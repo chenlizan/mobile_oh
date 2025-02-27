@@ -1,4 +1,4 @@
-import { xyApiPost, RouterConstants, Api_Context } from '@xy/basic';
+import { xyApiPost, RouterConstants, Api_Context, AppIcon, IconConstants } from '@xy/basic';
 
 interface REQUEST_PARAM {
   'id': string;
@@ -38,6 +38,8 @@ export struct LoginPage {
             .fontWeight(FontWeight.Bold)
             .buttonStyle(ButtonStyleMode.TEXTUAL)
             .onClick(this.handleLogin)
+
+          AppIcon({icon: IconConstants.NAVIGATION_HOME, iconSize: 24, iconColor: '#1698CE'})
         }
         .width('100%')
       }
