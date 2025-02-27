@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "小雅_oh"
+    },
+    {
+      "name": "tab_bar_home",
+      "value": "home"
+    },
+    {
+      "name": "tab_bar_mine",
+      "value": "mine"
+    }
+  ]
+}

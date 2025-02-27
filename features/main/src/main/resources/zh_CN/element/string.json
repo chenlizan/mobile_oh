@@ -1,0 +1,12 @@
+{
+  "string": [
+    {
+      "name": "tab_bar_home",
+      "value": "首页"
+    },
+    {
+      "name": "tab_bar_mine",
+      "value": "我的"
+    }
+  ]
+}

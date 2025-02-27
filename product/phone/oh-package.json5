@@ -1,0 +1,14 @@
+{
+  "name": "phone",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "@xy/basic": "file:../../commons/basic",
+    "@xy/main": "file:../../features/main",
+    "@xy/login": "file:../../features/login",
+  }
+}
+
