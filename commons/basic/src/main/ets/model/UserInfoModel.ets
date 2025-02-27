@@ -69,13 +69,13 @@ export class UserInfoModel {
     return this._schools
   }
 
-  private _fileCapacity: string = ''
+  private _fileCapacity: object | null = null
 
-  public set fileCapacity(value: string) {
+  public set fileCapacity(value: object | null) {
     this._fileCapacity = value
   }
 
-  public get fileCapacity(): string {
+  public get fileCapacity(): object | null {
     return this._fileCapacity
   }
 
@@ -109,15 +109,15 @@ export class UserInfoModel {
     return this._hasStudent
   }
 
-  // private _manageSpaces: object = {}
-  //
-  // public set manageSpaces(value: object) {
-  //   this._manageSpaces = value
-  // }
-  //
-  // public get manageSpaces(): object {
-  //   return this._manageSpaces
-  // }
+  private _manageSpaces: object | null = null
+
+  public set manageSpaces(value: object | null) {
+    this._manageSpaces = value
+  }
+
+  public get manageSpaces(): object | null {
+    return this._manageSpaces
+  }
 
   private _userFeatures: Array<object> = []
 
@@ -128,8 +128,4 @@ export class UserInfoModel {
   public get userFeatures(): Array<object> {
     return this._userFeatures
   }
-
-  constructor() {
-  }
-
 }

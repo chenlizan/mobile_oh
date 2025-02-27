@@ -1,30 +1,16 @@
-import { CustomList, CustomListItem, BuildImageArrowRight, Api_Context, ccApiGet, CCApi } from "@xy/basic";
-import { UserInfoModel } from "../model/UserInfoModel";
+import _ from '@wolfx/lodash'
+import { CustomList, CustomListItem, BuildImageArrowRight, Api_Context, UserInfoModel, } from "@xy/basic";
+
 
 @Component
 export struct MinePage {
   @StorageLink('access_token') token: string = ''
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
-  private userInfo: UserInfoModel = new UserInfoModel()
+  @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
 
   async aboutToAppear() {
-    const infra_userinfo_response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.queryInfraUserInfo)
-    if (infra_userinfo_response.code === 200) {
-      this.userInfo.mobile = (infra_userinfo_response.result as UserInfoModel).mobile
-    }
 
-    const userinfo_response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.getUserInfo)
-    if (userinfo_response.code === 200) {
-      const res = (userinfo_response.result as UserInfoModel)
-      this.userInfo.userId = res.id
-      // this.id = res.authorId
-      this.userInfo.nickname = res.nickname
-      this.userInfo.realname = res.realname
-      this.userInfo.avatar = res.avatar
-      // this.userInfo.schools = res.schoolRoleInfos
-      this.userInfo.fileCapacity = res.fileCapacity
-    }
   }
 
   build() {
@@ -37,7 +23,7 @@ export struct MinePage {
           .margin({ left: 40, right: 16 })
 
           Column() {
-            Text('Wc123456')
+            Text(this.userInfo.nickname)
             Text('华中师范大学')
           }
         }

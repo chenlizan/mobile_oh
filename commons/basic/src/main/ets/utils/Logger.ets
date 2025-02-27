@@ -44,4 +44,4 @@ class Logger {
   }
 }
 
-export const logger = new Logger('MultiFinancialManagement', LOG_DOMAIN);
+export const logger = new Logger('XIAOYA', LOG_DOMAIN);
