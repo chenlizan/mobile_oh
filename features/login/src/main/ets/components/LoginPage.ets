@@ -14,7 +14,7 @@ import {
 @Component
 export struct LoginPage {
   @Link globalPageIndex: string;
-  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context('ccnu')
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
 
   aboutToAppear() {

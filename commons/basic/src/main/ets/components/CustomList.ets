@@ -61,13 +61,12 @@ export struct CustomListItem {
         Text(this.text)
           .fontSize("16vp")
           .lineHeight(this.lineHeight)
-          .fontWeight(500)
       }
 
       if (typeof this.operateBuilder === 'function') {
         this.operateBuilder()
       } else {
-        AppIcon({ iconCode: IconConstants.RIGHT})
+        AppIcon({ iconCode: IconConstants.RIGHT })
       }
     }
     .width('100%')
