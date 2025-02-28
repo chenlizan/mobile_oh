@@ -3,7 +3,7 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "chenlizan",
         "compatibleSdkVersion": "5.0.1(13)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
@@ -24,7 +24,7 @@
     ],
     "signingConfigs": [
       {
-        "name": "default",
+        "name": "chenlizan",
         "type": "HarmonyOS",
         "material": {
           "certpath": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
@@ -37,7 +37,7 @@
         }
       },
       {
-        "name": "default2",
+        "name": "snow",
         "type": "HarmonyOS",
         "material": {
           "certpath": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.cer",
