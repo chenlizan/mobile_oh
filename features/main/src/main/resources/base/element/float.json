@@ -2,10 +2,18 @@
   "float": [
     {
       "name": "common_image_width",
+      "value": "16vp"
+    },
+    {
+      "name": "common_select_image_width",
       "value": "24vp"
     },
     {
       "name": "common_image_height",
+      "value": "16vp"
+    },
+    {
+      "name": "common_select_image_height",
       "value": "24vp"
     },
     {
@@ -14,7 +22,7 @@
     },
     {
       "name": "tab_text_height",
-      "value": "14vp"
+      "value": "16vp"
     },
     {
       "name": "tab_bar_width",

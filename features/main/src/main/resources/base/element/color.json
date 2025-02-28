@@ -22,19 +22,19 @@
     },
     {
       "name": "tab_choose_image",
-      "value": "#0A59F7"
+      "value": "#40A9FF"
     },
     {
       "name": "tab_un_image",
-      "value": "#33000000"
+      "value": "#999999"
     },
     {
       "name": "tab_choose_text",
-      "value": "#0A59F7"
+      "value": "#40A9FF"
     },
     {
       "name": "tab_un_text",
-      "value": "#33000000"
+      "value": "#999999"
     }
   ]
 }

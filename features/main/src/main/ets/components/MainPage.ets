@@ -86,41 +86,29 @@ export struct MainPage {
   }
 
 
-  getTabBarColor(index: number, currentTabIndex: number, breakPoint: string): ResourceColor {
-    if (this.backgroundImageY < -20 && this.currentTabIndex === 0 && index === 0) {
-      return $r('app.color.tab_choose_image')
-    } else if (index === 0 && breakPoint === CommonConstants.BREAK_POINT_LG) {
-      return currentTabIndex === index ? Color.White : $r('app.color.tab_un_image');
-    }
-    return currentTabIndex === index ? $r('app.color.tab_choose_image') : $r('app.color.tab_un_image');
-  }
+  // getTabBarColor(index: number, currentTabIndex: number, breakPoint: string): ResourceColor {
+  //   if (this.backgroundImageY < -20 && this.currentTabIndex === 0 && index === 0) {
+  //     return $r('app.color.tab_choose_image')
+  //   } else if (index === 0 && breakPoint === CommonConstants.BREAK_POINT_LG) {
+  //     return currentTabIndex === index ? Color.White : $r('app.color.tab_un_image');
+  //   }
+  //   return currentTabIndex === index ? $r('app.color.tab_choose_image') : $r('app.color.tab_un_image');
+  // }
 
   @Builder
-  BuildTabs(icon: Resource, title: ResourceStr, index: number) {
-    Column() {
-      Image(icon)
-        .width($r('app.float.common_image_width'))
-        .height($r('app.float.common_image_height'))
-        .fillColor(this.getTabBarColor(index, this.currentTabIndex, this.breakPoint))
-      Text(title)
-        .fontSize($r('app.float.tab_text_size'))
-        .lineHeight($r('app.float.tab_text_height'))
-        .fontWeight(FontWeight.Regular)
-        .fontColor(this.getTabBarColor(index, this.currentTabIndex, this.breakPoint))
-    }
-  }
-
-  @Builder
-  BuildTabsMine(icon: Resource, unIcon: Resource, title: ResourceStr, index: number) {
+  BuildTabs(icon: Resource, unIcon: Resource, title: ResourceStr, index: number) {
     Column() {
       Image(this.currentTabIndex === index ? icon : unIcon)
-        .width($r('app.float.common_image_width'))
-        .height($r('app.float.common_image_height'))
-      Text(title)
-        .fontSize($r('app.float.tab_text_size'))
-        .lineHeight($r('app.float.tab_text_height'))
-        .fontWeight(FontWeight.Regular)
-        .fontColor(this.getTabBarColor(index, this.currentTabIndex, this.breakPoint))
+        .width(this.currentTabIndex === index ? $r('app.float.common_select_image_width') : $r('app.float.common_image_width'))
+        .height(this.currentTabIndex === index ? $r('app.float.common_select_image_height')  : $r('app.float.common_image_height'))
+
+      if (this.currentTabIndex !== index) {
+        Text(title)
+          .fontSize($r('app.float.tab_text_size'))
+          .lineHeight($r('app.float.tab_text_height'))
+          .fontWeight(FontWeight.Regular)
+          .fontColor($r('app.color.tab_un_text'))
+      }
     }
   }
 
@@ -134,12 +122,12 @@ export struct MainPage {
             TabContent() {
               HomePage()
             }
-            .tabBar(this.BuildTabs($r('app.media.ic_public_home_filled'), $r('app.string.tab_bar_home'), 0))
+            .tabBar(this.BuildTabs($r('app.media.tab_home_active'), $r('app.media.tab_home'), $r('app.string.tab_bar_home'), 0))
 
             TabContent() {
               MinePage()
             }
-            .tabBar(this.BuildTabsMine($r('app.media.ic_home_mine'), $r('app.media.ic_home_mine_filled'),
+            .tabBar(this.BuildTabs($r('app.media.tab_profile_active'), $r('app.media.tab_profile'),
               $r('app.string.tab_bar_mine'), 1))
             .backgroundColor(Color.White)
           }
