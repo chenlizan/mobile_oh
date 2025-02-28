@@ -27,13 +27,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.cer",
-          "storePassword": "0000001B8C603D35A25F9902430049B9C588E86E045C0668C084FE37E641B37964453AD76728D6CDDF4E5A",
+          "certpath": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
+          "storePassword": "0000001AB55EFB3722CC845BCF094EB305F562DDFCA573307AF488D9F62A2AF703A39C0DB6D33B79F984",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BDE349F83D4D0379F831933866DB1CAC984324520AEB12C7F9DDD79F2676E5B025CDE4CD9AB510A",
-          "profile": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.p7b",
+          "keyPassword": "0000001A93DB29D8D280CA91017FFBB4AEB593A1A7FAB3E995678DEA8913D1F832780919FC3217E8A9CB",
+          "profile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.p12"
+          "storeFile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p12"
         }
       }
     ]

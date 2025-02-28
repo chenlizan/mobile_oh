@@ -32,6 +32,10 @@ export struct CustomListItem {
    */
   @Prop itemBorder: Length | EdgeWidths | LocalizedEdgeWidths = { top: '1vp' }
   /**
+   * 文字行高
+   */
+  @Prop lineHeight: number | string | Resource = 30
+  /**
    * 图标的builder
    */
   @BuilderParam iconBuilder?: CustomBuilder;
@@ -53,7 +57,7 @@ export struct CustomListItem {
         }
         Text(this.text)
           .fontSize("16vp")
-          .lineHeight("22vp")
+          .lineHeight(this.lineHeight)
           .fontWeight(500)
       }
 

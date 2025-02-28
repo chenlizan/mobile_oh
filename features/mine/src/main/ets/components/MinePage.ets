@@ -24,8 +24,16 @@ export struct MinePage {
 
           Column() {
             Text(this.userInfo.nickname)
+              .lineHeight(60)
+              .fontSize(20)
+              .fontColor(Color.White)
+              .fontWeight(FontWeight.Bold)
+              .textAlign(TextAlign.Start)
             Text('华中师范大学')
+              .fontColor(Color.White)
+              .textAlign(TextAlign.Start)
           }
+
         }
 
         Row() {
@@ -34,41 +42,46 @@ export struct MinePage {
         .margin({ right: 32 })
       }
       .width('100%')
-      .height('120vp')
-      .padding({ bottom: '-10vp' })
+      .height('170vp')
       .justifyContent(FlexAlign.SpaceBetween)
       .backgroundColor(Color.Blue)
+      .backgroundImage($r('app.media.homeBg'))
+      .backgroundImageSize({ width: '100%', height: '100%' })
+      .backgroundEffect({ radius: 25 })
 
-
-      CustomList({ listWidth: '90%' }) {
-        CustomListItem({
-          text: '个人年度报告',
-          itemMargin: { top: '8vp' },
-          itemRadius: '8vp',
-          itemBorder: ''
-        })
-        CustomListItem({
-          text: '个人数据看板',
-          itemMargin: { top: '8vp' },
-          itemRadius: '8vp',
-          itemBorder: ''
-        })
-        CustomListItem({
-          text: '反馈&建议',
-          itemMargin: { top: '8vp' },
-          itemRadius: '8vp',
-          itemBorder: ''
-        })
-        CustomListItem({
-          text: '关于小雅',
-          itemMargin: { top: '8vp' },
-          itemRadius: '8vp',
-          itemBorder: '',
-          onClickBtn: () => {
-            this.pageInfos.pushPath({ name: "about" })
-          }
-        })
+      Column() {
+        CustomList({ listWidth: '94%' }) {
+          CustomListItem({
+            text: '个人年度报告',
+            itemMargin: { top: '8vp' },
+            itemRadius: '8vp',
+            itemBorder: ''
+          })
+          CustomListItem({
+            text: '个人数据看板',
+            itemMargin: { top: '8vp' },
+            itemRadius: '8vp',
+            itemBorder: ''
+          })
+          CustomListItem({
+            text: '反馈&建议',
+            itemMargin: { top: '8vp' },
+            itemRadius: '8vp',
+            itemBorder: ''
+          })
+          CustomListItem({
+            text: '关于小雅',
+            itemMargin: { top: '8vp' },
+            itemRadius: '8vp',
+            itemBorder: '',
+            onClickBtn: () => {
+              this.pageInfos.pushPath({ name: "about" })
+            }
+          })
+        }
       }
+      .margin({ top: -24 })
+
     }
     .width('100%')
     .height('100%')

@@ -1,9 +1,9 @@
 import { PreferenceStorage, RouterConstants, SelectSpace } from "@xy/basic";
 
-@Builder
-export function IdentitySelectPageBuilder(name: string, param: Object) {
-  IdentitySelectPage()
-}
+// @Builder
+// export function IdentitySelectPageBuilder(name: string, param: Object) {
+//   IdentitySelectPage()
+// }
 
 
 @Component
