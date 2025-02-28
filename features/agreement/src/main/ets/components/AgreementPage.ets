@@ -1,11 +1,10 @@
-import { Api_Context, PreferenceStorage, RouterConstants } from "@xy/basic";
+import { PreferenceStorage, RouterConstants } from "@xy/basic";
 import { webview } from "@kit.ArkWeb";
 import { common } from "@kit.AbilityKit";
 
 @Component
 export struct AgreementPage {
   @Link globalPageIndex: string;
-  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @State showWeb: boolean = false
   @State webUrl: string = ''
@@ -75,14 +74,14 @@ export struct AgreementPage {
           Span('《小雅用户服务协议》')
             .fontSize(14)
             .fontColor(Color.Blue)
-            .onClick(() => this.showAgreement(this.Api_Context.getUserAgreement()))
+            .onClick(() => this.showAgreement('https://www.ai-augmented.com/user-agreement.html'))
           Span('和')
             .fontColor(Color.Grey)
             .fontSize(14)
           Span('《隐私政策》')
             .fontSize(14)
             .fontColor(Color.Blue)
-            .onClick(() => this.showAgreement(this.Api_Context.getPrivacyPolicy()))
+            .onClick(() => this.showAgreement('https://www.ai-augmented.com/privacy-agreement.html'))
           Span('相关内容，以便了解我们收集、使用、存储信息及，对信息的保护措施。')
             .fontSize(14)
             .fontColor(Color.Grey)
