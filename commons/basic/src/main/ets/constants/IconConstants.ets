@@ -1,4 +1,4 @@
 export class IconConstants {
   static readonly NAVIGATION_HOME: string = '\ue7c6'
-  static readonly RIGHT: string = '\ue7eb'
+  static readonly RIGHT: string = '\ue7eb' //右箭头
 }

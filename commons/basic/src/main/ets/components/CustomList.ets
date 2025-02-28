@@ -1,3 +1,6 @@
+import { IconConstants } from "../constants/IconConstants";
+import { AppIcon } from "./AppIcon";
+
 @Component
 export struct CustomList {
   @BuilderParam defaultBuilder?: CustomBuilder;
@@ -64,7 +67,7 @@ export struct CustomListItem {
       if (typeof this.operateBuilder === 'function') {
         this.operateBuilder()
       } else {
-        BuildImageArrowRight()
+        AppIcon({ iconCode: IconConstants.RIGHT})
       }
     }
     .width('100%')
@@ -77,12 +80,4 @@ export struct CustomListItem {
     .justifyContent(FlexAlign.SpaceBetween)
     .onClick(this.onClickBtn)
   }
-}
-
-@Builder
-export function BuildImageArrowRight() {
-  Image($r('app.media.ic_public_arrow_right'))
-    .width("12vp")
-    .height("24vp")
-    .fillColor("#999999")
 }

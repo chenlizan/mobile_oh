@@ -18,7 +18,9 @@ export { xyApiPost, xyApiGet, xyApiPut, xyApiDelete, ccApiPost, ccApiGet } from 
 
 export { ObjectUtil, ObjectOption } from './src/main/ets/utils/ObjectUtil'
 
-export { CustomList, CustomListItem, BuildImageArrowRight } from './src/main/ets/components/CustomList'
+export { CustomList, CustomListItem } from './src/main/ets/components/CustomList'
+
+export { Avatar } from "./src/main/ets/components/XyAvatar"
 
 export { UserInfoModel } from './src/main/ets/model/UserInfoModel'
 

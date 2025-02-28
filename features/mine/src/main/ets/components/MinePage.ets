@@ -1,5 +1,5 @@
 import _ from '@wolfx/lodash'
-import { CustomList, CustomListItem, Api_Context, UserInfoModel, AppIcon, IconConstants } from "@xy/basic";
+import { CustomList, CustomListItem, Api_Context, UserInfoModel, AppIcon, IconConstants, Avatar } from "@xy/basic";
 
 
 @Component
@@ -86,46 +86,5 @@ export struct MinePage {
     .width('100%')
     .height('100%')
     .backgroundColor("#f1f1f1")
-  }
-}
-
-
-@Component
-export struct Avatar {
-  @State avatar: string | null = null
-  getAvatarSource = (avatar: string) => {
-    let source: string | null = null
-    if (avatar) {
-      if (avatar.indexOf('cloud/file_access') !== -1) {
-        if (avatar.indexOf('/cloud/file_access') === 0) {
-          let icon_url =
-            AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('baseApi_out') + avatar.slice(1);
-          source = icon_url;
-        } else if (avatar.indexOf('cloud/file_access') === 0) {
-          let icon_url = AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('baseApi_out') + avatar;
-          source = icon_url;
-        }
-      } else {
-        source = avatar;
-      }
-    }
-    return source;
-  }
-
-  build() {
-    Row() {
-      if (this.avatar) {
-        Image(this.getAvatarSource(this.avatar))
-          .borderRadius(50)
-      } else {
-        Image($r('app.media.default'))
-          .borderRadius(50)
-      }
-    }
-    .width(60)
-    .height(60)
-    .borderRadius(50)
-    .borderWidth(1)
-    .borderColor(Color.White)
   }
 }
