@@ -2,6 +2,7 @@ import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { font } from '@kit.ArkUI'
+import { PreferenceStorage, RouterConstants } from '@xy/basic';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -21,6 +22,8 @@ export default class EntryAbility extends UIAbility {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
+      PersistentStorage.persistProp('globalPageIndex', RouterConstants.AGREEMENT_PAGE_URL);
+      PersistentStorage.persistProp('preferenceStorage', new PreferenceStorage());
       font.registerFont({
         familyName:'IconFont',
         familySrc:$rawfile('iconfont.ttf')

@@ -1,20 +1,5 @@
 {
   "app": {
-    "signingConfigs": [
-      {
-        "name": "default",
-        "type": "HarmonyOS",
-        "material": {
-          "certpath": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
-          "storePassword": "0000001A696846756410A6B61D7B3CC5EA34AB2D625935243BDFC391D48B96BB9F3EA77794769B815422",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001A29F4442DCA45B1BF5ACF72EADCD63C1C3CB9D998DB75BE56C61E46C657E2B3B7DEBFA1B9545D",
-          "profile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p12"
-        }
-      }
-    ],
     "products": [
       {
         "name": "default",
@@ -31,10 +16,25 @@
     ],
     "buildModeSet": [
       {
-        "name": "debug",
+        "name": "debug"
       },
       {
         "name": "release"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.cer",
+          "storePassword": "0000001B8C603D35A25F9902430049B9C588E86E045C0668C084FE37E641B37964453AD76728D6CDDF4E5A",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BDE349F83D4D0379F831933866DB1CAC984324520AEB12C7F9DDD79F2676E5B025CDE4CD9AB510A",
+          "profile": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.p12"
+        }
       }
     ]
   },
@@ -90,6 +90,10 @@
     {
       "name": "agreement",
       "srcPath": "./features/agreement",
+    },
+    {
+      "name": "school",
+      "srcPath": "./features/school",
     }
   ]
 }

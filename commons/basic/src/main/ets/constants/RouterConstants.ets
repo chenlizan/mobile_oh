@@ -17,6 +17,9 @@
  * Router constants for all features.
  */
 export class RouterConstants {
+  static readonly AGREEMENT_PAGE_URL: string = 'AgreementPage'
+  static readonly SCHOOL_PAGE_URL: string = 'SchoolPage'
   static readonly LOGIN_PAGE_URL: string = 'LoginPage'
+  static readonly IDENTITY_PAGE_URL: string = 'IdentityPage'
   static readonly MAIN_PAGE_URL: string = 'MainPage'
 }

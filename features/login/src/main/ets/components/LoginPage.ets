@@ -7,7 +7,8 @@ import {
   ccApiGet,
   ObjectUtil,
   CCApi,
-  ObjectOption
+  ObjectOption,
+  PreferenceStorage,
 } from '@xy/basic';
 
 @Component
@@ -16,8 +17,11 @@ export struct LoginPage {
   private domain: string = 'ccnu'
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context(this.domain)
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
 
   aboutToAppear() {
+    // const res = new ObjectUtil(this.preferenceStorage.school as ObjectOption<never>)
+    // console.log('school_code', res.getValue('code'))
   }
 
   async handleUserInfo() {
@@ -57,6 +61,8 @@ export struct LoginPage {
           }
         });
       });
+
+      this.preferenceStorage.access_token = 'access_token'
     }
   }
 

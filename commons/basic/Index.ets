@@ -8,6 +8,8 @@ export { BreakpointUtil } from './src/main/ets/utils/BreakpointUtil'
 
 export { logger } from './src/main/ets/utils/Logger'
 
+export { preferenceUtil } from './src/main/ets/utils/PreferenceUtil'
+
 export { Api_Context } from './src/main/ets/config/Context'
 
 export { HomeApi, MineApi, SystemApi, CCApi, MessageApi, IMApi } from './src/main/ets/config/ApiConfig'
@@ -22,3 +24,6 @@ export { UserInfoModel } from './src/main/ets/model/UserInfoModel'
 
 export { AppIcon } from './src/main/ets/components/AppIcon'
 
+export { PreferenceStorage } from './src/main/ets/model/LocalStorageModel'
+
+export { SelectSpace } from './src/main/ets/model/SelectSpaceModel'

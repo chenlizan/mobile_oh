@@ -9,6 +9,8 @@
     "@xy/basic": "file:../../commons/basic",
     "@xy/main": "file:../../features/main",
     "@xy/login": "file:../../features/login",
+    "agreement": "file:../../features/agreement",
+    "school": "file:../../features/school"
   }
 }
 
