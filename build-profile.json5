@@ -23,19 +23,7 @@
       }
     ],
     "signingConfigs": [
-      {
-        "name": "default",
-        "type": "HarmonyOS",
-        "material": {
-          "certpath": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
-          "storePassword": "0000001AB55EFB3722CC845BCF094EB305F562DDFCA573307AF488D9F62A2AF703A39C0DB6D33B79F984",
-          "keyAlias": "debugKey",
-          "keyPassword": "0000001A93DB29D8D280CA91017FFBB4AEB593A1A7FAB3E995678DEA8913D1F832780919FC3217E8A9CB",
-          "profile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p7b",
-          "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p12"
-        }
-      }
+
     ]
   },
   "modules": [
