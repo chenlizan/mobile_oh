@@ -15,11 +15,11 @@ export struct AppIcon {
   /**
    * 图标大小
    */
-  @Prop iconSize: number = 12
+  @Prop iconSize:  number | string | Resource = 12
   /**
    * 图标颜色
    */
-  @Prop iconColor: string = 'rgba(0, 0, 0, 0.45)';
+  @Prop iconColor: ResourceColor = Color.Black;
   /**
    * 点击按钮
    */
