@@ -7,7 +7,11 @@ export struct AppIcon {
   /**
    * 外边距
    */
-  @Prop itemMargin: Margin | Length | LocalizedMargin = ''
+  @Prop iconMargin: Margin | Length | LocalizedMargin = ''
+  /**
+   * 内边距 扩大图标点击范围
+   */
+  @Prop iconPadding: Margin | Length | LocalizedMargin = ''
   /**
    * 图标大小
    */
@@ -27,7 +31,8 @@ export struct AppIcon {
       .fontFamily('IconFont')
       .fontSize(this.iconSize)
       .fontColor(this.iconColor)
-      .margin(this.itemMargin)
+      .margin(this.iconMargin)
+      .padding(this.iconPadding)
       .onClick(this.onClickBtn)
   }
 }
