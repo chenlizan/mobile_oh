@@ -42,14 +42,13 @@ struct Index {
         this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
       }
     } else {
-      let spaceData: SelectSpace = {
+      this.preferenceStorage.selectSpace = {
         type: 'teaching',
         title: '教学空间',
         role: '',
         schoolId: '',
         schoolName: '',
-      };
-      this.preferenceStorage.selectSpace = spaceData
+      } as SelectSpace
 
       this.globalPageIndex = RouterConstants.MAIN_PAGE_URL
     }
