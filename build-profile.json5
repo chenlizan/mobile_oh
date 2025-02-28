@@ -23,7 +23,32 @@
       }
     ],
     "signingConfigs": [
-
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
+          "storePassword": "0000001A9C61785A45B414186190B5BFC1A4B2225443FAC028EBF6ACC3AE3CE86DB73AD7820E69463BDC",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001AA3C7B2C2BAA7FBE26DFB119C2F51FA0A77DAECD24ABC577E93657901F60F4D2F8B5601703BFA",
+          "profile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p12"
+        }
+      },
+      {
+        "name": "default2",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.cer",
+          "storePassword": "0000001B7F822860BA0EAE2EBA3E334D7EF4A99D5A902D7598CDFC0AFC6B6D41B6B2BF3DE8CF4F803A7DBC",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BA796215C5185254EB8F59F1D4F54D4D5A2FE3966E49E41C6D9909223869CD5F8C1BFE01B7E443E",
+          "profile": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/snow/.ohos/config/default_xy_mobile_oh_mWieonKgm0qC9QZZPqPM6hV7L8Z3ahsCJ4dXN_TdbRE=.p12"
+        }
+      }
     ]
   },
   "modules": [
