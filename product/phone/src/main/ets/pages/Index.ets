@@ -4,8 +4,8 @@ import { CommonConstants,
   SelectSpace } from '@xy/basic';
 import { IdentitySelectPage, LoginPage } from '@xy/login'
 import { MainPage } from '@xy/main'
-import { AgreementPage } from 'agreement'
-import { SchoolPage } from 'school';
+import { AgreementPage } from '@xy/agreement'
+import { SchoolPage } from '@xy/school';
 
 @Entry
 @Component
