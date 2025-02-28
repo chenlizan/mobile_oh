@@ -1,13 +1,8 @@
 import { PreferenceStorage, RouterConstants, SelectSpace } from "@xy/basic";
 
-// @Builder
-// export function IdentitySelectPageBuilder(name: string, param: Object) {
-//   IdentitySelectPage()
-// }
-
 
 @Component
-export struct IdentitySelectPage {
+export struct IdentityPage {
   @Link globalPageIndex: string;
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
 

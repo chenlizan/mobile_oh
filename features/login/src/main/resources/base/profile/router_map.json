@@ -1,12 +1,5 @@
 {
   "routerMap": [
-    {
-      "name": "identitySelect",
-      "pageSourceFile": "src/main/ets/components/IdentitySelectPage.ets",
-      "buildFunction": "IdentitySelectPageBuilder",
-      "data": {
-        "description": "this is pageOne"
-      }
-    }
+
   ]
 }

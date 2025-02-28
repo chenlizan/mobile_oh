@@ -2,7 +2,7 @@ import { CommonConstants,
   ObjectOption,
   ObjectUtil, PreferenceStorage, RouterConstants,
   SelectSpace } from '@xy/basic';
-import { IdentitySelectPage, LoginPage } from '@xy/login'
+import { IdentityPage, LoginPage } from '@xy/login'
 import { MainPage } from '@xy/main'
 import { AgreementPage } from '@xy/agreement'
 import { SchoolPage } from '@xy/school';
@@ -89,7 +89,7 @@ struct Index {
       } else if (this.globalPageIndex = RouterConstants.MAIN_PAGE_URL) {
         MainPage({ globalPageIndex: this.globalPageIndex })
       } else if (this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL) {
-        IdentitySelectPage({ globalPageIndex: this.globalPageIndex })
+        IdentityPage({ globalPageIndex: this.globalPageIndex })
       }
     }
     .mode(NavigationMode.Stack)
