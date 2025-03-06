@@ -29,3 +29,5 @@ export { AppIcon } from './src/main/ets/components/AppIcon'
 export { PreferenceStorage } from './src/main/ets/model/LocalStorageModel'
 
 export { SelectSpace } from './src/main/ets/model/SelectSpaceModel'
+
+export { isJSON, getApiHostDomain } from './src/main/ets/utils/BaseUtils'

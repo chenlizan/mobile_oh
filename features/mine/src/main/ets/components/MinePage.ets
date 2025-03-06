@@ -2,7 +2,7 @@ import _ from '@wolfx/lodash'
 import { CustomList, CustomListItem, Api_Context, UserInfoModel, AppIcon, IconConstants, Avatar } from "@xy/basic";
 import { image } from '@kit.ImageKit';
 
-
+@Entry
 @Component
 export struct MinePage {
   @StorageLink('access_token') token: string = ''
@@ -76,28 +76,28 @@ export struct MinePage {
         .backgroundEffect({ radius: 25 })
 
         Column() {
-          CustomList({ listWidth: '94%' }) {
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
-              text: '个人年度报告',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
-              itemBorder: ''
-            })
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
-              text: '个人数据看板',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
-              itemBorder: ''
-            })
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
-              text: '反馈&建议',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
-              itemBorder: ''
-            })
+          CustomList({ listPadding: { left: 16, right: 16 } }) {
+            // CustomListItem({
+            //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
+            //   text: '个人年度报告',
+            //   itemMargin: { top: '8vp' },
+            //   itemRadius: '8vp',
+            //   itemBorder: ''
+            // })
+            // CustomListItem({
+            //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
+            //   text: '个人数据看板',
+            //   itemMargin: { top: '8vp' },
+            //   itemRadius: '8vp',
+            //   itemBorder: ''
+            // })
+            // CustomListItem({
+            //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
+            //   text: '反馈&建议',
+            //   itemMargin: { top: '8vp' },
+            //   itemRadius: '8vp',
+            //   itemBorder: ''
+            // })
             CustomListItem({
               iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_about')),
               text: '关于小雅',
@@ -116,7 +116,7 @@ export struct MinePage {
 
       Column() {
         Button('退出小雅', { type: ButtonType.Normal })
-          .margin({ bottom: 10 })
+          .margin({ bottom: 16 })
           .width('94%')
           .backgroundColor('#fcbb34')
           .borderRadius(4)

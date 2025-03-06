@@ -1,10 +1,10 @@
-import { IconConstants } from "../constants/IconConstants";
-import { AppIcon } from "./AppIcon";
+import { IconConstants } from "../constants/IconConstants"
+import { AppIcon } from "./AppIcon"
 
 @Component
 export struct CustomList {
-  @BuilderParam defaultBuilder?: CustomBuilder;
-  @Prop listWidth: string = '100%';
+  @BuilderParam defaultBuilder?: CustomBuilder
+  @Prop listPadding: Padding | Length | LocalizedPadding
 
   build() {
     Column() {
@@ -12,7 +12,8 @@ export struct CustomList {
         this.defaultBuilder()
       }
     }
-    .width(this.listWidth)
+    .padding(this.listPadding)
+
   }
 }
 

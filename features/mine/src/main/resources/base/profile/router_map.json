@@ -7,6 +7,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "agreement",
+      "pageSourceFile": "src/main/ets/components/Agreement.ets",
+      "buildFunction": "AgreementBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

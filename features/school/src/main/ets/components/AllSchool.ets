@@ -1,3 +1,4 @@
+import { TextModifier } from "@kit.ArkUI";
 import _ from "@wolfx/lodash";
 import {
   Api_Context,
@@ -6,16 +7,15 @@ import {
   ObjectOption,
   ObjectUtil,
   PreferenceStorage,
-  RouterConstants,
   xyApiPost
 } from "@xy/basic";
 import { School } from "../model/SchoolModel";
 
 @Component
-export struct SchoolPage {
-  @Link globalPageIndex: string;
+export struct AllSchool {
   @State schoolList: Array<School> = []
   @State isRefreshing: boolean = false
+  @State searchValue: string = ''
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
 
@@ -25,8 +25,17 @@ export struct SchoolPage {
 
   handleSelect(schoolData: School) {
     this.preferenceStorage.school = schoolData;
-    this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
+    this.pageInfos.pop(schoolData)
   }
+
+  onGetSchools() {
+    return _.filter(this.schoolList, school => {
+      if (_.trim(this.searchValue)) {
+        return school.name.indexOf(this.searchValue) !== -1;
+      }
+      return true;
+    });
+  };
 
   async handleSchoolList(cb?: () => void) {
     const response = await xyApiPost(Api_Context.getApplicationConfig(),
@@ -86,22 +95,20 @@ export struct SchoolPage {
   BuildSchoolList() {
     Refresh({ refreshing: $$this.isRefreshing }) {
       Grid() {
-        ForEach(this.schoolList, (item: School, index: number) => {
-          if (index <= this.schoolList.length - 2) {
-            GridItem() {
-              Column() {
-                Image(item.logo)
-                  .width(56)
-                  .height(56)
-                  .margin({ top: 8, bottom: 8 })
-                Text(item.name)
-                  .fontColor('#999999')
-                  .fontSize(12)
-              }
-              .onClick(() => {
-                this.handleSelect(item) //登陆选择学校
-              })
+        ForEach(this.onGetSchools(), (item: School, index: number) => {
+          GridItem() {
+            Column() {
+              Image(item.logo)
+                .width(56)
+                .height(56)
+                .margin({ top: 8, bottom: 8 })
+              Text(item.name)
+                .fontColor('#999999')
+                .fontSize(12)
             }
+            .onClick(() => {
+              this.handleSelect(item) //登陆选择学校
+            })
           }
         })
       }
@@ -116,43 +123,28 @@ export struct SchoolPage {
   build() {
     NavDestination() {
       Column() {
-        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
-          Row() {
-            Text('请选择学校')
-              .fontColor('#999999')
-          }.margin({
-            bottom: 20
+        TextInput({ placeholder: '请输入要搜索的关键字' })
+          .borderRadius({ topLeft: 4, topRight: 4 })
+          .borderWidth(1)
+          .borderColor('#f1f1f1')
+          .backgroundColor(Color.White)
+          .onChange((value) => {
+            this.searchValue = value
           })
-
-          this.BuildSchoolList()
-          Row() {
-            if (this.schoolList.length > 8) {
-              Text('查看更多开课院校 >')
-                .fontColor('#40A9FF')
-                .fontSize(12)
-                .onClick(() => {
-                  this.pageInfos.pushPath({
-                    name: 'allSchool', onPop: (popInfo: PopInfo) => {
-                      this.handleSelect(popInfo.result as School)
-                    }
-                  })
-                })
-            }
-            Text('其他用户登录 >')
-              .fontColor('#40A9FF')
-              .fontSize(12)
-          }
-          .width('100%')
-          .padding({ left: 32, right: 32, bottom: 16 })
-          .justifyContent(FlexAlign.SpaceBetween)
-        }
-        .height('60%')
+        this.BuildSchoolList()
       }
-      .width('100%')
-      .height('100%')
-      .justifyContent(FlexAlign.End)
-      .backgroundImage($r('app.media.school_bg'))
-      .backgroundImageSize({ width: '100%', height: '100%' })
+      .margin({ left: 16, right: 16 })
+      .backgroundColor(Color.White)
     }
+    .title('全部开课院校',
+      {
+        mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
+      })
+    .backgroundColor('#f1f1f1')
   }
+}
+
+@Builder
+export function AllSchoolBuilder(name: string) {
+  AllSchool()
 }

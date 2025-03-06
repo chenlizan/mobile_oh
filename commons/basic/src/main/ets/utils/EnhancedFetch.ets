@@ -9,6 +9,7 @@ interface Options {
 }
 
 interface ApiResponse {
+  code?: number
   success?: boolean
   data?: PARAMS | Token
 }

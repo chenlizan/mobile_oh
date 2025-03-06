@@ -1,0 +1,12 @@
+{
+  "routerMap": [
+    {
+      "name": "allSchool",
+      "pageSourceFile": "src/main/ets/components/AllSchool.ets",
+      "buildFunction": "AllSchoolBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    }
+  ]
+}

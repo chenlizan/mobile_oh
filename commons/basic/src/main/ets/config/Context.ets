@@ -20,7 +20,7 @@ export class Api_Context {
   /**
    * 是否 测试环境。
    */
-  private isTest: boolean = false;
+  static isTest: boolean = false;
   private api: BaseApi = {
     baseApi_IM: "",
     baseApi: "",
@@ -42,7 +42,7 @@ export class Api_Context {
 
   constructor(domain?: string) {
     if (typeof domain === 'string') {
-      this.api = this.getBaseApi(this.isTest ? 'tst' : domain) as BaseApi;
+      this.api = this.getBaseApi(Api_Context.isTest ? 'tst' : domain) as BaseApi;
       this.domain = domain
     }
   }
@@ -52,7 +52,7 @@ export class Api_Context {
   }
 
   getOpenApi() {
-    return this.isTest
+    return Api_Context.isTest
       ? this.isStaging()
         ? 'https://stg-openai.ai-augmented.com/api/v1/chat/completions'
         : 'https://tst-openai.ai-augmented.com/api/v1/chat/completions'
@@ -60,7 +60,7 @@ export class Api_Context {
   }
 
   getAIGlobalConfig() {
-    return this.isTest
+    return Api_Context.isTest
       ? this.isStaging()
         ? 'https://stg-config.ai-augmented.com/api/v1/config/global'
         : 'https://tst-config.ai-augmented.com/api/v1/config/global'
@@ -68,7 +68,7 @@ export class Api_Context {
   }
 
   getFaqDomain() {
-    return this.isTest
+    return Api_Context.isTest
       ? this.isStaging()
         ? 'https://stg-faq.ai-augmented.com'
         : 'https://tst-faq.ai-augmented.com'
@@ -99,11 +99,11 @@ export class Api_Context {
     return 'https://www.ai-augmented.com/pages/app-download.html';
   }
 
-  getApplicationConfig() {
+  static getApplicationConfig() {
     return 'https://catalog.ai-augmented.com/api/application/searchApplicationConfig';
   }
 
-  getApplicationToken() {
+  static getApplicationToken() {
     return 'Basic eHlhdXRoX3NlcnZlcjoxeDhkTXNaMDJ6ZzBjN3BLMk9YN0NZVlM=';
   }
 
