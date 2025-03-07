@@ -7,9 +7,9 @@ import {
   ObjectUtil,
   PreferenceStorage,
   RouterConstants,
+  School,
   xyApiPost
 } from "@xy/basic";
-import { School } from "../model/SchoolModel";
 
 @Component
 export struct SchoolPage {
@@ -18,6 +18,7 @@ export struct SchoolPage {
   @State isRefreshing: boolean = false
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   private maxSchool = Api_Context.isTest ? 1 : 8;
 
   aboutToAppear(): void {
@@ -27,6 +28,7 @@ export struct SchoolPage {
   handleSelect(schoolData: School) {
     this.preferenceStorage.school = schoolData;
     this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
+    this.Api_Context = new Api_Context(schoolData.domain)
   }
 
   async handleSchoolList(cb?: () => void) {

@@ -7,9 +7,9 @@ import {
   ObjectOption,
   ObjectUtil,
   PreferenceStorage,
+  School,
   xyApiPost
 } from "@xy/basic";
-import { School } from "../model/SchoolModel";
 
 @Component
 export struct AllSchool {

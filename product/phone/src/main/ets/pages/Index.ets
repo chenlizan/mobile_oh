@@ -1,11 +1,4 @@
-import {
-  CommonConstants,
-  ObjectOption,
-  ObjectUtil,
-  PreferenceStorage,
-  RouterConstants,
-  SelectSpace
-} from '@xy/basic';
+import { CommonConstants, PreferenceStorage, RouterConstants, SelectSpace } from '@xy/basic';
 import { IdentityPage, LoginPage } from '@xy/login'
 import { MainPage } from '@xy/main'
 import { AgreementPage } from '@xy/agreement'
@@ -60,8 +53,7 @@ struct Index {
   };
 
   jumpToLogin() {
-    const school = new ObjectUtil(this.preferenceStorage?.school as ObjectOption<never>)
-    if (school.getValue('is_other')) {
+    if (this.preferenceStorage?.school?.is_other) {
       // signOther
       this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
     } else {

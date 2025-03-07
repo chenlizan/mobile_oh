@@ -20,6 +20,8 @@ export { ObjectUtil, ObjectOption } from './src/main/ets/utils/ObjectUtil'
 
 export { CustomList, CustomListItem } from './src/main/ets/components/CustomList'
 
+export { CustomDivider } from './src/main/ets/components/CustomDivider'
+
 export { Avatar } from "./src/main/ets/components/XyAvatar"
 
 export { UserInfoModel } from './src/main/ets/model/UserInfoModel'
@@ -29,5 +31,7 @@ export { AppIcon } from './src/main/ets/components/AppIcon'
 export { PreferenceStorage } from './src/main/ets/model/LocalStorageModel'
 
 export { SelectSpace } from './src/main/ets/model/SelectSpaceModel'
+
+export { School } from './src/main/ets/model/SchoolModel'
 
 export { isJSON, getApiHostDomain } from './src/main/ets/utils/BaseUtils'

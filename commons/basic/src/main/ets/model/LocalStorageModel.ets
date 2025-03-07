@@ -1,6 +1,7 @@
+import { School } from "./SchoolModel"
 
 export class PreferenceStorage {
-  school?: object | null
+  school?: School | null
   selectSpace?: object | null
   access_token?: string
   need_select_space?: boolean
