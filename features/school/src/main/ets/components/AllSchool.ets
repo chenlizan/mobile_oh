@@ -123,10 +123,16 @@ export struct AllSchool {
   build() {
     NavDestination() {
       Column() {
-        TextInput({ placeholder: '请输入要搜索的关键字' })
-          .borderRadius({ topLeft: 4, topRight: 4 })
-          .borderWidth(1)
-          .borderColor('#f1f1f1')
+        Search({ placeholder: '请输入要搜索的关键字' })
+          .placeholderColor('#999999')
+          .borderWidth(1.5)
+          .borderColor({
+            top: Color.White,
+            bottom: '#f1f1f1',
+            left: Color.White,
+            right: Color.White
+          })
+          .borderRadius(0)
           .backgroundColor(Color.White)
           .onChange((value) => {
             this.searchValue = value
@@ -134,6 +140,7 @@ export struct AllSchool {
         this.BuildSchoolList()
       }
       .margin({ left: 16, right: 16 })
+      .borderRadius({ topLeft: 4, topRight: 4 })
       .backgroundColor(Color.White)
     }
     .title('全部开课院校',

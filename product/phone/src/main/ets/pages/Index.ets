@@ -1,7 +1,11 @@
-import { CommonConstants,
+import {
+  CommonConstants,
   ObjectOption,
-  ObjectUtil, PreferenceStorage, RouterConstants,
-  SelectSpace } from '@xy/basic';
+  ObjectUtil,
+  PreferenceStorage,
+  RouterConstants,
+  SelectSpace
+} from '@xy/basic';
 import { IdentityPage, LoginPage } from '@xy/login'
 import { MainPage } from '@xy/main'
 import { AgreementPage } from '@xy/agreement'
@@ -13,8 +17,9 @@ struct Index {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('globalPageIndex') globalPageIndex: string = RouterConstants.LOGIN_PAGE_URL
+  @State private showSplash: boolean = true
 
-  async  aboutToAppear() {
+  async aboutToAppear() {
     // 判断页面
     if (this.preferenceStorage.is_agreement) {
       if (this.preferenceStorage?.school) {
@@ -33,7 +38,7 @@ struct Index {
   }
 
   // 跳转首页
-  jumpToRoot = () => {
+  jumpToRoot() {
     // 判断身份
     if (this.preferenceStorage?.need_select_space) {
       if (this.preferenceStorage?.selectSpace) {
@@ -54,7 +59,7 @@ struct Index {
     }
   };
 
-  jumpToLogin = () => {
+  jumpToLogin() {
     const school = new ObjectUtil(this.preferenceStorage?.school as ObjectOption<never>)
     if (school.getValue('is_other')) {
       // signOther
@@ -65,31 +70,60 @@ struct Index {
   };
 
   // 跳转到学校选择
-  jumpToSchool = () => {
+  jumpToSchool() {
     this.globalPageIndex = RouterConstants.SCHOOL_PAGE_URL
   };
 
-  jumpToAgreement = () => {
+  jumpToAgreement() {
     this.globalPageIndex = RouterConstants.AGREEMENT_PAGE_URL
   }
 
   @Builder
   PagesMap(name: string, param?: object) {
+  }
 
+  @Builder
+  BuildSplash() {
+    Column() {
+      Image($r('app.media.splash'))
+        .width(300)
+        .height(273)
+        .margin({ top: 146 })
+      Column() {
+        Text('小雅')
+          .margin({ bottom: 12 })
+        Text('Copyright © 2015-2021 版权所有: 华中师范大学')
+          .fontSize(12)
+        Text('鄂ICP备 05003325号-10')
+          .fontSize(12)
+      }
+      .margin({ bottom: 20 })
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(FlexAlign.SpaceBetween)
+    .backgroundColor('#eff9ff')
+    .transition(TransitionEffect.OPACITY.animation({ duration: 2000, playMode: PlayMode.Reverse }), () => {
+      this.showSplash = false
+    })
   }
 
   build() {
     Navigation(this.pageInfos) {
-      if (this.globalPageIndex === RouterConstants.AGREEMENT_PAGE_URL) {
-        AgreementPage({ globalPageIndex: this.globalPageIndex })
-      } else if (this.globalPageIndex === RouterConstants.SCHOOL_PAGE_URL) {
-        SchoolPage({ globalPageIndex: this.globalPageIndex })
-      } else if (this.globalPageIndex === RouterConstants.LOGIN_PAGE_URL) {
-        LoginPage({ globalPageIndex: this.globalPageIndex })
-      } else if (this.globalPageIndex = RouterConstants.MAIN_PAGE_URL) {
-        MainPage({ globalPageIndex: this.globalPageIndex })
-      } else if (this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL) {
-        IdentityPage({ globalPageIndex: this.globalPageIndex })
+      if (this.showSplash) {
+        this.BuildSplash()
+      } else {
+        if (this.globalPageIndex === RouterConstants.AGREEMENT_PAGE_URL) {
+          AgreementPage({ globalPageIndex: this.globalPageIndex })
+        } else if (this.globalPageIndex === RouterConstants.SCHOOL_PAGE_URL) {
+          SchoolPage({ globalPageIndex: this.globalPageIndex })
+        } else if (this.globalPageIndex === RouterConstants.LOGIN_PAGE_URL) {
+          LoginPage({ globalPageIndex: this.globalPageIndex })
+        } else if (this.globalPageIndex = RouterConstants.MAIN_PAGE_URL) {
+          MainPage({ globalPageIndex: this.globalPageIndex })
+        } else if (this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL) {
+          IdentityPage({ globalPageIndex: this.globalPageIndex })
+        }
       }
     }
     .mode(NavigationMode.Stack)

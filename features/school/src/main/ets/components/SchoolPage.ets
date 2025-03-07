@@ -18,6 +18,7 @@ export struct SchoolPage {
   @State isRefreshing: boolean = false
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  private maxSchool = Api_Context.isTest ? 1 : 8;
 
   aboutToAppear(): void {
     this.handleSchoolList()
@@ -87,7 +88,7 @@ export struct SchoolPage {
     Refresh({ refreshing: $$this.isRefreshing }) {
       Grid() {
         ForEach(this.schoolList, (item: School, index: number) => {
-          if (index <= this.schoolList.length - 2) {
+          if (index < this.maxSchool) {
             GridItem() {
               Column() {
                 Image(item.logo)
