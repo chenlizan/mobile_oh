@@ -1,6 +1,7 @@
 import _ from '@wolfx/lodash'
 import qs from '@open/qs'
 import { http } from '@kit.NetworkKit'
+import { PreferenceStorage } from '../model/LocalStorageModel';
 
 interface Options {
   method: http.RequestMethod;
@@ -16,7 +17,7 @@ interface ApiResponse {
 
 interface CCApiResponse {
   code?: number
-  result?: PARAMS | Token
+  result?: PARAMS | Token | Array<PARAMS>
 }
 
 interface Token {
@@ -25,11 +26,11 @@ interface Token {
   refresh_token_state?: string
 }
 
-type PARAMS = Record<string, string | number | boolean>
+export type PARAMS = Record<string, string | number | boolean | undefined | object> | Array<string>
 
 const enhancedFetch = async (url: string, options?: Options) => {
   const httpRequest = http.createHttp();
-  const access_token = AppStorage.get<string>('access_token')
+  const access_token = AppStorage.get<PreferenceStorage>('PreferenceStorage')?.access_token
   const requestOptions: http.HttpRequestOptions = {
     header: _.merge({
       'Access-Control-Allow-Origin': '*',
@@ -54,9 +55,9 @@ const enhancedFetch = async (url: string, options?: Options) => {
     }
     const result: ApiResponse = JSON.parse(_.isString(response.result) ? response.result : '{}');
     if (result.data && (result.data as Token).access_token && (result.data as Token).refresh_token) {
-      AppStorage.setOrCreate('access_token', (result.data as Token).access_token);
-      AppStorage.setOrCreate('refresh_token', (result.data as Token).refresh_token);
-      AppStorage.setOrCreate('refresh_token_state', (result.data as Token).refresh_token_state);
+      // AppStorage.setOrCreate('access_token', (result.data as Token).access_token);
+      // AppStorage.setOrCreate('refresh_token', (result.data as Token).refresh_token);
+      // AppStorage.setOrCreate('refresh_token_state', (result.data as Token).refresh_token_state);
     }
     return result;
   } catch (error) {
@@ -148,7 +149,7 @@ export const ccApiPost = async (path: string, body?: PARAMS, headers?: PARAMS): 
 }
 
 export const ccApiGet =
-  async (path: string, body?: Record<string, string>, headers?: Record<string, string>): Promise<CCApiResponse> => {
+  async (path: string, body?: PARAMS, headers?: Record<string, string>): Promise<CCApiResponse> => {
     const res = await xyApiGet(path, body, headers)
     return res as CCApiResponse
   }

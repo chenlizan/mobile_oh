@@ -3,6 +3,9 @@ import { AppIcon } from "./AppIcon"
 
 @Component
 export struct CustomList {
+  /**
+   * 内容区域的builder
+   */
   @BuilderParam defaultBuilder?: CustomBuilder
   @Prop listPadding: Padding | Length | LocalizedPadding
 

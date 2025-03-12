@@ -6,5 +6,5 @@ export class IconConstants {
   static readonly USER: string = '\ue7ae' //用户
   static readonly LOCK: string = '\ue7ca' //锁
   static readonly AUTH: string = '\ue823' //认证
-
+  static readonly CLOSE: string = '\ue7ff' //关闭
 }

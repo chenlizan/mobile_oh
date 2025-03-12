@@ -1,9 +1,11 @@
+import { IconConstants } from "../constants/IconConstants";
+
 @Component
 export struct AppIcon {
   /**
    * 图标编码
    */
-  @Prop iconCode: string = '';
+  @Prop iconCode: IconConstants = '';
   /**
    * 外边距
    */
@@ -15,7 +17,7 @@ export struct AppIcon {
   /**
    * 图标大小
    */
-  @Prop iconSize:  number | string | Resource = 12
+  @Prop iconSize: number | string | Resource = 12
   /**
    * 图标颜色
    */
@@ -27,7 +29,7 @@ export struct AppIcon {
   }
 
   build() {
-    Text(this.iconCode)
+    Text(this.iconCode as string)
       .fontFamily('IconFont')
       .fontSize(this.iconSize)
       .fontColor(this.iconColor)

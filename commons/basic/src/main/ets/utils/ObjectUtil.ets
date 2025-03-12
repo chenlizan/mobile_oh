@@ -10,4 +10,8 @@ export class ObjectUtil<T> {
   getValue(currentPoint: string): T {
     return this.options[currentPoint] as T;
   }
+
+  setValue(currentPoint: string, value: T): void {
+    this.options[currentPoint] = value
+  }
 }

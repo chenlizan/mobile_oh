@@ -22,7 +22,7 @@ export struct MainPage {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context('ccnu')
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
-  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
 
   aboutToAppear() {
     this.handleLogin()

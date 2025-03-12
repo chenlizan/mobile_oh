@@ -17,7 +17,7 @@ export struct SchoolPage {
   @State schoolList: Array<School> = []
   @State isRefreshing: boolean = false
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
-  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   private maxSchool = Api_Context.isTest ? 1 : 8;
 

@@ -8,7 +8,7 @@ import { SchoolPage } from '@xy/school';
 @Component
 struct Index {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
-  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('globalPageIndex') globalPageIndex: string = RouterConstants.LOGIN_PAGE_URL
   @State private showSplash: boolean = true
 

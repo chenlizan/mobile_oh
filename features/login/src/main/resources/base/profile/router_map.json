@@ -1,5 +1,20 @@
 {
   "routerMap": [
-
+    {
+      "name": "accountActivation",
+      "pageSourceFile": "src/main/ets/components/AccountActivation.ets",
+      "buildFunction": "AccountActivationBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "authLogin",
+      "pageSourceFile": "src/main/ets/components/AuthLogin.ets",
+      "buildFunction": "AuthLoginBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    }
   ]
 }

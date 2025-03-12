@@ -17,7 +17,7 @@ export struct AllSchool {
   @State isRefreshing: boolean = false
   @State searchValue: string = ''
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
-  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
 
   aboutToAppear(): void {
     this.handleSchoolList()

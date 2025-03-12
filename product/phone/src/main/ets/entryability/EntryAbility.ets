@@ -24,7 +24,7 @@ export default class EntryAbility extends UIAbility {
           return;
         }
         PersistentStorage.persistProp('globalPageIndex', RouterConstants.AGREEMENT_PAGE_URL);
-        PersistentStorage.persistProp('preferenceStorage', new PreferenceStorage());
+        PersistentStorage.persistProp('PreferenceStorage', new PreferenceStorage());
         font.registerFont({
           familyName: 'IconFont',
           familySrc: $rawfile('iconfont.ttf')

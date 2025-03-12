@@ -4,7 +4,7 @@ import { PreferenceStorage, RouterConstants, SelectSpace } from "@xy/basic";
 @Component
 export struct IdentityPage {
   @Link globalPageIndex: string;
-  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
 
   handleSelect = async () => {
     this.preferenceStorage.selectSpace = {

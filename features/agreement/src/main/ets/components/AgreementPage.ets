@@ -5,7 +5,7 @@ import { common } from "@kit.AbilityKit";
 @Component
 export struct AgreementPage {
   @Link globalPageIndex: string;
-  @StorageLink('preferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @State showWeb: boolean = false
   @State webUrl: string = ''
   controller: webview.WebviewController = new webview.WebviewController();
@@ -126,7 +126,7 @@ export struct AgreementPage {
         .width('100%')
       }
       .height('100%')
-      .backgroundColor(Color.Black)
+      .backgroundColor('#34000000')
 
     }
   }
