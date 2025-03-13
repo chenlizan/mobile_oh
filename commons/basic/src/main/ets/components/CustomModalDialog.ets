@@ -57,6 +57,7 @@ export struct CustomModalDialog {
       onCloseBtn: this.onCloseBtn
 
     }),
+    autoCancel: false,
     customStyle: true,
     isModal: this.isModal,
   })
@@ -112,9 +113,10 @@ struct CustomModalDialogView {
             top: { anchor: "__container__", align: VerticalAlign.Top },
             right: { anchor: "__container__", align: HorizontalAlign.End },
           })
-          .padding({ top: 10, right: 12 })
+          .padding({ top: 12, right: 12 })
         }
-        .height(60)
+        .flexBasis('auto')
+        .height(42)
       }
 
       Row() {
@@ -130,7 +132,7 @@ struct CustomModalDialogView {
       .alignItems(VerticalAlign.Center)
 
       if (typeof this.contentBuilder === 'function') {
-        Row() {
+        Column() {
           this.contentBuilder()
         }
         .flexGrow(1)

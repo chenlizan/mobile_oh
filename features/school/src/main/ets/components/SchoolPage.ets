@@ -1,6 +1,8 @@
 import _ from "@wolfx/lodash";
 import {
   Api_Context,
+  CCApi,
+  ccApiPost,
   getApiHostDomain,
   isJSON,
   ObjectOption,
@@ -10,6 +12,7 @@ import {
   School,
   xyApiPost
 } from "@xy/basic";
+import { promptAction } from "@kit.ArkUI";
 
 @Component
 export struct SchoolPage {
@@ -27,8 +30,18 @@ export struct SchoolPage {
 
   handleSelect(schoolData: School) {
     this.preferenceStorage.school = schoolData;
-    this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
     this.Api_Context = new Api_Context(schoolData.domain)
+    this.getDesEncryptKey(['1', '2', '5', '6'])
+  }
+
+  async getDesEncryptKey(params: Array<string>) {
+    const response = await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.queryDesEncryptKey, params)
+    if (response.code === 200) {
+      this.preferenceStorage.des_encrypt_key = response.result as Array<string>
+      this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
+    } else {
+      this.getDesEncryptKey(['1', '2', '5', '6'])
+    }
   }
 
   async handleSchoolList(cb?: () => void) {

@@ -26,7 +26,7 @@ interface Token {
   refresh_token_state?: string
 }
 
-export type PARAMS = Record<string, string | number | boolean | undefined | object> | Array<string>
+export type PARAMS = Record<string, string | number | boolean | undefined | null | object> | Array<string>
 
 const enhancedFetch = async (url: string, options?: Options) => {
   const httpRequest = http.createHttp();

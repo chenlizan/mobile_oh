@@ -5,7 +5,8 @@
     "@wolfx/lodash": "^4.17.21-rc.2",
     "@open/qs": "^1.0.0",
     "@ohos/base64": "^2.0.1",
-    "@ohos/crypto-js": "^2.0.4"
+    "@ohos/crypto-js": "^2.0.4",
+    "pinyin-pro": "^3.18.3"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.19",

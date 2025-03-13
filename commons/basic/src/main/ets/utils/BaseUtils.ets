@@ -1,8 +1,24 @@
 import _ from "@wolfx/lodash";
 import { CryptoJS } from '@ohos/crypto-js'
+import { pinyin } from 'pinyin-pro';
 import { promptAction } from "@kit.ArkUI";
 import { PARAMS } from "./EnhancedFetch";
 import { ObjectUtil, ObjectOption } from "./ObjectUtil";
+
+interface VL {
+  code: string,
+  roleCode: string,
+  roleLevel: number,
+  roleDomainScopeName: string,
+  roleDepartmentList: VL[],
+  roleName: string,
+  roleScopeName: string,
+  school: VL,
+  schoolId: string,
+  schoolInfo: VL,
+  schoolName: string,
+  userRoleInfos: VL[]
+}
 
 export const isJSON = (str: string): boolean => {
   try {
@@ -127,18 +143,6 @@ export const getIdentityList = (userInfo: object) => {
   const manageSpaces: PARAMS[] = [];
   const _userInfo = new ObjectUtil(userInfo as ObjectOption<never>)
 
-  interface VL {
-    roleCode: string,
-    roleLevel: number,
-    roleDomainScopeName: string,
-    roleDepartmentList: VL[],
-    roleName: string,
-    roleScopeName: string,
-    schoolId: string,
-    schoolInfo: VL,
-    schoolName: string,
-    userRoleInfos: VL[]
-  }
 
   _.forEach(_userInfo.getValue('platformUserRoleInfos') ?? [], (info: VL) => {
     manageSpaces.push({
@@ -204,3 +208,24 @@ export const getIdentityList = (userInfo: object) => {
   });
   return manageSpaces;
 };
+
+export const compareByPinyin = (a: string, b: string) => {
+  return pinyin(a, { toneType: 'none' }).localeCompare(
+    pinyin(b, { toneType: 'none' }),
+  );
+};
+
+export const sortByPinyin = (data: Array<never>, path: string) => {
+  return data.sort((a, b): number => {
+    return compareByPinyin(_.get(a, path, ''), _.get(b, path, ''));
+  });
+};
+
+export const getLoginAccounts =
+  (accounts: Array<never>, school_code: number | string) => {
+    const rows = sortByPinyin(
+      _.sortBy(accounts, 'loginName'),
+      'school.displayName',
+    );
+    return _.filter(rows, (item: Record<string, Record<string, string>>) => item.school.code === school_code)
+  };

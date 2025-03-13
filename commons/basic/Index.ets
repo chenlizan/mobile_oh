@@ -45,6 +45,7 @@ export { SelectSpace } from './src/main/ets/model/SelectSpaceModel'
 export { School } from './src/main/ets/model/SchoolModel'
 
 export { isJSON,
+  getLoginAccounts,
   getApiHostDomain,
   checkUserName,
   checkPassWord,
