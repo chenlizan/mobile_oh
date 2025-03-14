@@ -39,7 +39,7 @@ export struct CustomField {
       TextInput({ text: $$this.value, placeholder: this.placeholder })
         .enabled(!this.disabled)
         .borderRadius(0)
-        .backgroundColor(this.disabled ? '#33dfe3ea' : Color.White)
+        .backgroundColor(this.disabled ? '#00ffffff' : Color.White)
         .placeholderColor('#99999999')
         .fontColor('#999999')
         .type(this.inputType)
@@ -47,7 +47,7 @@ export struct CustomField {
           this.onChange(this.value)
         })
     }
-    .backgroundColor(this.disabled ? '#b2dfe3ea' : Color.White)
+    .backgroundColor(this.disabled ? '#4ddfe3ea' : Color.White)
     .borderColor('#dfe3ea')
     .borderRadius(4)
     .borderWidth(1)

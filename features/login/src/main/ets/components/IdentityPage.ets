@@ -27,7 +27,7 @@ export struct IdentityPage {
             .fontWeight(FontWeight.Bold)
           Button('确定', { stateEffect: true, type: ButtonType.Capsule })
             .width('100%')
-            .height('40px')
+            .height(40)
             .onClick(this.handleSelect)
         }
         .width('100%')

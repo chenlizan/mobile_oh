@@ -1,9 +1,10 @@
 export interface School {
-  code: number| string
-  real_code: number| string
+  id?: string
+  code: number | string
+  real_code: number | string
   name: string
   logo: string
-  banner_name:string
+  banner_name: string
   banner_icon: string
   domain: string
   access_date: string

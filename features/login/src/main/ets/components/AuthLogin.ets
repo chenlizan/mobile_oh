@@ -1,11 +1,81 @@
-import { CustomField, IconConstants, PreferenceStorage } from "@xy/basic"
+import {
+  Api_Context,
+  CCApi,
+  ccApiPost,
+  checkPassWord,
+  checkUserName,
+  CustomField,
+  encryptDes,
+  getIdentityList,
+  IconConstants,
+  ObjectOption,
+  ObjectUtil,
+  PreferenceStorage
+} from "@xy/basic"
+import { LoginType } from "./LoginPage";
+import { LoginRemindModal } from "./LoginRemindModal";
+
 
 @Component
 export struct AuthLogin {
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @State school: string | undefined = this.preferenceStorage?.school?.name
+  @State school_id: string | undefined = this.preferenceStorage?.school?.id
+  @State remindDialogVisible: boolean = false
   @State username: string = ''
   @State password: string = ''
+  @State login_info: ObjectUtil<never> = new ObjectUtil({})
+
+  async handleLogin() {
+    if (!checkUserName(this.username)) {
+      return;
+    }
+    if (!checkPassWord(this.password)) {
+      return;
+    }
+
+    const response = await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.unifiedCheckInfraLogin,
+      {
+        'loginType': LoginType.Id_Auth,
+        'weekNoLoginStatus': true,
+        'schoolId': this.school_id,
+        'password': encryptDes(this.password, this.preferenceStorage?.des_encrypt_key?.[2] ?? ''),
+        'loginName': encryptDes(this.username, this.preferenceStorage?.des_encrypt_key?.[3] ?? ''),
+      },
+      {
+        'mobile-device-id': '',
+        'mobile-brand': '',
+        'mobile-model': '',
+      })
+    if (response.code === 200) {
+      this.login_info = new ObjectUtil(response.result as ObjectOption<never>)
+      this.login_info.setValue('access_token', this.login_info.getValue('token'))
+      this.login_info.setValue('refresh_token', this.login_info.getValue('refreshToken'))
+
+      if (!this.login_info.getValue('access_token')) {
+        this.login_info.setValue('needActive', this.login_info.getValue('isUnSafePassword'))
+
+        if (!this.login_info.getValue('phoneStatus') ||
+        this.login_info.getValue('isUnSafePassword') ||
+        this.login_info.getValue('passwordExpiredStatus')) {
+          this.remindDialogVisible = true
+        }
+        return
+      } else {
+        this.savaLoginInfo()
+      }
+    }
+  }
+
+  savaLoginInfo() {
+    const manageSpaces = getIdentityList(this.login_info)
+    this.preferenceStorage.access_token = this.login_info.getValue('access_token')
+    this.preferenceStorage.refreshToken = this.login_info.getValue('refresh_token')
+    this.preferenceStorage.refresh_token_state = '0'
+    this.preferenceStorage.need_select_space = manageSpaces.length > 0
+  }
 
   build() {
     NavDestination() {
@@ -31,13 +101,31 @@ export struct AuthLogin {
           .width('100%')
           .borderRadius(4)
           .backgroundColor('#40A9FF')
-        // .onClick(() => this.handleLogin())
+          .onClick(() => this.handleLogin())
       }
       .height(240)
       .margin({
         top: 50, left: 24, right: 24
       })
       .justifyContent(FlexAlign.SpaceBetween)
+
+      LoginRemindModal({
+        login_info: $login_info,
+        visible: $remindDialogVisible,
+        onActive: () => {
+          this.remindDialogVisible = false
+          this.pageInfos.pushPath({
+            name: 'accountActivation',
+            param: JSON.stringify({ infraAccessToken: this.login_info.getValue('infraAccessToken') })
+          })
+        },
+        onLogin: () => {
+          this.savaLoginInfo()
+        },
+        onDeal: () => {
+          //去处理
+        }
+      })
     }
     .title('统一身份认证')
   }

@@ -48,7 +48,7 @@ struct Index {
         schoolName: '',
       } as SelectSpace
 
-      this.globalPageIndex = RouterConstants.MAIN_PAGE_URL
+      this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
     }
   };
 
@@ -111,9 +111,9 @@ struct Index {
           SchoolPage({ globalPageIndex: this.globalPageIndex })
         } else if (this.globalPageIndex === RouterConstants.LOGIN_PAGE_URL) {
           LoginPage({ globalPageIndex: this.globalPageIndex })
-        } else if (this.globalPageIndex = RouterConstants.MAIN_PAGE_URL) {
+        } else if (this.globalPageIndex === RouterConstants.MAIN_PAGE_URL) {
           MainPage({ globalPageIndex: this.globalPageIndex })
-        } else if (this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL) {
+        } else if (this.globalPageIndex === RouterConstants.IDENTITY_PAGE_URL) {
           IdentityPage({ globalPageIndex: this.globalPageIndex })
         }
       }

@@ -21,6 +21,13 @@ import {
 import { LoginAccountModal } from './LoginAccountModal';
 import { LoginRemindModal } from './LoginRemindModal';
 
+export class LoginType {
+  static readonly Id_Card: number = 1 // 账号密码  废弃
+  static readonly Phone: number = 2 // 手机号 废弃
+  static readonly Id_Auth: number = 3 // 统一身份认证
+  static readonly Default: number = 4 // 账号密码&手机号
+}
+
 
 @Component
 export struct LoginPage {
@@ -65,6 +72,11 @@ export struct LoginPage {
         })
       const school_info_obj = new ObjectUtil(school_info ?? {} as ObjectOption<never>)
       this.school_id = school_info_obj.getValue('id') as string
+      if (this.preferenceStorage) {
+        if (this.preferenceStorage.school) {
+          this.preferenceStorage.school.id = this.school_id
+        }
+      }
     }
   }
 
@@ -84,7 +96,7 @@ export struct LoginPage {
 
     const response = await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.unifiedCheckInfraLogin,
       {
-        'loginType': 4,
+        'loginType': LoginType.Default,
         'weekNoLoginStatus': true,
         'schoolId': this.school_id,
         'password': encryptDes(this.password, this.preferenceStorage?.des_encrypt_key?.[2] ?? ''),
@@ -102,7 +114,6 @@ export struct LoginPage {
       this.login_info.setValue('refresh_token', this.login_info.getValue('refreshToken'))
 
       if (!_.isEmpty(this.login_info.getValue('accounts'))) {
-        // 如果用户手机号绑定多账号，需要选择账号重新登录
         const accounts = getLoginAccounts(
           this.login_info.getValue('accounts') ?? [],
           this.preferenceStorage?.school?.code as number | string,
@@ -206,6 +217,7 @@ export struct LoginPage {
           .width('100%')
           .margin({ bottom: 12 })
           .justifyContent(FlexAlign.End)
+          .onClick(() => this.pageInfos.pushPath({ name: 'resetPassword' }))
 
           CustomDivider({ text: '其他登录方式' })
 
@@ -225,16 +237,6 @@ export struct LoginPage {
               this.pageInfos.pushPath({ name: 'authLogin' })
             })
           }
-
-          Button('测试1')
-            .onClick(() => {
-              this.accountDialogVisible = true
-            })
-
-          Button('测试2')
-            .onClick(() => {
-              this.remindDialogVisible = true
-            })
 
         }
         .height('60%')

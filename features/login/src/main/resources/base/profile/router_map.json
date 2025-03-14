@@ -15,6 +15,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "resetPassword",
+      "pageSourceFile": "src/main/ets/components/ResetPassword.ets",
+      "buildFunction": "ResetPasswordBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

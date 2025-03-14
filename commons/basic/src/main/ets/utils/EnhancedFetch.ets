@@ -18,6 +18,7 @@ interface ApiResponse {
 interface CCApiResponse {
   code?: number
   result?: PARAMS | Token | Array<PARAMS>
+  msg?: string
 }
 
 interface Token {

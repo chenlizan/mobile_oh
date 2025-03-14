@@ -165,7 +165,6 @@ export struct AccountActivation {
             .fontSize(32)
             .fontWeight(FontWeight.Bold)
         }
-
         .width('100%')
         .justifyContent(FlexAlign.Start)
 
@@ -199,7 +198,7 @@ export struct AccountActivation {
           .backgroundColor('#40A9FF')
           .onClick(() => this.handleSubmit())
       }
-      .height('60%')
+      .height(360)
       .margin({
         left: 24, right: 24
       })
@@ -208,7 +207,7 @@ export struct AccountActivation {
       CustomModalDialog({
         visible: $accountDialogVisible,
         title: '提示',
-        dialogHeight: '50%',
+        dialogHeight: 360,
         contentBuilder: () => this.BuildModalContent(this.accounts),
         footerBuilder: () => this.BuildModalFooter(),
       })

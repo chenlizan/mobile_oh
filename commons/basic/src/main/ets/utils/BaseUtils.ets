@@ -83,6 +83,28 @@ export function checkPassWordSame(password1: string, password2: string, placehol
   return true;
 }
 
+// 验证手机号不为空
+export function checkPhone(phone: string, placeholder: string = '手机号'): boolean {
+  if (phone === null || phone === '' || phone === 'undefined') {
+    promptAction.showToast({ alignment: Alignment.Center, message: `请输入${placeholder}` });
+    return false;
+  }
+  return checkNoSpace(phone, placeholder);
+}
+
+// 验证验证码不能为空
+export function checkCode(code: string) {
+  if (_.isEmpty(code)) {
+    promptAction.showToast({ alignment: Alignment.Center, message: `请输入手机验证码` });
+    return false;
+  }
+  if (!/^\d{6}$/.test(code)) {
+    promptAction.showToast({ alignment: Alignment.Center, message: `验证码不正确` });
+    return false;
+  }
+  return true;
+}
+
 //密码中不能包括中文字符
 export function checkNoChinese(value: string, placeholder = '密码') {
   const regPassword = /[\u4e00-\u9fa5]/;
@@ -111,6 +133,11 @@ export const verifyPassWord = (password: string) => {
     return false;
   }
   return true;
+};
+
+export const verifyNameIsMobile = (name: string) => {
+  const mobileRegex = /^1[3,4,5,6,7,8,9]\d{9}$/;
+  return mobileRegex.test(name);
 };
 
 const BASE_IV = CryptoJS.enc.Utf8.parse('12345678')
@@ -209,18 +236,27 @@ export const getIdentityList = (userInfo: object) => {
   return manageSpaces;
 };
 
+/**
+ * pinyin比较函数
+ */
 export const compareByPinyin = (a: string, b: string) => {
   return pinyin(a, { toneType: 'none' }).localeCompare(
     pinyin(b, { toneType: 'none' }),
   );
 };
 
+/**
+ * 按比较函数进行排序
+ */
 export const sortByPinyin = (data: Array<never>, path: string) => {
   return data.sort((a, b): number => {
     return compareByPinyin(_.get(a, path, ''), _.get(b, path, ''));
   });
 };
 
+/**
+ * 双重排序，先根据loginName，再根据学校名排序
+ */
 export const getLoginAccounts =
   (accounts: Array<never>, school_code: number | string) => {
     const rows = sortByPinyin(
