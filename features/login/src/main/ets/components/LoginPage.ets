@@ -21,13 +21,12 @@ import {
 import { LoginAccountModal } from './LoginAccountModal';
 import { LoginRemindModal } from './LoginRemindModal';
 
-export class LoginType {
-  static readonly Id_Card: number = 1 // 账号密码  废弃
-  static readonly Phone: number = 2 // 手机号 废弃
-  static readonly Id_Auth: number = 3 // 统一身份认证
-  static readonly Default: number = 4 // 账号密码&手机号
+export enum LoginType {
+  Id_Card = 1, // 账号密码  废弃
+  Phone = 2, // 手机号 废弃
+  Id_Auth = 3, // 统一身份认证
+  Default = 4 // 账号密码&手机号
 }
-
 
 @Component
 export struct LoginPage {
@@ -77,12 +76,6 @@ export struct LoginPage {
           this.preferenceStorage.school.id = this.school_id
         }
       }
-    }
-  }
-
-  async currentUserInfo() {
-    const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.getUserInfo)
-    if (response.code === 200) {
     }
   }
 
@@ -144,11 +137,14 @@ export struct LoginPage {
   }
 
   savaLoginInfo() {
-    const manageSpaces = getIdentityList(this.login_info)
     this.preferenceStorage.access_token = this.login_info.getValue('access_token')
     this.preferenceStorage.refreshToken = this.login_info.getValue('refresh_token')
     this.preferenceStorage.refresh_token_state = '0'
-    this.preferenceStorage.need_select_space = manageSpaces.length > 0
+    this.preferenceStorage.selectSpace = {
+      type: 'teaching',
+      title: '教学空间'
+    }
+    this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
   }
 
   build() {
@@ -234,12 +230,18 @@ export struct LoginPage {
                 .fontColor('#999999')
             }
             .onClick(() => {
-              this.pageInfos.pushPath({ name: 'authLogin' })
+              this.pageInfos.pushPath({
+                name: 'authLogin', onPop: (popInfo: PopInfo) => {
+                  if (popInfo.result === RouterConstants.IDENTITY_PAGE_URL) {
+                    this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
+                  }
+                }
+              })
             })
           }
 
         }
-        .height('60%')
+        .height(420)
         .margin({
           left: 24, right: 24
         })

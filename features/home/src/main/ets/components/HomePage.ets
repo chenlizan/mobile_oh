@@ -1,16 +1,17 @@
+import { RouterConstants, } from "@xy/basic";
+
 @Component
 export struct HomePage {
-  @State message: string = 'Home';
+  @Link globalPageIndex: string;
 
   build() {
-    Row() {
-      Column() {
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-      }
-      .width('100%')
+    Column() {
+      Button('空间选择')
+        .onClick(() => {
+          this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
+        })
     }
+    .width('100%')
     .height('100%')
   }
 }

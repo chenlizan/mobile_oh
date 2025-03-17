@@ -23,6 +23,14 @@ export struct AppIcon {
    */
   @Prop iconColor: ResourceColor = Color.Black;
   /**
+   * 背景色
+   */
+  @Prop iconBackgroundColor: ResourceColor = '';
+  /**
+   * 边角
+   */
+  @Prop iconRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
+  /**
    * 点击按钮
    */
   onClickBtn: (event: ClickEvent) => void = () => {
@@ -33,6 +41,8 @@ export struct AppIcon {
       .fontFamily('IconFont')
       .fontSize(this.iconSize)
       .fontColor(this.iconColor)
+      .backgroundColor(this.iconBackgroundColor)
+      .borderRadius(this.iconRadius)
       .margin(this.iconMargin)
       .padding(this.iconPadding)
       .onClick(this.onClickBtn)

@@ -33,6 +33,10 @@ export struct ResetPassword {
   @State accounts: Array<PARAMS> = []
   private interval: number = 0
 
+  aboutToDisappear() {
+    clearInterval(this.interval);
+  }
+
   async getMobileValidCode() {
     const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.infraSendMobileCode,
       { 'phone': this.phone, },

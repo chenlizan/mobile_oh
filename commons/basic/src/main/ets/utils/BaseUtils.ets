@@ -166,12 +166,10 @@ export const encryptDes = (message: string, key: string): string | undefined => 
 };
 
 // 获取身份列表
-export const getIdentityList = (userInfo: object) => {
+export const getIdentityList = (userInfo: ObjectUtil<never>) => {
   const manageSpaces: PARAMS[] = [];
-  const _userInfo = new ObjectUtil(userInfo as ObjectOption<never>)
 
-
-  _.forEach(_userInfo.getValue('platformUserRoleInfos') ?? [], (info: VL) => {
+  _.forEach(userInfo.getValue('platformUserRoleInfos') ?? [], (info: VL) => {
     manageSpaces.push({
       'type': 'manager',
       'role': info.roleName,
@@ -179,7 +177,7 @@ export const getIdentityList = (userInfo: object) => {
     });
   });
 
-  _.forEach(_userInfo.getValue('schoolRoleInfos'), (info: VL) => {
+  _.forEach(userInfo.getValue('schoolRoleInfos'), (info: VL) => {
     const _schoolId = info?.schoolId
     const _schoolName = info?.schoolInfo?.schoolName
 

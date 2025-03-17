@@ -1,4 +1,4 @@
-import { PreferenceStorage, RouterConstants } from "@xy/basic";
+import { Api_Context, PreferenceStorage, RouterConstants } from "@xy/basic";
 import { webview } from "@kit.ArkWeb";
 import { common } from "@kit.AbilityKit";
 
@@ -74,14 +74,14 @@ export struct AgreementPage {
           Span('《小雅用户服务协议》')
             .fontSize(14)
             .fontColor(Color.Blue)
-            .onClick(() => this.showAgreement('https://www.ai-augmented.com/user-agreement.html'))
+            .onClick(() => this.showAgreement(Api_Context.getUserAgreement()))
           Span('和')
             .fontColor(Color.Grey)
             .fontSize(14)
           Span('《隐私政策》')
             .fontSize(14)
             .fontColor(Color.Blue)
-            .onClick(() => this.showAgreement('https://www.ai-augmented.com/privacy-agreement.html'))
+            .onClick(() => this.showAgreement(Api_Context.getPrivacyPolicy()))
           Span('相关内容，以便了解我们收集、使用、存储信息及，对信息的保护措施。')
             .fontSize(14)
             .fontColor(Color.Grey)

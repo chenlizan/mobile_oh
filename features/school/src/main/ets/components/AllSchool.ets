@@ -87,10 +87,6 @@ export struct AllSchool {
     }
   }
 
-  handleRefresh() {
-    this.handleSchoolList()
-  }
-
   @Builder
   BuildSchoolList() {
     Refresh({ refreshing: $$this.isRefreshing }) {

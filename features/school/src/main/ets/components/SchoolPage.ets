@@ -94,10 +94,6 @@ export struct SchoolPage {
     }
   }
 
-  handleRefresh() {
-    this.handleSchoolList()
-  }
-
   @Builder
   BuildSchoolList() {
     Refresh({ refreshing: $$this.isRefreshing }) {

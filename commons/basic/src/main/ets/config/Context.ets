@@ -79,11 +79,11 @@ export class Api_Context {
     return this.domain.indexOf('stg-') > 1
   }
 
-  getUserAgreement() {
+  static getUserAgreement() {
     return 'https://www.ai-augmented.com/user-agreement.html';
   }
 
-  getPrivacyPolicy() {
+  static getPrivacyPolicy() {
     return 'https://www.ai-augmented.com/privacy-agreement.html';
   }
 

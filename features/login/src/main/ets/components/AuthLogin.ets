@@ -10,7 +10,8 @@ import {
   IconConstants,
   ObjectOption,
   ObjectUtil,
-  PreferenceStorage
+  PreferenceStorage,
+  RouterConstants
 } from "@xy/basic"
 import { LoginType } from "./LoginPage";
 import { LoginRemindModal } from "./LoginRemindModal";
@@ -70,11 +71,10 @@ export struct AuthLogin {
   }
 
   savaLoginInfo() {
-    const manageSpaces = getIdentityList(this.login_info)
     this.preferenceStorage.access_token = this.login_info.getValue('access_token')
     this.preferenceStorage.refreshToken = this.login_info.getValue('refresh_token')
     this.preferenceStorage.refresh_token_state = '0'
-    this.preferenceStorage.need_select_space = manageSpaces.length > 0
+    this.pageInfos.pop(RouterConstants.IDENTITY_PAGE_URL)
   }
 
   build() {

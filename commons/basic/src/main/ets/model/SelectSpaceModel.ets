@@ -5,4 +5,5 @@ export class  SelectSpace {
   role?: string
   schoolId?: string
   schoolName?: string
+  roleSpace?: string
 }

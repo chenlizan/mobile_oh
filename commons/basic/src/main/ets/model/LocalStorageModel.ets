@@ -1,8 +1,9 @@
 import { School } from "./SchoolModel"
+import { SelectSpace } from "./SelectSpaceModel"
 
 export class PreferenceStorage {
   school?: School | null
-  selectSpace?: object | null
+  selectSpace?: SelectSpace | null
   access_token?: string
   refreshToken?: string
   refresh_token_state?: string
