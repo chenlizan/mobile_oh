@@ -6,12 +6,12 @@ import {
   checkPassWordSame,
   CustomField,
   CustomModalDialog,
+  CustomToast,
   IconConstants,
   ObjectUtil,
   PARAMS,
   verifyPassWord
 } from "@xy/basic";
-import { promptAction } from "@kit.ArkUI";
 
 interface Account {
   loginName: string;
@@ -59,19 +59,19 @@ export struct AccountActivation {
         "authToken": token,
       })
     if (response.code === 200) {
-      promptAction.showToast({ alignment: Alignment.Center, message: `账号激活成功` });
+      CustomToast.toast_success(`账号激活成功`)
       this.pageInfos.pop()
     } else if (response.code === 5100051) {
-      promptAction.showToast({ alignment: Alignment.Center, message: `真实姓名与账号不符` });
+      CustomToast.toast_fail(`真实姓名与账号不符`)
     } else {
-      promptAction.showToast({ alignment: Alignment.Center, message: `密码重置失败` });
+      CustomToast.toast_fail(`密码重置失败`)
     }
 
   }
 
   async handleSubmit() {
     if (!_.trim(this.username)) {
-      promptAction.showToast({ alignment: Alignment.Center, message: '请输入真实姓名' });
+      CustomToast.toast_fail('请输入真实姓名')
       return;
     }
 
@@ -91,8 +91,9 @@ export struct AccountActivation {
       } else {
         this.appActivationByAT(this.password1, this.username, this.param.getValue('infraAccessToken'));
       }
+    } else {
+      CustomToast.toast_fail('真实姓名与账号不符')
     }
-
   }
 
   aboutToAppear(): void {

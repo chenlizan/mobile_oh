@@ -1,5 +1,7 @@
 import { CustomList, CustomListItem } from "@xy/basic";
+import { common } from "@kit.AbilityKit";
 import { TextModifier } from "@kit.ArkUI";
+import { updateManager } from "@kit.StoreKit";
 
 @Component
 export struct About {
@@ -22,7 +24,10 @@ export struct About {
 
       CustomList() {
         CustomListItem({
-          text: "检查版本更新"
+          text: "检查版本更新",
+          onClickBtn: async () => {
+            updateManager.showUpdateDialog(getContext() as common.UIAbilityContext)
+          }
         })
         // CustomListItem({
         //   text: "清除缓存"

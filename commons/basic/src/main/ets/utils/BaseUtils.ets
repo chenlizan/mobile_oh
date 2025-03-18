@@ -1,9 +1,9 @@
 import _ from "@wolfx/lodash";
 import { CryptoJS } from '@ohos/crypto-js'
 import { pinyin } from 'pinyin-pro';
-import { promptAction } from "@kit.ArkUI";
 import { PARAMS } from "./EnhancedFetch";
-import { ObjectUtil, ObjectOption } from "./ObjectUtil";
+import { ObjectUtil } from "./ObjectUtil";
+import { CustomToast } from "../components/CustomToast";
 
 interface VL {
   code: string,
@@ -43,7 +43,7 @@ export const getApiHostDomain = (url: string): string => {
 export function checkNoSpace(value: string, placeholder: string = '密码') {
   const regPassword = /^[^\s]*$/;
   if (!regPassword.test(value)) {
-    promptAction.showToast({ alignment: Alignment.Center, message: `${placeholder}禁止输入空格` });
+    CustomToast.toast_fail(`${placeholder}禁止输入空格`)
     return false;
   }
   return true;
@@ -52,7 +52,7 @@ export function checkNoSpace(value: string, placeholder: string = '密码') {
 // 验证用户名不为空
 export function checkUserName(name: string, placeholder: string = '手机号/账号'): boolean {
   if (!_.trim(name)) {
-    promptAction.showToast({ alignment: Alignment.Center, message: `请输入${placeholder}` });
+    CustomToast.toast_fail(`请输入${placeholder}`)
     return false;
   }
 
@@ -62,7 +62,7 @@ export function checkUserName(name: string, placeholder: string = '手机号/账
 // 验证密码不为空
 export function checkPassWord(password: string, placeholder: string = '密码'): boolean {
   if (password === null || password === '' || password === 'undefined') {
-    promptAction.showToast({ alignment: Alignment.Center, message: `请输入${placeholder}` });
+    CustomToast.toast_fail(`请输入${placeholder}`)
     return false;
   }
   return checkNoSpace(password, placeholder);
@@ -77,7 +77,7 @@ export function checkPassWordSame(password1: string, password2: string, placehol
     return false;
   }
   if (password1 !== password2) {
-    promptAction.showToast({ alignment: Alignment.Center, message: `${placeholder}与首次输入的不一致` });
+    CustomToast.toast_fail(`${placeholder}与首次输入的不一致`)
     return false;
   }
   return true;
@@ -86,7 +86,7 @@ export function checkPassWordSame(password1: string, password2: string, placehol
 // 验证手机号不为空
 export function checkPhone(phone: string, placeholder: string = '手机号'): boolean {
   if (phone === null || phone === '' || phone === 'undefined') {
-    promptAction.showToast({ alignment: Alignment.Center, message: `请输入${placeholder}` });
+    CustomToast.toast_fail(`请输入${placeholder}`)
     return false;
   }
   return checkNoSpace(phone, placeholder);
@@ -95,11 +95,11 @@ export function checkPhone(phone: string, placeholder: string = '手机号'): bo
 // 验证验证码不能为空
 export function checkCode(code: string) {
   if (_.isEmpty(code)) {
-    promptAction.showToast({ alignment: Alignment.Center, message: `请输入手机验证码` });
+    CustomToast.toast_fail(`请输入手机验证码`)
     return false;
   }
   if (!/^\d{6}$/.test(code)) {
-    promptAction.showToast({ alignment: Alignment.Center, message: `验证码不正确` });
+    CustomToast.toast_fail(`验证码不正确`)
     return false;
   }
   return true;
@@ -109,7 +109,7 @@ export function checkCode(code: string) {
 export function checkNoChinese(value: string, placeholder = '密码') {
   const regPassword = /[\u4e00-\u9fa5]/;
   if (regPassword.test(value)) {
-    promptAction.showToast({ alignment: Alignment.Center, message: `${placeholder}中不能包括中文字符` });
+    CustomToast.toast_fail(`${placeholder}中不能包括中文字符`)
     return false;
   }
   return true;
@@ -126,10 +126,7 @@ export const verifyPassWord = (password: string) => {
   const regPassword =
     /^(?![A-Za-z]+$)(?![A-Z0-9]+$)(?![A-Z\W_]+$)(?![a-z0-9]+$)(?![a-z\W_]+$)(?![0-9\W_]+$)[A-Za-z0-9\W_]{8,18}$/;
   if (!regPassword.test(password)) {
-    promptAction.showToast({
-      alignment: Alignment.Center,
-      message: '密码长度8-18，由3种及以上字符类型（大写字母/小写字母/数字/特殊字符）组成'
-    });
+    CustomToast.toast_fail('密码长度8-18，由3种及以上字符类型（大写字母/小写字母/数字/特殊字符）组成')
     return false;
   }
   return true;

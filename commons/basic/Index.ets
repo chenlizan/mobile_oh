@@ -38,6 +38,8 @@ export { UserInfoModel } from './src/main/ets/model/UserInfoModel'
 
 export { AppIcon } from './src/main/ets/components/AppIcon'
 
+export { CustomToast } from './src/main/ets/components/CustomToast'
+
 export { PreferenceStorage } from './src/main/ets/model/LocalStorageModel'
 
 export { SelectSpace } from './src/main/ets/model/SelectSpaceModel'

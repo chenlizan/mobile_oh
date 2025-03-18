@@ -12,7 +12,6 @@ import {
   School,
   xyApiPost
 } from "@xy/basic";
-import { promptAction } from "@kit.ArkUI";
 
 @Component
 export struct SchoolPage {

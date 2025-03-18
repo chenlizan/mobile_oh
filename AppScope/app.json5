@@ -1,7 +1,7 @@
 {
   "app": {
-    "bundleName": "com.ccnu.myapplication",
-    "vendor": "example",
+    "bundleName": "com.ccnu.xiaoya",
+    "vendor": "ccnu",
     "versionCode": 1000000,
     "versionName": "1.0.0",
     "icon": "$media:app_icon",

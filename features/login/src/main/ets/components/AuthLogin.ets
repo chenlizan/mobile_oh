@@ -1,3 +1,4 @@
+import { deviceInfo } from "@kit.BasicServicesKit";
 import {
   Api_Context,
   CCApi,
@@ -5,8 +6,8 @@ import {
   checkPassWord,
   checkUserName,
   CustomField,
+  CustomToast,
   encryptDes,
-  getIdentityList,
   IconConstants,
   ObjectOption,
   ObjectUtil,
@@ -15,6 +16,7 @@ import {
 } from "@xy/basic"
 import { LoginType } from "./LoginPage";
 import { LoginRemindModal } from "./LoginRemindModal";
+import { TextModifier } from "@kit.ArkUI";
 
 
 @Component
@@ -37,6 +39,8 @@ export struct AuthLogin {
       return;
     }
 
+    CustomToast.toast_loading('登录中...')
+
     const response = await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.unifiedCheckInfraLogin,
       {
         'loginType': LoginType.Id_Auth,
@@ -46,11 +50,12 @@ export struct AuthLogin {
         'loginName': encryptDes(this.username, this.preferenceStorage?.des_encrypt_key?.[3] ?? ''),
       },
       {
-        'mobile-device-id': '',
-        'mobile-brand': '',
-        'mobile-model': '',
+        'mobile-device-id': deviceInfo.serial,
+        'mobile-brand': deviceInfo.brand,
+        'mobile-model': deviceInfo.productModel,
       })
     if (response.code === 200) {
+      CustomToast.hide()
       this.login_info = new ObjectUtil(response.result as ObjectOption<never>)
       this.login_info.setValue('access_token', this.login_info.getValue('token'))
       this.login_info.setValue('refresh_token', this.login_info.getValue('refreshToken'))
@@ -127,7 +132,9 @@ export struct AuthLogin {
         }
       })
     }
-    .title('统一身份认证')
+    .title('统一身份认证', {
+      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
+    })
   }
 }
 

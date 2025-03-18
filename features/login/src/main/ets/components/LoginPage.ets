@@ -1,4 +1,5 @@
 import _ from '@wolfx/lodash'
+import { deviceInfo } from '@kit.BasicServicesKit';
 import {
   RouterConstants,
   Api_Context,
@@ -15,8 +16,8 @@ import {
   encryptDes,
   ObjectUtil,
   ObjectOption,
-  getIdentityList,
   getLoginAccounts,
+  CustomToast,
 } from '@xy/basic';
 import { LoginAccountModal } from './LoginAccountModal';
 import { LoginRemindModal } from './LoginRemindModal';
@@ -87,6 +88,8 @@ export struct LoginPage {
       return;
     }
 
+    CustomToast.toast_loading('登录中...')
+
     const response = await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.unifiedCheckInfraLogin,
       {
         'loginType': LoginType.Default,
@@ -97,11 +100,12 @@ export struct LoginPage {
         'xyAccountId': accountId,
       },
       {
-        'mobile-device-id': '',
-        'mobile-brand': '',
-        'mobile-model': '',
+        'mobile-device-id': deviceInfo.serial,
+        'mobile-brand': deviceInfo.brand,
+        'mobile-model': deviceInfo.productModel,
       })
     if (response.code === 200) {
+      CustomToast.hide()
       this.login_info = new ObjectUtil(response.result as ObjectOption<never>)
       this.login_info.setValue('access_token', this.login_info.getValue('token'))
       this.login_info.setValue('refresh_token', this.login_info.getValue('refreshToken'))

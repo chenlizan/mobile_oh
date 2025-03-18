@@ -1,17 +1,51 @@
 import _ from '@wolfx/lodash'
-import { CustomList, CustomListItem, Api_Context, UserInfoModel, AppIcon, IconConstants, Avatar } from "@xy/basic";
 import { image } from '@kit.ImageKit';
+import {
+  CustomList,
+  CustomListItem,
+  Api_Context,
+  UserInfoModel,
+  AppIcon,
+  IconConstants,
+  Avatar,
+  ccApiGet,
+  CCApi,
+  CustomToast,
+  PreferenceStorage,
+  RouterConstants
+} from "@xy/basic";
 
-@Entry
 @Component
 export struct MinePage {
+  @Link globalPageIndex: string;
   @StorageLink('access_token') token: string = ''
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
 
-  async aboutToAppear() {
+  async handleLoginOut() {
+    CustomToast.toast_loading('退出登录中...')
+    setTimeout(async () => {
+      await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.logout)
+      this.preferenceStorage.access_token = undefined
+      this.preferenceStorage.refreshToken = undefined
+      this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
+      CustomToast.hide()
+    }, 4000)
   }
+
+  getSchools() {
+    let news: string[] = [];
+    _.forEach(this.userInfo.schools, (school: object) => {
+      const schoolInfo = (school as Record<string, Record<string, string>>).schoolInfo
+      const name = schoolInfo['schoolName']
+      if (name) {
+        news.push(name);
+      }
+    });
+    return news.join('，');
+  };
 
   @Builder
   BuildLeftIcon(src: image.PixelMap | ResourceStr | DrawableDescriptor) {
@@ -29,7 +63,7 @@ export struct MinePage {
             Column() {
               Avatar({ avatar: this.userInfo.avatar })
               Row() {
-                Text('高级用户')
+                Text((this.userInfo.fileCapacity as Record<string, string>).caseName)
                   .padding({
                     top: 4,
                     bottom: 4,
@@ -53,7 +87,7 @@ export struct MinePage {
                 .fontColor(Color.White)
                 .fontWeight(FontWeight.Bold)
                 .textAlign(TextAlign.Start)
-              Text('华中师范大学')
+              Text(this.getSchools())
                 .fontColor(Color.White)
                 .textAlign(TextAlign.Start)
             }
@@ -120,6 +154,7 @@ export struct MinePage {
           .width('94%')
           .backgroundColor('#fcbb34')
           .borderRadius(4)
+          .onClick(() => this.handleLoginOut())
       }
       .height(60)
       .justifyContent(FlexAlign.End)

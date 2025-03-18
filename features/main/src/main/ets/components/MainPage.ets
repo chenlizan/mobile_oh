@@ -45,7 +45,7 @@ export struct MainPage {
               $r('app.string.tab_bar_home'), 0))
 
             TabContent() {
-              MinePage()
+              MinePage({ globalPageIndex: this.globalPageIndex })
             }
             .tabBar(this.BuildTabs($r('app.media.tab_profile_active'), $r('app.media.tab_profile'),
               $r('app.string.tab_bar_mine'), 1))

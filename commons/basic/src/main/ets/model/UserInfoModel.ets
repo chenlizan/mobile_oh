@@ -59,13 +59,13 @@ export class UserInfoModel {
     return this._avatar
   }
 
-  private _schools: string = ''
+  private _schools: Array<object> = []
 
-  public set schools(value: string) {
+  public set schools(value: Array<object>) {
     this._schools = value
   }
 
-  public get schools(): string {
+  public get schools(): Array<object> {
     return this._schools
   }
 

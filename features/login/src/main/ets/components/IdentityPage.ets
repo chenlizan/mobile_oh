@@ -1,9 +1,11 @@
 import _ from "@wolfx/lodash";
+import { TextModifier } from "@kit.ArkUI";
 import {
   Api_Context,
   AppIcon,
   CCApi,
   ccApiGet,
+  CustomToast,
   getIdentityList,
   IconConstants,
   ObjectOption,
@@ -13,7 +15,6 @@ import {
   SelectSpace,
   UserInfoModel
 } from "@xy/basic";
-import { promptAction } from "@kit.ArkUI";
 
 @Component
 export struct IdentityPage {
@@ -91,7 +92,7 @@ export struct IdentityPage {
 
   handleSelect(space: SelectSpace) {
     if (space.type !== 'teaching') {
-      promptAction.showToast({ alignment: Alignment.Center, message: `移动端暂未开放${space.title}，请去web端查看。` });
+      CustomToast.toast_info(`移动端暂未开放${space.title}，请去web端查看。`)
       return;
     }
     this.preferenceStorage.selectSpace = space
@@ -116,11 +117,13 @@ export struct IdentityPage {
   build() {
     NavDestination() {
       Column() {
-        Text(`用户${this.userInfo.nickname}（${this.userInfo.realname}）在本系统中拥有多个角色，请选择一个角色进入相应的空间`)
-          .margin({ left: 16, right: 16, bottom: 8 })
-          .fontColor('#999999')
-          .fontSize(12)
-          .opacity(0.85)
+        if (this.userInfo.nickname && this.userInfo.realname) {
+          Text(`用户${this.userInfo.nickname}（${this.userInfo.realname}）在本系统中拥有多个角色，请选择一个角色进入相应的空间`)
+            .margin({ left: 16, right: 16, bottom: 8 })
+            .fontColor('#999999')
+            .fontSize(12)
+            .opacity(0.85)
+        }
         Refresh({ refreshing: $$this.isRefreshing }) {
           List() {
             ForEach(this.manageSpaces, (item: SelectSpace) => {
@@ -194,6 +197,8 @@ export struct IdentityPage {
       }
       .margin({ bottom: 30 })
     }
-    .title('我的小雅空间')
+    .title(this.userInfo.nickname ? '我的小雅空间' : null, {
+      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
+    })
   }
 }

@@ -1,3 +1,4 @@
+import _ from "@wolfx/lodash";
 import {
   Api_Context,
   CCApi,
@@ -12,10 +13,9 @@ import {
   encryptDes,
   PreferenceStorage,
   ccApiPost,
-  PARAMS
+  PARAMS,
+  CustomToast
 } from "@xy/basic"
-import { promptAction } from "@kit.ArkUI"
-import _ from "@wolfx/lodash";
 import { PhoneCheckModal } from "./PhoneCheckModal";
 
 @Component
@@ -42,9 +42,9 @@ export struct ResetPassword {
       { 'phone': this.phone, },
     )
     if (response.code === 200) {
-      promptAction.showToast({ alignment: Alignment.Center, message: `获取手机验证码成功` });
+      CustomToast.toast_success(`获取手机验证码成功`)
     } else {
-      promptAction.showToast({ alignment: Alignment.Center, message: response.msg });
+      CustomToast.toast_fail(response.msg as string);
     }
   }
 
@@ -79,7 +79,7 @@ export struct ResetPassword {
     }
 
     if (!verifyNameIsMobile(this.phone)) {
-      promptAction.showToast({ alignment: Alignment.Center, message: `该手机号无效，请核查` });
+      CustomToast.toast_info(`该手机号无效，请核查`)
       return;
     }
 
@@ -114,10 +114,11 @@ export struct ResetPassword {
       { 'phone': phone, 'password': password, 'code': code }
     )
     if (response.code === 200) {
-      promptAction.showToast({ alignment: Alignment.Center, message: `密码修改成功` });
+      CustomToast.toast_success(`密码修改成功`)
+
       this.pageInfos.pop()
     } else {
-      promptAction.showToast({ alignment: Alignment.Center, message: response.msg });
+      CustomToast.toast_fail(response.msg as string)
     }
   }
 

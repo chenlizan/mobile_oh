@@ -2,6 +2,7 @@ import _ from '@wolfx/lodash'
 import qs from '@open/qs'
 import { http } from '@kit.NetworkKit'
 import { PreferenceStorage } from '../model/LocalStorageModel';
+import { RouterConstants } from '../constants/RouterConstants';
 
 interface Options {
   method: http.RequestMethod;
@@ -10,7 +11,7 @@ interface Options {
 }
 
 interface ApiResponse {
-  code?: number
+  code: number
   success?: boolean
   data?: PARAMS | Token
 }
@@ -45,20 +46,21 @@ const enhancedFetch = async (url: string, options?: Options) => {
 
   try {
     const response = await httpRequest.request(url, requestOptions);
-    if (response.responseCode >= 400 && response.responseCode < 500) {
+    const result: ApiResponse = JSON.parse(_.isString(response.result) ? response.result : '{}');
+    if (result.code >= 400 && result.code < 500) {
       console.error('请求的资源可能不存在', url);
-    } else if (response.responseCode >= 500) {
+    } else if (result.code >= 500) {
       console.error('服务器无法正常访问');
     }
-    if (response.responseCode === 401) {
+    if (result.code === 401) {
       console.error('未授权');
-      return response;
-    }
-    const result: ApiResponse = JSON.parse(_.isString(response.result) ? response.result : '{}');
-    if (result.data && (result.data as Token).access_token && (result.data as Token).refresh_token) {
-      // AppStorage.setOrCreate('access_token', (result.data as Token).access_token);
-      // AppStorage.setOrCreate('refresh_token', (result.data as Token).refresh_token);
-      // AppStorage.setOrCreate('refresh_token_state', (result.data as Token).refresh_token_state);
+      const preferenceStorage = AppStorage.get<PreferenceStorage>('PreferenceStorage')
+      if (preferenceStorage?.access_token && preferenceStorage.refreshToken) {
+        preferenceStorage.access_token = undefined
+        preferenceStorage.refreshToken = undefined
+      }
+      AppStorage.set<string>('globalPageIndex', RouterConstants.LOGIN_PAGE_URL)
+      return result;
     }
     return result;
   } catch (error) {
