@@ -12,7 +12,7 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { PreferenceStorage, RouterConstants, SystemNoticeStorage } from '@xy/basic';
 import { BusinessError } from '@kit.BasicServicesKit';
 
-const permissions: Array<Permissions> = ['ohos.permission.CAMERA'];
+const permissions: Array<Permissions> = ['ohos.permission.CAMERA', 'ohos.permission.APP_TRACKING_CONSENT'];
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {

@@ -60,6 +60,13 @@
         "usedScene": {
           "when": "inuse"
         }
+      },
+      {
+        "name": "ohos.permission.APP_TRACKING_CONSENT",
+        "reason": "$string:app_name",
+        "usedScene": {
+          "when": "inuse"
+        }
       }
     ]
   }

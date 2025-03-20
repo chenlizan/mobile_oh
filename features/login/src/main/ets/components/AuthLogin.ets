@@ -1,4 +1,6 @@
 import { deviceInfo } from "@kit.BasicServicesKit";
+import { TextModifier } from "@kit.ArkUI";
+import { identifier } from "@kit.AdsKit";
 import {
   Api_Context,
   CCApi,
@@ -16,7 +18,6 @@ import {
 } from "@xy/basic"
 import { LoginType } from "./LoginPage";
 import { LoginRemindModal } from "./LoginRemindModal";
-import { TextModifier } from "@kit.ArkUI";
 
 
 @Component
@@ -50,7 +51,7 @@ export struct AuthLogin {
         'loginName': encryptDes(this.username, this.preferenceStorage?.des_encrypt_key?.[3] ?? ''),
       },
       {
-        'mobile-device-id': deviceInfo.serial,
+        'mobile-device-id': await identifier.getOAID(),
         'mobile-brand': deviceInfo.brand,
         'mobile-model': deviceInfo.productModel,
       })

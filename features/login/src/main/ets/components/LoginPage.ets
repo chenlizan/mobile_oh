@@ -1,5 +1,6 @@
 import _ from '@wolfx/lodash'
 import { deviceInfo } from '@kit.BasicServicesKit';
+import { identifier } from '@kit.AdsKit';
 import {
   RouterConstants,
   Api_Context,
@@ -21,6 +22,7 @@ import {
 } from '@xy/basic';
 import { LoginAccountModal } from './LoginAccountModal';
 import { LoginRemindModal } from './LoginRemindModal';
+
 
 export enum LoginType {
   Id_Card = 1, // 账号密码  废弃
@@ -100,7 +102,7 @@ export struct LoginPage {
         'xyAccountId': accountId,
       },
       {
-        'mobile-device-id': deviceInfo.serial,
+        'mobile-device-id': await identifier.getOAID(),
         'mobile-brand': deviceInfo.brand,
         'mobile-model': deviceInfo.productModel,
       })
