@@ -46,6 +46,8 @@ export { SelectSpace } from './src/main/ets/model/SelectSpaceModel'
 
 export { School } from './src/main/ets/model/SchoolModel'
 
+export { SystemNoticeStorage, Notice } from './src/main/ets/model/SystemNoticeModel'
+
 export { isJSON,
   getLoginAccounts,
   getApiHostDomain,

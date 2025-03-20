@@ -1,3 +1,4 @@
+import { emitter } from '@kit.BasicServicesKit';
 import { CommonConstants, PreferenceStorage, RouterConstants, SelectSpace } from '@xy/basic';
 import { IdentityPage, LoginPage } from '@xy/login'
 import { MainPage } from '@xy/main'
@@ -28,6 +29,12 @@ struct Index {
     } else {
       this.jumpToAgreement()
     }
+  }
+
+  onPageShow(): void {
+    setTimeout(() => {
+      emitter.emit("systemNotice")
+    }, 3000)
   }
 
   // 跳转首页

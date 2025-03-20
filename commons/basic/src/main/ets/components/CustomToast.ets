@@ -67,7 +67,7 @@ class Toast {
   }
 
   public toast_info(message: string) {
-    this.show(message)
+    this.show(message, IconConstants.INFO)
   }
 
   public toast_loading(message: string) {

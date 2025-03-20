@@ -1,21 +1,15 @@
 import { CustomModalDialog } from "@xy/basic";
 
-
-interface Account {
-  loginName: string;
-  schoolName: string;
-  schoolIcon: string;
-}
-
 @Component
 export struct PhoneCheckModal {
   @Link visible: boolean
-  @Link accounts: Account[]
+  @Link accounts: Record<string, string>[]
+  @State title: string = '重置密码提示'
   onSubmit: () => void = () => {
   }
 
   @Builder
-  BuildModalContent(accounts: Account[]) {
+  BuildModalContent(accounts: Record<string, string>[]) {
     Column() {
       Text('注意：修改后，以下账号均需使用新密码登录')
         .padding(10)
@@ -24,7 +18,7 @@ export struct PhoneCheckModal {
         .fontSize(13)
 
       List() {
-        ForEach(accounts, (item: Account) => {
+        ForEach(accounts, (item: Record<string, string>) => {
           ListItem() {
             Row() {
               Image(item.schoolIcon)
@@ -77,7 +71,7 @@ export struct PhoneCheckModal {
     CustomModalDialog({
       dialogHeight: 360,
       visible: $visible,
-      title: '重置密码提示',
+      title: this.title,
       contentBuilder: () => this.BuildModalContent(this.accounts),
       footerBuilder: () => this.BuildModalFooter(),
     })

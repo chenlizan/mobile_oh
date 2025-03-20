@@ -30,7 +30,7 @@ export struct CustomModalDialog {
   /**
    * 标题
    */
-  @Prop title: string = ''
+  @Link title: string
   /**
    * 弹框开启回调
    */

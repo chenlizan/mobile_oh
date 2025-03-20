@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "teachingSpace",
+    "type": "har",
+    "deviceTypes": [
+      "default",
+      "tablet"
+    ]
+  }
+}

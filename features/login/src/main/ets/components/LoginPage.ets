@@ -137,6 +137,8 @@ export struct LoginPage {
       } else {
         this.savaLoginInfo()
       }
+    } else {
+      CustomToast.hide()
     }
   }
 

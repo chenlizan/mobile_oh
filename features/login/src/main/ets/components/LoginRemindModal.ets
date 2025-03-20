@@ -4,6 +4,7 @@ import { CustomModalDialog, ObjectUtil } from "@xy/basic";
 export struct LoginRemindModal {
   @Link visible: boolean
   @Link login_info: ObjectUtil<never>
+  @State title: string = '账号安全提示'
   onActive: () => void = () => {
   }
   onLogin: () => void = () => {
@@ -127,7 +128,7 @@ export struct LoginRemindModal {
     CustomModalDialog({
       dialogHeight: 300,
       visible: $visible,
-      title: '账号安全提示',
+      title: this.title,
       contentBuilder: () => this.BuildModalContent(this.login_info),
       footerBuilder: () => this.BuildModalFooter(this.login_info),
     })

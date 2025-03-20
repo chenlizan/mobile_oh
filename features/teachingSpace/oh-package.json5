@@ -1,12 +1,11 @@
 {
-  "name": "@xy/home",
+  "name": "@xy/teaching_space",
   "version": "1.0.0",
   "description": "Please describe the basic information.",
   "main": "Index.ets",
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@xy/basic": "file:../../commons/basic",
-    "@xy/teaching_space": "file:../teachingSpace"
+    "@xy/basic": "file:../../commons/basic"
   }
 }

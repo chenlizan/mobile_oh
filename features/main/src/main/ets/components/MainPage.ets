@@ -1,8 +1,9 @@
 import _ from '@wolfx/lodash';
-import { BreakpointUtil, CommonConstants } from '@xy/basic';
+import { CommonConstants } from '@xy/basic';
 import { HomePage } from '@xy/home'
 import { MinePage } from '@xy/mine'
-
+import { SystemNoticeModal } from './SystemNoticeModal';
+import { emitter } from '@kit.BasicServicesKit';
 
 @Component
 export struct MainPage {
@@ -72,6 +73,8 @@ export struct MainPage {
         .width('100%')
       }
       .height('100%')
+
+      SystemNoticeModal()
     }
   }
 }

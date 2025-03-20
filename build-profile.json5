@@ -28,9 +28,9 @@
         "type": "HarmonyOS",
         "material": {
           "certpath": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
-          "storePassword": "0000001BC14861807708CA85811B2BB9D9BB034CAE16B50CD40CBAAE54C1354289883AE83920F59D436F71",
+          "storePassword": "0000001B80499B36AD54CADF6993E3F71BEA15E85F821C8D6529667E19869EEA1BEBEDF7D9E7120C7768AF",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B1DDBE13366F61258609BA35D2EEFD71257E7601C69AC7E8D28EC06AA6D5517EC164CE28BA8B05B",
+          "keyPassword": "0000001B2553C879CBC11D31F33882DDD03C5B087E4489A14C011FC7411535CB3B48E3342F8D9D77B1FB5F",
           "profile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "/Users/chenlizan/.ohos/config/default_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p12"
@@ -94,6 +94,10 @@
     {
       "name": "school",
       "srcPath": "./features/school",
+    },
+    {
+      "name": "teachingSpace",
+      "srcPath": "./features/teachingSpace",
     }
   ]
 }

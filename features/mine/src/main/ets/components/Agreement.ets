@@ -1,16 +1,11 @@
 import { webview } from "@kit.ArkWeb";
 import { TextModifier } from "@kit.ArkUI";
 
-interface PARAMS {
-  url?: string,
-  title?: string
-}
-
 @Component
 export struct Agreement {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   private controller: webview.WebviewController = new webview.WebviewController();
-  private param: PARAMS = {}
+  private param: Record<string, string> = {}
 
   aboutToAppear(): void {
     this.param = JSON.parse(String(this.pageInfos.getParamByName('agreement')[0]))

@@ -5,7 +5,7 @@
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
-      "phone",
+      "phone"
     ],
     "deliveryWithInstall": true,
     "installationFree": false,
@@ -51,10 +51,14 @@
       {
         "name": "ohos.permission.INTERNET",
         "usedScene": {
-          "abilities": [
-            "EntryAbility"
-          ],
           "when": "always"
+        }
+      },
+      {
+        "name": "ohos.permission.CAMERA",
+        "reason": "$string:app_name",
+        "usedScene": {
+          "when": "inuse"
         }
       }
     ]

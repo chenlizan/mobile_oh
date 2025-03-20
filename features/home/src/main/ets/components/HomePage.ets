@@ -1,15 +1,16 @@
-import { RouterConstants, CustomToast, IconConstants, } from "@xy/basic";
+import { PreferenceStorage, } from "@xy/basic";
+import { TeachingPage } from '@xy/teaching_space'
 
 @Component
 export struct HomePage {
   @Link globalPageIndex: string;
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
 
   build() {
     Column() {
-      Button('空间选择')
-        .onClick(() => {
-          this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
-        })
+      if (this.preferenceStorage.selectSpace?.type === 'teaching') {
+        TeachingPage()
+      }
     }
     .width('100%')
     .height('100%')

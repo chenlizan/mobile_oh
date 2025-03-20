@@ -1,4 +1,5 @@
 import _ from "@wolfx/lodash";
+import { emitter } from "@kit.BasicServicesKit";
 import { TextModifier } from "@kit.ArkUI";
 import {
   Api_Context,
@@ -80,6 +81,9 @@ export struct IdentityPage {
 
       if (this.manageSpaces.length === 0) {
         this.globalPageIndex = RouterConstants.MAIN_PAGE_URL
+        setTimeout(() => {
+          emitter.emit("systemNotice")
+        }, 3000)
       }
 
       if (cb) {
@@ -97,6 +101,9 @@ export struct IdentityPage {
     }
     this.preferenceStorage.selectSpace = space
     this.globalPageIndex = RouterConstants.MAIN_PAGE_URL
+    setTimeout(() => {
+      emitter.emit("systemNotice")
+    }, 3000)
   }
 
   getSpaceIconByType(type: string | undefined) {

@@ -1,8 +1,18 @@
-import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
-import { hilog } from '@kit.PerformanceAnalysisKit';
+import {
+  abilityAccessCtrl,
+  AbilityConstant,
+  PermissionRequestResult,
+  Permissions,
+  UIAbility,
+  Want
+} from '@kit.AbilityKit';
 import { window } from '@kit.ArkUI';
 import { font } from '@kit.ArkUI'
-import { PreferenceStorage, RouterConstants } from '@xy/basic';
+import { hilog } from '@kit.PerformanceAnalysisKit';
+import { PreferenceStorage, RouterConstants, SystemNoticeStorage } from '@xy/basic';
+import { BusinessError } from '@kit.BasicServicesKit';
+
+const permissions: Array<Permissions> = ['ohos.permission.CAMERA'];
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -25,6 +35,7 @@ export default class EntryAbility extends UIAbility {
         }
         PersistentStorage.persistProp('globalPageIndex', RouterConstants.AGREEMENT_PAGE_URL);
         PersistentStorage.persistProp('PreferenceStorage', new PreferenceStorage());
+        PersistentStorage.persistProp('SystemNoticeStorage', new SystemNoticeStorage())
         font.registerFont({
           familyName: 'IconFont',
           familySrc: $rawfile('iconfont.ttf')
@@ -33,6 +44,12 @@ export default class EntryAbility extends UIAbility {
       });
     }, 500)
 
+    let atManager = abilityAccessCtrl.createAtManager();
+    atManager.requestPermissionsFromUser(this.context, permissions).then((result: PermissionRequestResult) => {
+      console.info(`get Permission success, result: ${JSON.stringify(result)}`);
+    }).catch((error: BusinessError) => {
+      console.error(`get Permission error, error. Code: ${error.code}, message: ${error.message}`);
+    })
   }
 
   onWindowStageDestroy(): void {

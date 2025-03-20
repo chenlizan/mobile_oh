@@ -13,16 +13,11 @@ import {
   verifyPassWord
 } from "@xy/basic";
 
-interface Account {
-  loginName: string;
-  schoolName: string;
-  schoolIcon: string;
-}
-
 @Component
 export struct AccountActivation {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @State title:string = '提示'
   @State accountDialogVisible: boolean = false
   @State username: string = ''
   @State password1: string = ''
@@ -110,7 +105,7 @@ export struct AccountActivation {
         .fontColor('#FF931E')
         .fontSize(13)
       List() {
-        ForEach(accounts, (item: Account) => {
+        ForEach(accounts, (item: Record<string, string>) => {
           ListItem() {
             Row() {
               Image(item.schoolIcon)
@@ -207,7 +202,7 @@ export struct AccountActivation {
 
       CustomModalDialog({
         visible: $accountDialogVisible,
-        title: '提示',
+        title: this.title,
         dialogHeight: 360,
         contentBuilder: () => this.BuildModalContent(this.accounts),
         footerBuilder: () => this.BuildModalFooter(),

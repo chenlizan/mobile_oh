@@ -1,4 +1,4 @@
-import { CustomModalDialog, ObjectUtil } from "@xy/basic";
+import { CustomModalDialog } from "@xy/basic";
 
 interface Account extends Record<string, Record<string, string>> {
   id,
@@ -11,6 +11,7 @@ export struct LoginAccountModal {
   @Link visible: boolean
   @Link accounts: Account[]
   @State selectItem: Account | null = null
+  @State title: string = '选择账号登录'
   onSelect: (selectItem: Account | null) => void = () => {
   }
 
@@ -77,7 +78,7 @@ export struct LoginAccountModal {
     CustomModalDialog({
       dialogHeight: 360,
       visible: $visible,
-      title: '选择账号登录',
+      title: this.title,
       contentBuilder: () => this.BuildModalContent(this.accounts),
       footerBuilder: () => this.BuildModalFooter(),
     })
