@@ -24,11 +24,9 @@ function customDialogComponent(param: ToastParam) {
     Text(param.message)
       .margin({ top: param.icon ? param.icon === IconConstants.LOADING ? 8 : 16 : 0 })
       .fontColor(Color.White)
-      .fontSize(16)
   }
-  .width(120)
-  .height(120)
   .justifyContent(FlexAlign.Center)
+  .padding(16)
   .backgroundColor('#b2000000')
   .borderRadius(8)
 }
