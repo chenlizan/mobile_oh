@@ -24,6 +24,8 @@ export { xyApiPost,
 
 export { ObjectUtil, ObjectOption } from './src/main/ets/utils/ObjectUtil'
 
+export { DownloadUtil } from './src/main/ets/utils/DownloadUtil'
+
 export { CustomList, CustomListItem } from './src/main/ets/components/CustomList'
 
 export { CustomDivider } from './src/main/ets/components/CustomDivider'

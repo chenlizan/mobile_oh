@@ -6,14 +6,13 @@ import {
   AppIcon,
   ccApiGet,
   CustomModalDialog,
-  CustomToast,
+  DownloadUtil,
   IconConstants,
   Notice,
   SystemApi,
   SystemNoticeStorage,
   UserInfoModel,
 } from "@xy/basic";
-
 
 @Component
 export struct SystemNoticeModal {
@@ -66,7 +65,9 @@ export struct SystemNoticeModal {
   async handleDownload(attach: Record<string, string>) {
     const response =
       await ccApiGet(this.Api_Context.getApiPrefix("managerApi") + "oss/downloadByAttachId", { 'attachId': attach.id })
-    CustomToast.toast_info('不支持下载')
+    if (response.code === 200) {
+      DownloadUtil(response.result as string, attach.filename)
+    }
   }
 
   @Builder
