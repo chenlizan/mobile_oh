@@ -58,14 +58,21 @@
         "name": "ohos.permission.CAMERA",
         "reason": "$string:app_name",
         "usedScene": {
-          "when": "inuse"
+          "when": "always"
+        }
+      },
+      {
+        "name": "ohos.permission.MICROPHONE",
+        "reason": "$string:app_name",
+        "usedScene": {
+          "when": "always"
         }
       },
       {
         "name": "ohos.permission.APP_TRACKING_CONSENT",
         "reason": "$string:app_name",
         "usedScene": {
-          "when": "inuse"
+          "when": "always"
         }
       }
     ]

@@ -34,6 +34,8 @@ export { CustomField } from './src/main/ets/components/CustomField'
 
 export { CustomModalDialog } from './src/main/ets/components/CustomModalDialog'
 
+export { CustomLocalH5 } from './src/main/ets/components/CustomLocalH5'
+
 export { Avatar } from "./src/main/ets/components/XyAvatar"
 
 export { UserInfoModel } from './src/main/ets/model/UserInfoModel'

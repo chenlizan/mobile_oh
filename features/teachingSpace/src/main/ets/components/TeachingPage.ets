@@ -1,13 +1,13 @@
+import { CustomLocalH5 } from "@xy/basic";
+
 @Component
 export struct TeachingPage {
-  @State message: string = '课程空间';
-
   build() {
     Row() {
       Column() {
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
+        CustomLocalH5({
+          url: '/note?node_id=5974622286299329679&resource_id=5974622286299329679&group_id=null&type=document&mode=edit'
+        })
       }
       .width('100%')
     }

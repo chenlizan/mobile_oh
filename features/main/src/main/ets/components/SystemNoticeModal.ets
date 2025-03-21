@@ -1,4 +1,5 @@
 import { emitter } from "@kit.BasicServicesKit";
+import { webview } from "@kit.ArkWeb";
 import _ from "@wolfx/lodash";
 import dayjs from "dayjs"
 import {
@@ -24,6 +25,7 @@ export struct SystemNoticeModal {
   @State visible: boolean = false
   @State systemNotice: Notice[] = []
   @State noticeId: string = ''
+  controller: webview.WebviewController = new webview.WebviewController();
 
   aboutToAppear(): void {
     emitter.on("systemNotice", () => {
@@ -106,7 +108,7 @@ export struct SystemNoticeModal {
                 Column() {
                   Web({
                     src: `data:text/html, <html><head><style>body{font-size: 48px;}</style></head><body>${item.content}</body></html>`,
-                    controller: new WebController
+                    controller: this.controller
                   })
                     .backgroundColor('#f5f5f5')
 
