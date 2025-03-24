@@ -47,7 +47,7 @@ export struct IdentityPage {
       this.userInfo.avatar = res.getValue('headImageUrl') || res.getValue('avatar')
       this.userInfo.schools = res.getValue('schoolRoleInfos')
       this.userInfo.fileCapacity = res.getValue('userFileCapacityLevel')
-      this.userInfo.isSchoolFellow = (res.getValue('schoolRoleInfos') ?? [].length ?? 0) !== 0;
+      this.userInfo.isRealStudent = (res.getValue('schoolRoleInfos') ?? [].length ?? 0) !== 0;
 
       _.forEach(res.getValue('schoolRoleInfos'), (info: never) => {
         const _info = new ObjectUtil(info as ObjectOption<never>)

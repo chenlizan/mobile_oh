@@ -4,6 +4,8 @@ export { RouterConstants } from './src/main/ets/constants/RouterConstants'
 
 export { IconConstants } from './src/main/ets/constants/IconConstants'
 
+export { getFriendlyMsg } from './src/main/ets/constants/MessageDict'
+
 export { BreakpointUtil } from './src/main/ets/utils/BreakpointUtil'
 
 export { logger } from './src/main/ets/utils/Logger'

@@ -7,7 +7,7 @@ export class ObjectUtil<T> {
     this.options = option;
   }
 
-  getValue(currentPoint: string): T {
+  getValue(currentPoint: string | number): T {
     return this.options[currentPoint] as T;
   }
 

@@ -78,7 +78,7 @@ export struct AuthLogin {
 
   savaLoginInfo() {
     this.preferenceStorage.access_token = this.login_info.getValue('access_token')
-    this.preferenceStorage.refreshToken = this.login_info.getValue('refresh_token')
+    this.preferenceStorage.refresh_token = this.login_info.getValue('refresh_token')
     this.preferenceStorage.refresh_token_state = '0'
     this.pageInfos.pop(RouterConstants.IDENTITY_PAGE_URL)
   }

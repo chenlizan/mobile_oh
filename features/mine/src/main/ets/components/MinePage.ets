@@ -18,7 +18,6 @@ import {
 @Component
 export struct MinePage {
   @Link globalPageIndex: string;
-  @StorageLink('access_token') token: string = ''
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
@@ -29,7 +28,7 @@ export struct MinePage {
     setTimeout(async () => {
       await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.logout)
       this.preferenceStorage.access_token = undefined
-      this.preferenceStorage.refreshToken = undefined
+      this.preferenceStorage.refresh_token = undefined
       this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
       CustomToast.hide()
     }, 4000)
@@ -79,7 +78,7 @@ export struct MinePage {
               .borderColor(Color.White)
               .borderWidth(0.5)
             }
-            .margin({ left: 40, right: 16 })
+            .margin({ left: 40, right: 18 })
 
             Column() {
               Text(this.userInfo.nickname)
@@ -91,7 +90,7 @@ export struct MinePage {
                 .fontColor(Color.White)
                 .textAlign(TextAlign.Start)
             }
-            .height('40%')
+            .height(64)
             .alignItems(HorizontalAlign.Start)
             .justifyContent(FlexAlign.SpaceAround)
           }
@@ -102,7 +101,7 @@ export struct MinePage {
           .margin({ right: 32 })
         }
         .width('100%')
-        .height('170vp')
+        .height(170)
         .justifyContent(FlexAlign.SpaceBetween)
         .backgroundColor(Color.Blue)
         .backgroundImage($r('app.media.homeBg'))

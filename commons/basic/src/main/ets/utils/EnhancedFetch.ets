@@ -3,6 +3,7 @@ import qs from '@open/qs'
 import { http } from '@kit.NetworkKit'
 import { PreferenceStorage } from '../model/LocalStorageModel';
 import { RouterConstants } from '../constants/RouterConstants';
+import { Api_Context, CCApi, CustomToast, getFriendlyMsg, logger, ObjectOption, ObjectUtil } from '../../../../Index';
 
 interface Options {
   method: http.RequestMethod;
@@ -14,6 +15,7 @@ interface ApiResponse {
   code: number
   success?: boolean
   data?: PARAMS | Token
+  message: string
 }
 
 interface CCApiResponse {
@@ -29,6 +31,41 @@ interface Token {
 }
 
 export type PARAMS = Record<string, string | number | boolean | undefined | null | object> | Array<string>
+
+export const refreshTokenInfoWarp: Record<string, boolean> = {
+  'isRefreshing': false,
+};
+
+const waitTokenRefresh = (url: string, options?: Options) => {
+  for (let index = 0; index < 5; index++) {
+    _.delay(null, 300)
+    if (!refreshTokenInfoWarp.isRefreshing) {
+      enhancedFetch(url, options)
+    }
+  }
+  throw new Error('token refresh failed');
+};
+
+const refreshToken = async (url: string, options?: Options) => {
+  const preferenceStorage = AppStorage.get<PreferenceStorage>('PreferenceStorage');
+  if (preferenceStorage?.refresh_token) {
+    preferenceStorage.refresh_token_state = '1'
+    refreshTokenInfoWarp.isRefreshing = true
+    const response: CCApiResponse =
+      await ccApiGet(AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('ccApi') + CCApi.refreshToken, {
+        'weekNoLoginStatus': true,
+        'refreshToken': preferenceStorage?.refresh_token,
+      })
+    if (response.code === 200) {
+      refreshTokenInfoWarp.isRefreshing = false
+      const token = new ObjectUtil(response.result as ObjectOption<never>)
+      preferenceStorage.access_token = token.getValue('access_token')
+      preferenceStorage.refresh_token = token.getValue('refresh_token')
+      AppStorage.set<PreferenceStorage>('refresh_token_state', preferenceStorage)
+      enhancedFetch(url, options)
+    }
+  }
+};
 
 const enhancedFetch = async (url: string, options?: Options) => {
   const httpRequest = http.createHttp();
@@ -48,24 +85,47 @@ const enhancedFetch = async (url: string, options?: Options) => {
     const response = await httpRequest.request(url, requestOptions);
     const result: ApiResponse = JSON.parse(_.isString(response.result) ? response.result : '{}');
     if (result.code >= 400 && result.code < 500) {
-      console.error('请求的资源可能不存在', url);
+      logger.error('请求的资源可能不存在', url);
     } else if (result.code >= 500) {
-      console.error('服务器无法正常访问');
+      logger.error('服务器无法正常访问');
     }
     if (result.code === 401) {
       console.error('未授权');
       const preferenceStorage = AppStorage.get<PreferenceStorage>('PreferenceStorage')
-      if (preferenceStorage?.access_token && preferenceStorage.refreshToken) {
-        preferenceStorage.access_token = undefined
-        preferenceStorage.refreshToken = undefined
+
+      if (preferenceStorage?.refresh_token_state === '0') {
+        refreshToken(url, options)
+      } else if (refreshTokenInfoWarp.isRefreshing) {
+        waitTokenRefresh(url, options)
+      } else {
+        if (preferenceStorage?.access_token && preferenceStorage.refresh_token) {
+          preferenceStorage.access_token = undefined
+          preferenceStorage.refresh_token = undefined
+        }
+        AppStorage.set<string>('globalPageIndex', RouterConstants.LOGIN_PAGE_URL)
       }
-      AppStorage.set<string>('globalPageIndex', RouterConstants.LOGIN_PAGE_URL)
+
       return result;
+    }
+    if (result.success === false) {
+      console.log(`Request error : ${url} - ${result.code} - ${result.message}`);
+      const msg = String(getFriendlyMsg(result.code, result.message));
+      if (msg !== '-') {
+        CustomToast.toast_fail(msg);
+      }
     }
     return result;
   } catch (error) {
-    console.error('HTTP请求失败:', error);
-    return error;
+    if (!_.includes(url, AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('lrsApi'))) {
+      CustomToast.hide()
+      if (_.includes(error.message, 'Network request failed') && options?.method !== 'GET') {
+        CustomToast.toast_fail('网络请求失败，请检查网络！');
+      } else if (_.includes(error.message, 'xy-timeout')) {
+        CustomToast.toast_fail('网络连接超时！');
+      }
+    }
+    logger.error(`Request catch : ${url} - ${options?.body} - ${error}`);
+    return error
   }
 }
 

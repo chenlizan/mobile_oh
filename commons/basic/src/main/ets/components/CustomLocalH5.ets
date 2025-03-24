@@ -6,8 +6,10 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { CustomToast, PreferenceStorage } from '../../../../Index';
 
 class Toolkits {
+  private pageInfos = AppStorage.get<NavPathStack>('pageInfos')
+
   onGoBack() {
-    CustomToast.toast_success('onGoBack')
+    this.pageInfos?.pop()
   }
 }
 
@@ -16,7 +18,8 @@ export struct CustomLocalH5 {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @State toolkits: Toolkits = new Toolkits()
   @State extraJavaScript: string = ''
-  @Prop url: string = ''
+  @Prop url: string =
+    '/note?node_id=5974622286299329679&resource_id=5974622286299329679&group_id=null&type=document&mode=edit'
   controller: webview.WebviewController = new webview.WebviewController();
 
   getLrsHeader() {
@@ -29,7 +32,7 @@ export struct CustomLocalH5 {
 
   getJavaScript() {
     const access_token = this.preferenceStorage.access_token
-    const refresh_token = this.preferenceStorage.refreshToken
+    const refresh_token = this.preferenceStorage.refresh_token
     const lrs_headers = JSON.stringify(this.getLrsHeader());
     return `window.localStorage.setItem('refresh_token','${refresh_token}');
     window.localStorage.setItem('access_token','${access_token}');

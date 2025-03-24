@@ -19,4 +19,6 @@ export class IconConstants {
   static readonly AGREE: string = '\ue8bb' //同意
   static readonly INFO: string = '\ue693' //信息
   static readonly LOADING: string = 'loading' //加载
+  static readonly MENU: string = '\ue7f5' //菜单
+  static readonly SCAN:string ='\ue70b' //扫码
 }
