@@ -9,7 +9,7 @@ export struct HomePage {
   build() {
     Column() {
       if (this.preferenceStorage.selectSpace?.type === 'teaching') {
-        TeachingPage()
+        TeachingPage({ globalPageIndex: this.globalPageIndex })
       }
     }
     .width('100%')

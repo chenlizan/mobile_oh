@@ -9,11 +9,13 @@ import {
   ccApiGet,
   IconConstants,
   PreferenceStorage,
+  RouterConstants,
   UserInfoModel
 } from "@xy/basic";
 
 @Component
 export struct TeachingPage {
+  @Link globalPageIndex: string;
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
@@ -99,8 +101,15 @@ export struct TeachingPage {
                 await scanBarcode.startScanForResult(getContext())
               }
             })
-            if (this.userInfo.manageSpaces) {
-              AppIcon({ iconCode: IconConstants.MENU, iconSize: 16, iconColor: Color.White })
+            if (!_.isEmpty(this.userInfo.manageSpaces)) {
+              AppIcon({
+                iconCode: IconConstants.MENU,
+                iconSize: 16,
+                iconColor: Color.White,
+                onClickBtn: () => {
+                  this.globalPageIndex = RouterConstants.IDENTITY_PAGE_URL
+                }
+              })
             }
           }
           .width('100%')
