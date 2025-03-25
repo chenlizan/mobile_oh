@@ -3,7 +3,7 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "xiaoya",
+        "signingConfig": "chenlizan",
         "compatibleSdkVersion": "5.0.2(14)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
@@ -34,6 +34,19 @@
           "signAlg": "SHA256withECDSA",
           "profile": "./sign/xiaoyaRelease.p7b",
           "certpath": "./sign/xiaoya.cer"
+        }
+      },
+      {
+        "name": "chenlizan",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/chenlizan/.ohos/config/chenlizan_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B065C03A138644B72E709A93FF2FCEA73E56EB4D8F6630CAC3C2738A3E80291D54D7870E1C87800",
+          "profile": "/Users/chenlizan/.ohos/config/chenlizan_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/chenlizan/.ohos/config/chenlizan_xy_mobile_oh_LcG8rIGFjkHIbXmqdAF0z0kXWXd8zV94FePkEusY5RM=.p12",
+          "storePassword": "0000001B5D0EAED74E13B681CA213A3A84637C691F047FA4AD26EA4EB40EB3CB4E0E822FBDBE61B1356867"
         }
       }
     ]
