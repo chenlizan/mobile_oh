@@ -63,6 +63,15 @@ const refreshToken = async (url: string, options?: Options) => {
       preferenceStorage.refresh_token = token.getValue('refresh_token')
       AppStorage.set<PreferenceStorage>('refresh_token_state', preferenceStorage)
       enhancedFetch(url, options)
+    } else {
+      if (preferenceStorage?.access_token && preferenceStorage.refresh_token) {
+        preferenceStorage.access_token = undefined
+        preferenceStorage.refresh_token = undefined
+      }
+      CustomToast.toast_fail('登录已失效或账号在其他移动设备上登录，请重新登录')
+      setTimeout(() => {
+        AppStorage.set<string>('globalPageIndex', RouterConstants.LOGIN_PAGE_URL)
+      }, 1500)
     }
   }
 };
