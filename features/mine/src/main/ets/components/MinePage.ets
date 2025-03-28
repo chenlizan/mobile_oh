@@ -110,20 +110,26 @@ export struct MinePage {
 
         Column() {
           CustomList({ listPadding: { left: 16, right: 16 } }) {
-            // CustomListItem({
-            //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
-            //   text: '个人年度报告',
-            //   itemMargin: { top: '8vp' },
-            //   itemRadius: '8vp',
-            //   itemBorder: ''
-            // })
-            // CustomListItem({
-            //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
-            //   text: '个人数据看板',
-            //   itemMargin: { top: '8vp' },
-            //   itemRadius: '8vp',
-            //   itemBorder: ''
-            // })
+            CustomListItem({
+              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
+              text: '个人年度报告',
+              itemMargin: { top: '8vp' },
+              itemRadius: '8vp',
+              itemBorder: '',
+              onClickBtn: () => {
+                this.pageInfos.pushPath({ name: 'userReport' })
+              }
+            })
+            CustomListItem({
+              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
+              text: '个人数据看板',
+              itemMargin: { top: '8vp' },
+              itemRadius: '8vp',
+              itemBorder: '',
+              onClickBtn: () => {
+                this.pageInfos.pushPath({ name: 'userPortrait' })
+              }
+            })
             // CustomListItem({
             //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
             //   text: '反馈&建议',

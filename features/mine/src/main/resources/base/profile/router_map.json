@@ -15,6 +15,22 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "userReport",
+      "pageSourceFile": "src/main/ets/components/UserReport.ets",
+      "buildFunction": "UserReportBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userPortrait",
+      "pageSourceFile": "src/main/ets/components/UserPortrait.ets",
+      "buildFunction": "UserPortraitBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

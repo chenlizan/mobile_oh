@@ -20,7 +20,7 @@ interface ApiResponse {
 
 interface CCApiResponse {
   code?: number
-  result?: PARAMS | Token | Array<PARAMS>
+  result?: PARAMS | Token
   msg?: string
 }
 
@@ -30,7 +30,7 @@ interface Token {
   refresh_token_state?: string
 }
 
-export type PARAMS = Record<string, string | number | boolean | undefined | null | object> | Array<string>
+export type PARAMS = Record<string, string | number | boolean | undefined | null | object> | Array<string> | Array<PARAMS>
 
 export const refreshTokenInfoWarp: Record<string, boolean> = {
   'isRefreshing': false,

@@ -28,6 +28,10 @@ export struct CustomModalDialog {
    */
   @Prop dialogHeight: Length = '30%'
   /**
+   * 隐藏关闭按钮
+   */
+  @Prop hideCloseBtn: Visibility = Visibility.Visible
+  /**
    * 标题
    */
   @Link title: string
@@ -54,8 +58,8 @@ export struct CustomModalDialog {
       footerBuilder: this.footerBuilder,
       title: this.title,
       dialogHeight: this.dialogHeight,
+      hideCloseBtn: this.hideCloseBtn,
       onCloseBtn: this.onCloseBtn
-
     }),
     autoCancel: false,
     customStyle: true,
@@ -84,6 +88,7 @@ struct CustomModalDialogView {
   @BuilderParam footerBuilder?: CustomBuilder
   title?: string
   dialogHeight?: Length = '30%'
+  hideCloseBtn?: Visibility = Visibility.Visible
   onCloseBtn: () => void = () => {
   }
 
@@ -108,6 +113,7 @@ struct CustomModalDialogView {
               iconColor: '#999999',
               onClickBtn: this.onCloseBtn
             })
+              .visibility(this.hideCloseBtn)
           }
           .alignRules({
             top: { anchor: "__container__", align: VerticalAlign.Top },
