@@ -22,7 +22,7 @@ export struct AccountActivation {
   @State username: string = ''
   @State password1: string = ''
   @State password2: string = ''
-  @State accounts: PARAMS[] | string[] = []
+  @State accounts: PARAMS[] = []
   private param: ObjectUtil<never> = new ObjectUtil({})
 
   async userCheckRealnameByAT(realname: string, authToken: string): Promise<boolean> {
@@ -81,7 +81,7 @@ export struct AccountActivation {
     if (res) {
       const accounts = await this.queryUserInfoUnionAccountsByAT(this.param.getValue('infraAccessToken'))
       if (!_.isEmpty(accounts) && _.isArray(accounts) && accounts.length > 1) {
-        this.accounts = accounts;
+        this.accounts = accounts as PARAMS[];
         this.accountDialogVisible = true
       } else {
         this.appActivationByAT(this.password1, this.username, this.param.getValue('infraAccessToken'));

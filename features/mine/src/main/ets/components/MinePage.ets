@@ -1,5 +1,6 @@
 import _ from '@wolfx/lodash'
-import { image } from '@kit.ImageKit';
+import { image } from '@kit.ImageKit'
+import { display } from '@kit.ArkUI'
 import {
   CustomList,
   CustomListItem,
@@ -13,7 +14,7 @@ import {
   CustomToast,
   PreferenceStorage,
   RouterConstants
-} from "@xy/basic";
+} from "@xy/basic"
 
 @Component
 export struct MinePage {
@@ -22,6 +23,11 @@ export struct MinePage {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State screenWidth: number = 0
+
+  aboutToAppear(): void {
+    this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
+  }
 
   async handleLoginOut() {
     CustomToast.toast_loading('退出登录中...')
@@ -31,7 +37,7 @@ export struct MinePage {
       this.preferenceStorage.refresh_token = undefined
       this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
       CustomToast.hide()
-    }, 4000)
+    }, 3000)
   }
 
   getSchools() {
@@ -130,13 +136,16 @@ export struct MinePage {
                 this.pageInfos.pushPath({ name: 'userPortrait' })
               }
             })
-            // CustomListItem({
-            //   iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
-            //   text: '反馈&建议',
-            //   itemMargin: { top: '8vp' },
-            //   itemRadius: '8vp',
-            //   itemBorder: ''
-            // })
+            CustomListItem({
+              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
+              text: '反馈&建议',
+              itemMargin: { top: '8vp' },
+              itemRadius: '8vp',
+              itemBorder: '',
+              onClickBtn: () => {
+                this.pageInfos.pushPath({ name: 'userReflect' })
+              }
+            })
             CustomListItem({
               iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_about')),
               text: '关于小雅',
@@ -155,13 +164,13 @@ export struct MinePage {
 
       Column() {
         Button('退出小雅', { type: ButtonType.Normal })
-          .margin({ bottom: 16 })
-          .width('94%')
+          .margin(16)
+          .width(this.screenWidth - 32)
+          .height(40)
           .backgroundColor('#fcbb34')
           .borderRadius(4)
           .onClick(() => this.handleLoginOut())
       }
-      .height(60)
       .justifyContent(FlexAlign.End)
 
     }

@@ -31,6 +31,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "userReflect",
+      "pageSourceFile": "src/main/ets/components/UserReflect.ets",
+      "buildFunction": "UserReflectBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

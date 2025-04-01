@@ -7,7 +7,8 @@
     "@ohos/base64": "^2.0.1",
     "@ohos/crypto-js": "^2.0.4",
     "pinyin-pro": "^3.18.3",
-    "dayjs": "^1.11.13"
+    "dayjs": "^1.11.13",
+    "@ohos/axios": "^2.2.5"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.19",

@@ -51,6 +51,8 @@ export struct LoginPage {
   aboutToAppear() {
     this.checkImportUnifiedAuth(this.preferenceStorage?.school?.code)
     this.getSchoolList()
+    this.username = this.preferenceStorage.saveUsername ?? ''
+    this.password = this.preferenceStorage.savePassword ?? ''
   }
 
   async checkImportUnifiedAuth(schoolCertify: string | number | undefined) {
@@ -89,6 +91,9 @@ export struct LoginPage {
     if (!checkPassWord(this.password)) {
       return;
     }
+
+    this.preferenceStorage.saveUsername = this.username
+    this.preferenceStorage.savePassword = this.password
 
     CustomToast.toast_loading('登录中...')
 
@@ -175,6 +180,8 @@ export struct LoginPage {
         .justifyContent(FlexAlign.Start)
         .onClick(() => {
           this.globalPageIndex = RouterConstants.SCHOOL_PAGE_URL
+          this.preferenceStorage.saveUsername = undefined
+          this.preferenceStorage.savePassword = undefined
         })
 
         Column() {

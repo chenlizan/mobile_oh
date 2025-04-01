@@ -10,4 +10,6 @@ export class PreferenceStorage {
   need_select_space?: boolean
   is_agreement?: boolean
   des_encrypt_key?: Array<string>
+  saveUsername?: string
+  savePassword?: string
 }
