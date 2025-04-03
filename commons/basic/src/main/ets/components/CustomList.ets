@@ -43,6 +43,10 @@ export struct CustomListItem {
    */
   @Prop lineHeight: number | string | Resource = 30
   /**
+   * 文字粗细
+   */
+  @Prop fontWeight: FontWeight = FontWeight.Normal
+  /**
    * 图标的builder
    */
   @BuilderParam iconBuilder?: CustomBuilder;
@@ -63,8 +67,10 @@ export struct CustomListItem {
           this.iconBuilder()
         }
         Text(this.text)
-          .fontSize("16vp")
+          .fontSize(16)
+          .fontWeight(this.fontWeight)
           .lineHeight(this.lineHeight)
+
       }
 
       if (typeof this.operateBuilder === 'function') {

@@ -39,6 +39,78 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "userEdit",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserEdit.ets",
+      "buildFunction": "UserEditBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userLevelInfo",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserLevelInfo.ets",
+      "buildFunction": "UserLevelInfoBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userSchool",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserSchool.ets",
+      "buildFunction": "UserSchoolBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userPassword",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserPassword.ets",
+      "buildFunction": "UserPasswordBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userNickname",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserNickname.ets",
+      "buildFunction": "UserNicknameBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userDocumentPassword",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserDocumentPassword.ets",
+      "buildFunction": "UserDocumentPasswordBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userDocumentChangePassword",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserDocumentChangePassword.ets",
+      "buildFunction": "UserDocumentChangePasswordBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userMobile",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserMobile.ets",
+      "buildFunction": "UserMobileBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userRemoveMobile",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserRemoveMobile.ets",
+      "buildFunction": "UserRemoveMobileBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

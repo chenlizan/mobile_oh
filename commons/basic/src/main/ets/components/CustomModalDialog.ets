@@ -32,6 +32,10 @@ export struct CustomModalDialog {
    */
   @Prop hideCloseBtn: Visibility = Visibility.Visible
   /**
+   * 隐藏分割线
+   */
+  @Prop hideDivider: Visibility = Visibility.Visible
+  /**
    * 标题
    */
   @Link title: string
@@ -59,6 +63,7 @@ export struct CustomModalDialog {
       title: this.title,
       dialogHeight: this.dialogHeight,
       hideCloseBtn: this.hideCloseBtn,
+      hideDivider: this.hideDivider,
       onCloseBtn: this.onCloseBtn
     }),
     autoCancel: false,
@@ -89,6 +94,7 @@ struct CustomModalDialogView {
   title?: string
   dialogHeight?: Length = '30%'
   hideCloseBtn?: Visibility = Visibility.Visible
+  hideDivider?: Visibility = Visibility.Visible
   onCloseBtn: () => void = () => {
   }
 
@@ -121,7 +127,7 @@ struct CustomModalDialogView {
           })
           .padding({ top: 12, right: 12 })
         }
-        .flexBasis('auto')
+        .flexBasis(42)
         .height(42)
       }
 
@@ -136,6 +142,7 @@ struct CustomModalDialogView {
       .width('100%')
       .padding({ left: 16, right: 16 })
       .alignItems(VerticalAlign.Center)
+      .visibility(this.hideDivider)
 
       if (typeof this.contentBuilder === 'function') {
         Column() {

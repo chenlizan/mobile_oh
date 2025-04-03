@@ -148,9 +148,16 @@ export struct TeachingPage {
             }
 
             Row() {
-              AppIcon({ iconCode: IconConstants.RIGHT, iconSize: 16, iconColor: Color.White })
+              AppIcon({
+                iconCode: IconConstants.RIGHT,
+                iconSize: 16,
+                iconColor: Color.White,
+                iconPadding: 32,
+                onClickBtn: () => {
+                  this.pageInfos.pushPath({ name: 'userEdit' })
+                }
+              })
             }
-            .margin({ right: 32 })
           }
           .width('100%')
           .justifyContent(FlexAlign.SpaceBetween)

@@ -1,5 +1,5 @@
 import { webview } from "@kit.ArkWeb";
-import { TextModifier } from "@kit.ArkUI";
+import { CustomNavTitle } from "@xy/basic";
 
 @Component
 export struct Agreement {
@@ -18,10 +18,7 @@ export struct Agreement {
         controller: this.controller
       })
     }
-    .title(this.param.title,
-      {
-        mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-      })
+    .title(CustomNavTitle(this.param.title))
     .backgroundColor("#f1f1f1")
   }
 }

@@ -2,6 +2,8 @@ import { Api_Context } from "../config/Context";
 
 @Component
 export struct Avatar {
+  @Prop avatarSize: number = 60;
+
   @State avatar: string | null = null
   getAvatarSource = (avatar: string) => {
     let source: string | null = null
@@ -32,8 +34,8 @@ export struct Avatar {
           .borderRadius(50)
       }
     }
-    .width(60)
-    .height(60)
+    .width(this.avatarSize)
+    .height(this.avatarSize)
     .borderRadius(50)
     .borderWidth(1)
     .borderColor(Color.White)

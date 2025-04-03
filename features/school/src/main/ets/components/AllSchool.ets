@@ -1,7 +1,7 @@
-import { TextModifier } from "@kit.ArkUI";
 import _ from "@wolfx/lodash";
 import {
   Api_Context,
+  CustomNavTitle,
   getApiHostDomain,
   isJSON,
   ObjectOption,
@@ -139,11 +139,7 @@ export struct AllSchool {
       .borderRadius({ topLeft: 4, topRight: 4 })
       .backgroundColor(Color.White)
     }
-    .title('全部开课院校',
-      {
-        mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-      })
-    .backgroundColor('#f1f1f1')
+    .title(CustomNavTitle('全部开课院校'))
   }
 }
 

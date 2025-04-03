@@ -12,4 +12,5 @@ export class PreferenceStorage {
   des_encrypt_key?: Array<string>
   saveUsername?: string
   savePassword?: string
+  node_key?: string
 }

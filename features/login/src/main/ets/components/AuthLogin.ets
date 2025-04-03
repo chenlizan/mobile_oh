@@ -1,5 +1,4 @@
 import { deviceInfo } from "@kit.BasicServicesKit";
-import { TextModifier } from "@kit.ArkUI";
 import { identifier } from "@kit.AdsKit";
 import {
   Api_Context,
@@ -8,6 +7,7 @@ import {
   checkPassWord,
   checkUserName,
   CustomField,
+  CustomNavTitle,
   CustomToast,
   encryptDes,
   IconConstants,
@@ -133,9 +133,7 @@ export struct AuthLogin {
         }
       })
     }
-    .title('统一身份认证', {
-      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-    })
+    .title(CustomNavTitle('统一身份认证'))
   }
 }
 

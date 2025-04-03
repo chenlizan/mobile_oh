@@ -1,7 +1,6 @@
-import { TextModifier } from "@kit.ArkUI"
 import _ from "@wolfx/lodash"
 import dayjs from "dayjs"
-import { Api_Context, ccApiGet, HomeApi, MineApi, UserInfoModel, xyApiGet } from "@xy/basic"
+import { Api_Context, ccApiGet, CustomNavTitle, HomeApi, MineApi, UserInfoModel, xyApiGet } from "@xy/basic"
 
 interface PORTRAIT {
   title?: string
@@ -390,9 +389,7 @@ struct UserPortrait {
         }, 500)
       })
     }
-    .title('个人数据看板', {
-      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-    })
+    .title(CustomNavTitle('个人数据看板'))
     .backgroundColor("#f1f1f1")
   }
 }

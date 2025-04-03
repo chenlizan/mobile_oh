@@ -260,3 +260,23 @@ export const getLoginAccounts =
     );
     return _.filter(rows, (item: Record<string, Record<string, string>>) => item.school.code === school_code)
   };
+
+/**
+ * 阅读密码规则
+ */
+export const passwordRules = (password: string) => {
+  if (password.length < 6) {
+    CustomToast.toast_fail('阅读密码不能小于6个字符');
+    return false;
+  }
+  if (password.length > 20) {
+    CustomToast.toast_fail('阅读密码不能超过20个字符');
+    return false;
+  }
+  const regPassword = /^[^\s]*$/;
+  if (!regPassword.test(password)) {
+    CustomToast.toast_fail('禁止输入空格');
+    return false;
+  }
+  return true;
+}

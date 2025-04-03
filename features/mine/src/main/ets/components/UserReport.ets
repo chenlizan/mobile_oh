@@ -1,6 +1,5 @@
 import { webview } from '@kit.ArkWeb';
-import { TextModifier } from '@kit.ArkUI';
-import { Api_Context, CustomModalDialog, PreferenceStorage, UserInfoModel } from '@xy/basic';
+import { Api_Context, CustomModalDialog, CustomNavTitle, PreferenceStorage, UserInfoModel } from '@xy/basic';
 
 @Component
 struct UserReport {
@@ -68,9 +67,7 @@ struct UserReport {
         contentBuilder: () => this.buildContent()
       })
     }
-    .title('个人年度报告', {
-      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-    })
+    .title(CustomNavTitle('个人年度报告'))
     .backgroundColor("#f1f1f1")
   }
 }

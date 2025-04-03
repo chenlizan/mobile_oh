@@ -38,13 +38,17 @@ export { CustomModalDialog } from './src/main/ets/components/CustomModalDialog'
 
 export { CustomLocalH5 } from './src/main/ets/components/CustomLocalH5'
 
-export { Avatar } from "./src/main/ets/components/XyAvatar"
+export { CustomNavTitle } from './src/main/ets/components/CustomNavTitle'
 
-export { UserInfoModel } from './src/main/ets/model/UserInfoModel'
+export { CustomToast } from './src/main/ets/components/CustomToast'
+
+export { CustomAlertDialog, AlertDialogParam } from './src/main/ets/components/CustomAlertDialog'
+
+export { Avatar } from "./src/main/ets/components/XyAvatar"
 
 export { AppIcon } from './src/main/ets/components/AppIcon'
 
-export { CustomToast } from './src/main/ets/components/CustomToast'
+export { UserInfoModel } from './src/main/ets/model/UserInfoModel'
 
 export { PreferenceStorage } from './src/main/ets/model/LocalStorageModel'
 
@@ -65,4 +69,5 @@ export { isJSON,
   checkPassWordSame,
   verifyPassWord,
   verifyNameIsMobile,
-  getIdentityList } from './src/main/ets/utils/BaseUtils'
+  getIdentityList,
+  passwordRules } from './src/main/ets/utils/BaseUtils'

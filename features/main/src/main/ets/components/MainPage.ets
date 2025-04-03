@@ -1,17 +1,39 @@
+import { emitter } from '@kit.BasicServicesKit';
 import _ from '@wolfx/lodash';
-import { CommonConstants } from '@xy/basic';
+import { Api_Context, CCApi, ccApiGet, CommonConstants, PreferenceStorage, RouterConstants,
+  SystemApi,
+  xyApiGet } from '@xy/basic';
 import { HomePage } from '@xy/home'
 import { MinePage } from '@xy/mine'
 import { SystemNoticeModal } from './SystemNoticeModal';
-import { emitter } from '@kit.BasicServicesKit';
 
 @Component
 export struct MainPage {
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @Link globalPageIndex: string;
   @State backgroundImageY: number = 0;
   @State currentTabIndex: number = 0;
   @StorageProp('bottom') bottom: number = 0;
   @StorageLink('breakPoint') breakPoint: string = CommonConstants.BREAK_POINT_SM;
+
+  aboutToAppear(): void {
+    emitter.on("loginOut", async () => {
+      await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.logout)
+      this.preferenceStorage.access_token = undefined
+      this.preferenceStorage.refresh_token = undefined
+      this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
+    })
+    this.getAuthStore()
+  }
+
+  async getAuthStore() {
+    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + SystemApi.authStore)
+    if (response.success) {
+      const profile = (response.data as Record<string, Record<string, Record<string, string>>>).auth.profile
+      this.preferenceStorage.node_key = profile.node_key
+    }
+  }
 
   @Builder
   BuildTabs(icon: Resource, unIcon: Resource, title: ResourceStr, index: number) {

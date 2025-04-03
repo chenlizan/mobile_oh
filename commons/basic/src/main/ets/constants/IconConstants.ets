@@ -20,7 +20,10 @@ export class IconConstants {
   static readonly INFO: string = '\ue693' //信息
   static readonly LOADING: string = 'loading' //加载
   static readonly MENU: string = '\ue7f5' //菜单
-  static readonly SCAN:string ='\ue70b' //扫码
-  static readonly ADD:string = '\ue84a' //添加
-  static readonly FOLDER:string = '\ue747' //文件夹
+  static readonly SCAN: string = '\ue70b' //扫码
+  static readonly ADD: string = '\ue84a' //添加
+  static readonly FOLDER: string = '\ue747' //文件夹
+  static readonly SCHOOL: string = '\ue804' //学校
+  static readonly MAJOR: string = '\ue802' //院系
+  static readonly PASS: string = '\ue803' //一卡通号
 }

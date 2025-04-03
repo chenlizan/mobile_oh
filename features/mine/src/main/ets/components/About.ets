@@ -1,6 +1,5 @@
-import { CustomList, CustomListItem } from "@xy/basic";
+import { CustomList, CustomListItem, CustomNavTitle } from "@xy/basic";
 import { common } from "@kit.AbilityKit";
-import { TextModifier } from "@kit.ArkUI";
 import { updateManager } from "@kit.StoreKit";
 
 @Component
@@ -20,7 +19,7 @@ export struct About {
       Row() {
         Text('小雅版本 2.2.2204')
       }
-      .margin({ top: '160vp', bottom: '16vp' })
+      .margin({ top: 160, bottom: 16 })
 
       CustomList() {
         CustomListItem({
@@ -39,7 +38,7 @@ export struct About {
         CustomListItem({
           text: '小雅用户服务协议',
           itemBorder: {},
-          itemMargin: { top: '16vp' },
+          itemMargin: { top: 16 },
           onClickBtn: () => {
             this.pageInfos.pushPath({
               name: "agreement",
@@ -64,9 +63,7 @@ export struct About {
         })
       }
     }
-    .title('关于小雅', {
-      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-    })
+    .title(CustomNavTitle('关于小雅'))
     .backgroundColor("#f1f1f1")
   }
 }

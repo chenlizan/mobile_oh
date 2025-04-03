@@ -1,6 +1,7 @@
 import _ from '@wolfx/lodash'
 import { image } from '@kit.ImageKit'
 import { display } from '@kit.ArkUI'
+import { emitter } from '@kit.BasicServicesKit';
 import {
   CustomList,
   CustomListItem,
@@ -20,7 +21,7 @@ import {
 export struct MinePage {
   @Link globalPageIndex: string;
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
-  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @State screenWidth: number = 0
@@ -102,9 +103,16 @@ export struct MinePage {
           }
 
           Row() {
-            AppIcon({ iconCode: IconConstants.RIGHT, iconSize: 16, iconColor: Color.White })
+            AppIcon({
+              iconCode: IconConstants.RIGHT,
+              iconSize: 16,
+              iconColor: Color.White,
+              iconPadding: 32,
+              onClickBtn: () => {
+                this.pageInfos.pushPath({ name: 'userEdit' })
+              }
+            })
           }
-          .margin({ right: 32 })
         }
         .width('100%')
         .height(170)
@@ -119,8 +127,8 @@ export struct MinePage {
             CustomListItem({
               iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
               text: '个人年度报告',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
+              itemMargin: { top: 8 },
+              itemRadius: 8,
               itemBorder: '',
               onClickBtn: () => {
                 this.pageInfos.pushPath({ name: 'userReport' })
@@ -129,8 +137,8 @@ export struct MinePage {
             CustomListItem({
               iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
               text: '个人数据看板',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
+              itemMargin: { top: 8 },
+              itemRadius: 8,
               itemBorder: '',
               onClickBtn: () => {
                 this.pageInfos.pushPath({ name: 'userPortrait' })
@@ -139,8 +147,8 @@ export struct MinePage {
             CustomListItem({
               iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
               text: '反馈&建议',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
+              itemMargin: { top: 8 },
+              itemRadius: 8,
               itemBorder: '',
               onClickBtn: () => {
                 this.pageInfos.pushPath({ name: 'userReflect' })
@@ -149,8 +157,8 @@ export struct MinePage {
             CustomListItem({
               iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_about')),
               text: '关于小雅',
-              itemMargin: { top: '8vp' },
-              itemRadius: '8vp',
+              itemMargin: { top: 8 },
+              itemRadius: 8,
               itemBorder: '',
               onClickBtn: () => {
                 this.pageInfos.pushPath({ name: "about" })

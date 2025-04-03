@@ -1,9 +1,11 @@
 import _ from '@wolfx/lodash'
 import { uniformTypeDescriptor } from '@kit.ArkData'
-import { display, TextModifier } from '@kit.ArkUI'
+import { display } from '@kit.ArkUI'
 import { fileIo, picker } from '@kit.CoreFileKit'
 import axios, { AxiosError, AxiosProgressEvent, AxiosResponse, FormData } from '@ohos/axios'
-import { Api_Context, AppIcon, CCApi, ccApiPost, CustomToast, IconConstants, PreferenceStorage, } from '@xy/basic'
+import { Api_Context, AppIcon, CCApi, ccApiPost,
+  CustomNavTitle,
+  CustomToast, IconConstants, PreferenceStorage, } from '@xy/basic'
 
 @Component
 struct UserReflect {
@@ -258,9 +260,7 @@ struct UserReflect {
       .justifyContent(FlexAlign.End)
 
     }
-    .title('反馈&建议', {
-      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-    })
+    .title(CustomNavTitle('反馈&建议'))
     .backgroundColor("#f1f1f1")
   }
 }

@@ -1,11 +1,11 @@
 import _ from "@wolfx/lodash";
 import { emitter } from "@kit.BasicServicesKit";
-import { TextModifier } from "@kit.ArkUI";
 import {
   Api_Context,
   AppIcon,
   CCApi,
   ccApiGet,
+  CustomNavTitle,
   CustomToast,
   getIdentityList,
   IconConstants,
@@ -204,8 +204,6 @@ export struct IdentityPage {
       }
       .margin({ bottom: 30 })
     }
-    .title(this.userInfo.nickname ? '我的小雅空间' : null, {
-      mainTitleModifier: new TextModifier().fontColor('#404040').fontSize(16).fontWeight(FontWeight.Normal)
-    })
+    .title(CustomNavTitle(this.userInfo.nickname ? '我的小雅空间' : ''))
   }
 }
