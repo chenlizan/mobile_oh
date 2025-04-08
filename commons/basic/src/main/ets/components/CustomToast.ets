@@ -53,6 +53,7 @@ class Toast {
     if (this.promptAction && this.customDialog) {
       this.promptAction.closeCustomDialog(this.customDialog)
       this.customDialog.dispose()
+      this.customDialog = null
     }
   }
 
