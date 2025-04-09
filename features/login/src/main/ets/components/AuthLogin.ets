@@ -94,7 +94,7 @@ export struct AuthLogin {
         CustomField({
           value: $username,
           iconCode: IconConstants.USER,
-          placeholder: '请输入手机号/账号',
+          placeholder: '请输入用户名',
         })
         CustomField({
           value: $password,

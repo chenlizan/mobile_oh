@@ -20,6 +20,7 @@ export struct TeachingPage {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State avatar:string = this.userInfo.avatar
   @State isRefreshing: boolean = false
   @State screenWidth: number = 0
   @State teach: number = 0
@@ -120,7 +121,7 @@ export struct TeachingPage {
           Row() {
             Row() {
               Column() {
-                Avatar({ avatar: this.userInfo.avatar })
+                Avatar({ avatar: $avatar })
               }
               .margin({ left: 40, right: 18 })
 
@@ -222,6 +223,7 @@ export struct TeachingPage {
     }
     .onRefreshing(() => {
       this.handleSiteCountNum()
+      this.avatar = this.userInfo.avatar
       setTimeout(() => {
         this.isRefreshing = false
       }, 500)

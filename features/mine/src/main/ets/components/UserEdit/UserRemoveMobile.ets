@@ -5,13 +5,22 @@ import {
   IconConstants,
   UserInfoModel,
   AlertDialogParam,
-  checkPassWord
+  checkPassWord,
+  ccApiPost,
+  CCApi,
+  CustomToast,
+  Api_Context,
+  encryptDes,
+  PreferenceStorage
 } from "@xy/basic"
 import { display } from "@kit.ArkUI"
 
 @Component
 struct UserRemoveMobile {
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @State screenWidth: number = 0
   @State mobile: string = this.userInfo.mobile
   @State password: string = ''
@@ -20,20 +29,30 @@ struct UserRemoveMobile {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
   }
 
+  async handleInfraDismissMobile() {
+    const response =
+      await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.infraDismissMobile,
+        { 'password': encryptDes(this.password, this.preferenceStorage?.des_encrypt_key?.[2] ?? '') })
+    if (response.code === 200) {
+      this.userInfo.mobile = ''
+      CustomToast.toast_success('手机解绑成功')
+      this.pageInfos.popToName('userEdit')
+    } else {
+      CustomToast.toast_fail(response.msg || '')
+    }
+  }
+
   handleSubmit() {
     if (!checkPassWord(this.password)) {
       return;
     }
 
-    new CustomAlertDialog({
+    CustomAlertDialog({
       title: '注意',
       message: '移除后，已绑定账号将不再支持手机密码登录',
       onClickBtn: () => {
-        console.log('')
-      },
-      onCloseBtn: () => {
-        console.log('')
-      },
+        this.handleInfraDismissMobile()
+      }
     } as AlertDialogParam)
   }
 

@@ -97,9 +97,9 @@
       }
     },
     {
-      "name": "userMobile",
-      "pageSourceFile": "src/main/ets/components/UserEdit/UserMobile.ets",
-      "buildFunction": "UserMobileBuilder",
+      "name": "userEditMobile",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserEditMobile.ets",
+      "buildFunction": "UserEditMobileBuilder",
       "data": {
         "description": "this is pageOne"
       }
@@ -108,6 +108,30 @@
       "name": "userRemoveMobile",
       "pageSourceFile": "src/main/ets/components/UserEdit/UserRemoveMobile.ets",
       "buildFunction": "UserRemoveMobileBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userBindMobile",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserBindMobile.ets",
+      "buildFunction": "UserBindMobileBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userChangeMobile",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserChangeMobile.ets",
+      "buildFunction": "UserChangeMobileBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "userAvatar",
+      "pageSourceFile": "src/main/ets/components/UserEdit/UserAvatar.ets",
+      "buildFunction": "UserAvatarBuilder",
       "data": {
         "description": "this is pageOne"
       }

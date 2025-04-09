@@ -152,6 +152,7 @@ export struct SchoolPage {
             Text('其他用户登录 >')
               .fontColor('#40A9FF')
               .fontSize(12)
+              .visibility(Visibility.Hidden)
           }
           .width('100%')
           .padding({ left: 32, right: 32, bottom: 16 })

@@ -3,8 +3,7 @@ import { Api_Context } from "../config/Context";
 @Component
 export struct Avatar {
   @Prop avatarSize: number = 60;
-
-  @State avatar: string | null = null
+  @Link avatar: string | null
   getAvatarSource = (avatar: string) => {
     let source: string | null = null
     if (avatar) {
@@ -28,15 +27,15 @@ export struct Avatar {
     Row() {
       if (this.avatar) {
         Image(this.getAvatarSource(this.avatar))
-          .borderRadius(50)
+          .borderRadius(this.avatarSize / 2)
       } else {
         Image($r('app.media.default'))
-          .borderRadius(50)
+          .borderRadius(this.avatarSize / 2)
       }
     }
     .width(this.avatarSize)
     .height(this.avatarSize)
-    .borderRadius(50)
+    .borderRadius(this.avatarSize / 2)
     .borderWidth(1)
     .borderColor(Color.White)
   }

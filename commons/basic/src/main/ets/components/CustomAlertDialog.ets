@@ -1,11 +1,11 @@
-import { ComponentContent, PromptAction, window } from "@kit.ArkUI"
+import { ComponentContent, window } from "@kit.ArkUI"
 import { AppIcon } from "./AppIcon"
 import { IconConstants } from "../constants/IconConstants"
 
 export class AlertDialogParam {
-  message: string = '警告'
+  message: string = ''
   title: string = ''
-  dialogHeight: Length = 180
+  dialogHeight: Length = 0
   autoCancel: boolean = false
   hideCloseBtn: Visibility = Visibility.Visible
   hideDivider: Visibility = Visibility.Visible
@@ -22,7 +22,7 @@ function AlertDialogComponent(params: AlertDialogParam) {
   Flex({ direction: FlexDirection.Column }) {
     RelativeContainer() {
       Row() {
-        Text(params.title || '警告')
+        Text(params.title)
           .fontWeight(FontWeight.Bold)
       }
       .width('100%')
@@ -87,7 +87,9 @@ function AlertDialogComponent(params: AlertDialogParam) {
         })
         .flexGrow(1)
         .onClick(() => {
-          params.onCloseBtn()
+          if (params.onCloseBtn) {
+            params.onCloseBtn()
+          }
           params.hide()
         })
       Button('确定', { type: ButtonType.Normal })
@@ -103,12 +105,13 @@ function AlertDialogComponent(params: AlertDialogParam) {
         })
         .flexGrow(1)
         .onClick(() => {
-          params.onClickBtn()
+          if (params.onClickBtn) {
+            params.onClickBtn()
+          }
           params.hide()
         })
     }
     .width('100%')
-
   }
   .height(params.dialogHeight || 180)
   .margin(48)
@@ -116,27 +119,16 @@ function AlertDialogComponent(params: AlertDialogParam) {
   .backgroundColor(Color.White)
 }
 
-export class CustomAlertDialog {
-  private promptAction: PromptAction | null = null
-  private customDialog: ComponentContent<AlertDialogParam> | null = null
-
-  constructor(params: AlertDialogParam) {
-    this.show(params)
-  }
-
-  private async show(params: AlertDialogParam) {
-    params.hide = (): void => this.hide()
-    const windowClass = await window.getLastWindow(getContext())
-    const uiContext = windowClass.getUIContext()
-    this.customDialog = new ComponentContent(uiContext, wrapBuilder(AlertDialogComponent), params)
-    this.promptAction = uiContext.getPromptAction()
-    this.promptAction.openCustomDialog(this.customDialog, { autoCancel: params.autoCancel })
-  }
-
-  private hide() {
-    if (this.promptAction && this.customDialog) {
-      this.promptAction.closeCustomDialog(this.customDialog)
-      this.customDialog.dispose()
+export async function CustomAlertDialog(params: AlertDialogParam) {
+  const windowClass = await window.getLastWindow(getContext())
+  const uiContext = windowClass.getUIContext()
+  const customDialog = new ComponentContent(uiContext, wrapBuilder(AlertDialogComponent), params)
+  const promptAction = uiContext.getPromptAction()
+  params.hide = () => {
+    if (promptAction && customDialog) {
+      promptAction.closeCustomDialog(customDialog)
+      customDialog.dispose()
     }
   }
+  promptAction.openCustomDialog(customDialog, { autoCancel: params.autoCancel || false })
 }

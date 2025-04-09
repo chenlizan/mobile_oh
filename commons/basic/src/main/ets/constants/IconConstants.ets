@@ -18,6 +18,7 @@ export class IconConstants {
   static readonly SPACE_MANAGER: string = '\ue81c' //管理空间
   static readonly AGREE: string = '\ue8bb' //同意
   static readonly INFO: string = '\ue693' //信息
+  static readonly RIGHT_GOING: string = '\ue814' //右箭头
   static readonly LOADING: string = 'loading' //加载
   static readonly MENU: string = '\ue7f5' //菜单
   static readonly SCAN: string = '\ue70b' //扫码

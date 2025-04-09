@@ -34,8 +34,8 @@ export enum LoginType {
 @Component
 export struct LoginPage {
   @Link globalPageIndex: string;
-  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
-  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context(this.preferenceStorage?.school?.domain)
   @State showIdAuth: boolean = false
   @State accountDialogVisible: boolean = false

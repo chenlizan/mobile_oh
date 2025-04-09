@@ -159,6 +159,7 @@ struct UserPassword {
         accounts: $accounts,
         visible: $checkDialogVisible,
         onSubmit: () => {
+          this.handleUpdate(this.password0, this.password1)
         }
       })
     }

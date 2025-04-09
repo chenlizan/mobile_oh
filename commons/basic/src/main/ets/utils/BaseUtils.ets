@@ -105,7 +105,7 @@ export function checkCode(code: string) {
   return true;
 }
 
-//密码中不能包括中文字符
+// 密码中不能包括中文字符
 export function checkNoChinese(value: string, placeholder = '密码') {
   const regPassword = /[\u4e00-\u9fa5]/;
   if (regPassword.test(value)) {

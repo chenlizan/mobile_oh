@@ -1,7 +1,6 @@
 import _ from '@wolfx/lodash'
 import { image } from '@kit.ImageKit'
 import { display } from '@kit.ArkUI'
-import { emitter } from '@kit.BasicServicesKit';
 import {
   CustomList,
   CustomListItem,
@@ -24,6 +23,8 @@ export struct MinePage {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State isRefreshing: boolean = false
+  @State avatar: string = this.userInfo.avatar
   @State screenWidth: number = 0
 
   aboutToAppear(): void {
@@ -62,128 +63,136 @@ export struct MinePage {
   }
 
   build() {
-    Column() {
+    Refresh({ refreshing: $$this.isRefreshing }) {
       Column() {
-        Row() {
+        Column() {
           Row() {
-            Column() {
-              Avatar({ avatar: this.userInfo.avatar })
-              Row() {
-                Text((this.userInfo.fileCapacity as Record<string, string>).caseName)
-                  .padding({
-                    top: 4,
-                    bottom: 4,
-                    left: 8,
-                    right: 8
-                  })
-                  .fontSize(8)
-                  .fontColor('#fcbb34')
+            Row() {
+              Column() {
+                Avatar({ avatar: $avatar })
+                Row() {
+                  Text((this.userInfo.fileCapacity as Record<string, string>).caseName)
+                    .padding({
+                      top: 4,
+                      bottom: 4,
+                      left: 8,
+                      right: 8
+                    })
+                    .fontSize(8)
+                    .fontColor('#fcbb34')
+                }
+                .margin({ top: -16 })
+                .borderRadius(30)
+                .backgroundColor('#404040')
+                .borderColor(Color.White)
+                .borderWidth(0.5)
               }
-              .margin({ top: -16 })
-              .borderRadius(30)
-              .backgroundColor('#404040')
-              .borderColor(Color.White)
-              .borderWidth(0.5)
-            }
-            .margin({ left: 40, right: 18 })
+              .margin({ left: 40, right: 18 })
 
-            Column() {
-              Text(this.userInfo.nickname)
-                .fontSize(20)
-                .fontColor(Color.White)
-                .fontWeight(FontWeight.Bold)
-                .textAlign(TextAlign.Start)
-              Text(this.getSchools())
-                .fontColor(Color.White)
-                .textAlign(TextAlign.Start)
-            }
-            .height(64)
-            .alignItems(HorizontalAlign.Start)
-            .justifyContent(FlexAlign.SpaceAround)
-          }
-
-          Row() {
-            AppIcon({
-              iconCode: IconConstants.RIGHT,
-              iconSize: 16,
-              iconColor: Color.White,
-              iconPadding: 32,
-              onClickBtn: () => {
-                this.pageInfos.pushPath({ name: 'userEdit' })
+              Column() {
+                Text(this.userInfo.nickname)
+                  .fontSize(20)
+                  .fontColor(Color.White)
+                  .fontWeight(FontWeight.Bold)
+                  .textAlign(TextAlign.Start)
+                Text(this.getSchools())
+                  .fontColor(Color.White)
+                  .textAlign(TextAlign.Start)
               }
-            })
+              .height(64)
+              .alignItems(HorizontalAlign.Start)
+              .justifyContent(FlexAlign.SpaceAround)
+            }
+
+            Row() {
+              AppIcon({
+                iconCode: IconConstants.RIGHT,
+                iconSize: 16,
+                iconColor: Color.White,
+                iconPadding: 32,
+                onClickBtn: () => {
+                  this.pageInfos.pushPath({ name: 'userEdit' })
+                }
+              })
+            }
           }
+          .width('100%')
+          .height(170)
+          .justifyContent(FlexAlign.SpaceBetween)
+          .backgroundColor(Color.Blue)
+          .backgroundImage($r('app.media.homeBg'))
+          .backgroundImageSize({ width: '100%', height: '100%' })
+          .backgroundEffect({ radius: 25 })
+
+          Column() {
+            CustomList({ listPadding: { left: 16, right: 16 } }) {
+              CustomListItem({
+                iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
+                text: '个人年度报告',
+                itemMargin: { top: 8 },
+                itemRadius: 8,
+                itemBorder: '',
+                onClickBtn: () => {
+                  this.pageInfos.pushPath({ name: 'userReport' })
+                }
+              })
+              CustomListItem({
+                iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
+                text: '个人数据看板',
+                itemMargin: { top: 8 },
+                itemRadius: 8,
+                itemBorder: '',
+                onClickBtn: () => {
+                  this.pageInfos.pushPath({ name: 'userPortrait' })
+                }
+              })
+              CustomListItem({
+                iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
+                text: '反馈&建议',
+                itemMargin: { top: 8 },
+                itemRadius: 8,
+                itemBorder: '',
+                onClickBtn: () => {
+                  this.pageInfos.pushPath({ name: 'userReflect' })
+                }
+              })
+              CustomListItem({
+                iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_about')),
+                text: '关于小雅',
+                itemMargin: { top: 8 },
+                itemRadius: 8,
+                itemBorder: '',
+                onClickBtn: () => {
+                  this.pageInfos.pushPath({ name: "about" })
+                }
+              })
+            }
+          }
+          .margin({ top: -24 })
         }
-        .width('100%')
-        .height(170)
-        .justifyContent(FlexAlign.SpaceBetween)
-        .backgroundColor(Color.Blue)
-        .backgroundImage($r('app.media.homeBg'))
-        .backgroundImageSize({ width: '100%', height: '100%' })
-        .backgroundEffect({ radius: 25 })
+        .flexGrow(1)
 
         Column() {
-          CustomList({ listPadding: { left: 16, right: 16 } }) {
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_report')),
-              text: '个人年度报告',
-              itemMargin: { top: 8 },
-              itemRadius: 8,
-              itemBorder: '',
-              onClickBtn: () => {
-                this.pageInfos.pushPath({ name: 'userReport' })
-              }
-            })
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_portrait')),
-              text: '个人数据看板',
-              itemMargin: { top: 8 },
-              itemRadius: 8,
-              itemBorder: '',
-              onClickBtn: () => {
-                this.pageInfos.pushPath({ name: 'userPortrait' })
-              }
-            })
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_reflect')),
-              text: '反馈&建议',
-              itemMargin: { top: 8 },
-              itemRadius: 8,
-              itemBorder: '',
-              onClickBtn: () => {
-                this.pageInfos.pushPath({ name: 'userReflect' })
-              }
-            })
-            CustomListItem({
-              iconBuilder: () => this.BuildLeftIcon($r('app.media.mine_about')),
-              text: '关于小雅',
-              itemMargin: { top: 8 },
-              itemRadius: 8,
-              itemBorder: '',
-              onClickBtn: () => {
-                this.pageInfos.pushPath({ name: "about" })
-              }
-            })
-          }
+          Button('退出小雅', { type: ButtonType.Normal })
+            .margin(16)
+            .width(this.screenWidth - 32)
+            .height(40)
+            .backgroundColor('#fcbb34')
+            .borderRadius(4)
+            .onClick(() => this.handleLoginOut())
         }
-        .margin({ top: -24 })
-      }
-      .flexGrow(1)
+        .justifyContent(FlexAlign.End)
 
-      Column() {
-        Button('退出小雅', { type: ButtonType.Normal })
-          .margin(16)
-          .width(this.screenWidth - 32)
-          .height(40)
-          .backgroundColor('#fcbb34')
-          .borderRadius(4)
-          .onClick(() => this.handleLoginOut())
       }
-      .justifyContent(FlexAlign.End)
-
+      .width('100%')
+      .height('100%')
+      .backgroundColor('#f1f1f1')
     }
-    .width('100%')
-    .height('100%')
-    .backgroundColor('#f1f1f1')
+    .onRefreshing(() => {
+      this.avatar = this.userInfo.avatar
+      setTimeout(() => {
+        this.isRefreshing = false
+      }, 500)
+    })
   }
 }

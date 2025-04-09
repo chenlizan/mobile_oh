@@ -2,7 +2,7 @@ import { display } from "@kit.ArkUI"
 import { CustomNavTitle, UserInfoModel } from "@xy/basic"
 
 @Component
-struct UserMobile {
+struct UserEditMobile {
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @State screenWidth: number = 0
@@ -43,6 +43,7 @@ struct UserMobile {
           .height(40)
           .backgroundColor('#40A9FF')
           .borderRadius(4)
+          .onClick(() => this.pageInfos.pushPath({ name: 'userChangeMobile' }))
 
         Text('更换手机号后，登录手机号将改变')
           .fontColor('#9a999999')
@@ -59,6 +60,6 @@ struct UserMobile {
 }
 
 @Builder
-export function UserMobileBuilder() {
-  UserMobile()
+export function UserEditMobileBuilder() {
+  UserEditMobile()
 }

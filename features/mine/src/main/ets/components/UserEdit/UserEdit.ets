@@ -1,3 +1,4 @@
+import _ from "@wolfx/lodash";
 import {
   Api_Context,
   AppIcon,
@@ -22,6 +23,7 @@ struct UserEdit {
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
   @State schoolList: Record<string, string>[] = []
+  @State avatar: string = this.userInfo.avatar
 
   aboutToAppear(): void {
     this.getUserSchoolInfo()
@@ -38,7 +40,7 @@ struct UserEdit {
   @Builder
   BuildAvatarItem() {
     Row() {
-      Avatar({ avatar: this.userInfo.avatar, avatarSize: 40 })
+      Avatar({ avatar: $avatar, avatarSize: 40 })
       AppIcon({ iconCode: IconConstants.RIGHT })
     }
   }
@@ -94,8 +96,7 @@ struct UserEdit {
           text: "头像",
           operateBuilder: () => this.BuildAvatarItem(),
           itemBorder: {},
-          onClickBtn: () => {
-          }
+          onClickBtn: () => this.pageInfos.pushPath({ name: 'userAvatar' })
         })
         CustomListItem({
           text: "昵称",
@@ -105,7 +106,13 @@ struct UserEdit {
         CustomListItem({
           text: "手机号码",
           operateBuilder: () => this.BuildMobileItem(),
-          onClickBtn: () => this.pageInfos.pushPath({ name: 'userMobile' })
+          onClickBtn: () => {
+            if (_.trim(this.userInfo.mobile)) {
+              this.pageInfos.pushPath({ name: 'userEditMobile' })
+            } else {
+              this.pageInfos.pushPath({ name: 'userBindMobile' })
+            }
+          }
         })
         CustomListItem({
           text: "登录密码",
@@ -142,6 +149,9 @@ struct UserEdit {
     }
     .title(CustomNavTitle('账号设置'))
     .backgroundColor("#f1f1f1")
+    .onShown(() => {
+      this.avatar = this.userInfo.avatar
+    })
   }
 }
 

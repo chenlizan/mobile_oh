@@ -35,13 +35,13 @@ struct UserReflect {
       const uri = documentSelectResult[0];
       const file = fileIo.openSync(uri)
       const stat = fileIo.statSync(file.fd)
-      const fileName = file.name;
+      const fileName = file.name
       const fileExtention = file.name.split('.').pop()
-      const typeId = uniformTypeDescriptor.getUniformDataTypeByFilenameExtension(`.${fileExtention}`);
-      const typeObj = uniformTypeDescriptor.getTypeDescriptor(typeId);
-      const mimeTypes = typeObj.mimeTypes[0];
-      const fileBuffer = new ArrayBuffer(stat.size);
-      fileIo.readSync(file.fd, fileBuffer);
+      const typeId = uniformTypeDescriptor.getUniformDataTypeByFilenameExtension(`.${fileExtention}`)
+      const typeObj = uniformTypeDescriptor.getTypeDescriptor(typeId)
+      const mimeTypes = typeObj.mimeTypes[0]
+      const fileBuffer = new ArrayBuffer(stat.size)
+      fileIo.readSync(file.fd, fileBuffer)
       fileIo.closeSync(file.fd)
 
       const isLt200M = stat.size / 1024 / 1024 < 200
@@ -87,7 +87,6 @@ struct UserReflect {
 
       const formData = new FormData()
       formData.append('key', `${ossData.dir}/${ossData.fileName}`)
-      formData.append('name', fileName)
       formData.append('OSSAccessKeyId', ossData.accessid)
       formData.append('policy', ossData.policy)
       formData.append('signature', ossData.signature)
@@ -103,7 +102,7 @@ struct UserReflect {
         },
       }).then((res: AxiosResponse<string>) => {
         CustomToast.hide()
-        CustomToast.toast_fail('上传成功!')
+        CustomToast.toast_success('上传成功!')
         this.attachmentId = response.result as string
         console.info("result" + JSON.stringify(res.data));
       }).catch((err: AxiosError) => {
