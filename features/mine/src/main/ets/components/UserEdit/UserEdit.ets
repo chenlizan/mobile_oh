@@ -41,7 +41,7 @@ struct UserEdit {
   BuildAvatarItem() {
     Row() {
       Avatar({ avatar: $avatar, avatarSize: 40 })
-      AppIcon({ iconCode: IconConstants.RIGHT })
+      AppIcon({ iconCode: IconConstants.RIGHT, iconMargin: { left: 8 } })
     }
   }
 
