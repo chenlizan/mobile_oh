@@ -56,24 +56,23 @@ export struct AuthLogin {
         'mobile-model': deviceInfo.productModel,
       })
     if (response.code === 200) {
-      CustomToast.hide()
       this.login_info = new ObjectUtil(response.result as ObjectOption<never>)
       this.login_info.setValue('access_token', this.login_info.getValue('token'))
       this.login_info.setValue('refresh_token', this.login_info.getValue('refreshToken'))
 
       if (!this.login_info.getValue('access_token')) {
         this.login_info.setValue('needActive', this.login_info.getValue('isUnSafePassword'))
+      }
 
-        if (!this.login_info.getValue('phoneStatus') ||
-        this.login_info.getValue('isUnSafePassword') ||
-        this.login_info.getValue('passwordExpiredStatus')) {
-          this.remindDialogVisible = true
-        }
-        return
+      if (!this.login_info.getValue('phoneStatus') ||
+      this.login_info.getValue('isUnSafePassword') ||
+      this.login_info.getValue('passwordExpiredStatus')) {
+        this.remindDialogVisible = true
       } else {
         this.savaLoginInfo()
       }
     }
+    CustomToast.hide()
   }
 
   savaLoginInfo() {
@@ -126,10 +125,15 @@ export struct AuthLogin {
           })
         },
         onLogin: () => {
+          this.remindDialogVisible = false
           this.savaLoginInfo()
         },
         onDeal: () => {
-          //去处理
+          this.remindDialogVisible = false
+          this.savaLoginInfo()
+          setTimeout(() => {
+            this.pageInfos.pushPath({ name: 'userEdit' })
+          }, 1500)
         }
       })
     }

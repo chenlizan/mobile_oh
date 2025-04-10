@@ -86,6 +86,14 @@ export struct IdentityPage {
         }, 3000)
       }
 
+      const dynamicMenus_response =
+        await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.queryOneUserDynamicMenuList,
+          { 'userId': this.userInfo.userId, 'type': this.userInfo.isRealStudent ? 2 : 1, 'outInType': 2, })
+      if (dynamicMenus_response.code === 200) {
+        const res = new ObjectUtil(dynamicMenus_response as ObjectOption<never>)
+        this.userInfo.userFeatures = res.getValue('result')
+      }
+
       if (cb) {
         setTimeout(() => {
           cb()

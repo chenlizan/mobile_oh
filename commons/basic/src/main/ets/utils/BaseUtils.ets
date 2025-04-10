@@ -5,21 +5,6 @@ import { PARAMS } from "./EnhancedFetch";
 import { ObjectUtil } from "./ObjectUtil";
 import { CustomToast } from "../components/CustomToast";
 
-interface VL {
-  code: string,
-  roleCode: string,
-  roleLevel: number,
-  roleDomainScopeName: string,
-  roleDepartmentList: VL[],
-  roleName: string,
-  roleScopeName: string,
-  school: VL,
-  schoolId: string,
-  schoolInfo: VL,
-  schoolName: string,
-  userRoleInfos: VL[]
-}
-
 export const isJSON = (str: string): boolean => {
   try {
     const obj: object = JSON.parse(str);
@@ -166,7 +151,7 @@ export const encryptDes = (message: string, key: string): string | undefined => 
 export const getIdentityList = (userInfo: ObjectUtil<never>) => {
   const manageSpaces: PARAMS[] = [];
 
-  _.forEach(userInfo.getValue('platformUserRoleInfos') ?? [], (info: VL) => {
+  _.forEach(userInfo.getValue('platformUserRoleInfos') ?? [], (info: Record<string, string>) => {
     manageSpaces.push({
       'type': 'manager',
       'role': info.roleName,
@@ -174,11 +159,12 @@ export const getIdentityList = (userInfo: ObjectUtil<never>) => {
     });
   });
 
-  _.forEach(userInfo.getValue('schoolRoleInfos'), (info: VL) => {
+  _.forEach(userInfo.getValue('schoolRoleInfos'), (info: Record<string, Record<string, string>>) => {
     const _schoolId = info?.schoolId
     const _schoolName = info?.schoolInfo?.schoolName
 
-    const roleDepartmentList: VL[] = info?.roleDepartmentList ?? [];
+    const roleDepartmentList: Record<string, string>[] =
+      _.isArray(info?.roleDepartmentList) ? info?.roleDepartmentList : [];
     if (!_.isEmpty(roleDepartmentList)) {
       if (roleDepartmentList.some(v => v.roleCode === 'JS007')) {
         manageSpaces.push({
@@ -201,8 +187,9 @@ export const getIdentityList = (userInfo: ObjectUtil<never>) => {
       }
     }
 
-    const userRoleInfos = _.filter(info?.userRoleInfos ?? [], (v: VL) => v.roleLevel !== -1 && v.roleLevel !== 0);
-    _.map(userRoleInfos, (item: VL) => {
+    let userRoleInfos: Record<string, number>[] = _.isArray(info?.userRoleInfos) ? info.userRoleInfos : []
+    userRoleInfos = _.filter(userRoleInfos, (v) => v.roleLevel !== -1 && v.roleLevel !== 0)
+    _.map(userRoleInfos, (item: Record<string, string>) => {
       let roleSpace = '';
       let title = '管理空间';
       if (item?.roleDomainScopeName) {

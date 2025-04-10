@@ -78,7 +78,7 @@ export struct LoginRemindModal {
       .margin({ top: 12, bottom: 12 })
 
       this.BuildRemindText(login_info,
-        login_info.getValue('phoneStatus') ? '为了通过手机号找回密码，请及时绑定手机号。' : '',
+        login_info.getValue('phoneStatus') ? '' : '为了通过手机号找回密码，请及时绑定手机号。',
         login_info.getValue('totalBufferCount') - login_info.getValue('useBufferCount'),
         login_info.getValue('needActive') ? '立即' : '及时')
     }

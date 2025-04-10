@@ -1,0 +1,20 @@
+{
+  "routerMap": [
+    {
+      "name": "aIService",
+      "pageSourceFile": "src/main/ets/components/AIService.ets",
+      "buildFunction": "AIServiceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "aIHelper",
+      "pageSourceFile": "src/main/ets/components/AIHelper.ets",
+      "buildFunction": "AIHelperBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    }
+  ]
+}

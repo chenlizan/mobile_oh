@@ -12,23 +12,30 @@ import {
   RouterConstants,
   UserInfoModel
 } from "@xy/basic";
+import { DragComponent } from "./DragComponent";
 
 @Component
 export struct TeachingPage {
   @Link globalPageIndex: string;
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
-  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
-  @State avatar:string = this.userInfo.avatar
+  @State avatar: string = this.userInfo.avatar
   @State isRefreshing: boolean = false
   @State screenWidth: number = 0
+  @State screenHeight: number = 0
   @State teach: number = 0
   @State study: number = 0
+  preOffsetX: number = 0;
+  preOffsetY: number = 0;
+  @State imgOffSetX: number = 0;
+  @State imgOffSetY: number = 0;
 
   aboutToAppear(): void {
     this.handleSiteCountNum()
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
+    this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
   }
 
   getSchools() {
@@ -131,6 +138,11 @@ export struct TeachingPage {
                   .fontColor(Color.White)
                   .fontWeight(FontWeight.Bold)
                   .textAlign(TextAlign.Start)
+                  .width(160)
+                  .maxLines(1)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+                  .ellipsisMode(EllipsisMode.END)
+                  .wordBreak(WordBreak.BREAK_ALL)
                 Row() {
                   Text(this.getSchools())
                     .fontColor(Color.White)
@@ -180,6 +192,7 @@ export struct TeachingPage {
                 .margin({ top: 12 })
             }
           }
+          .enabled(false)
 
           GridItem() {
             Column() {
@@ -191,6 +204,7 @@ export struct TeachingPage {
                 .margin({ top: 12 })
             }
           }
+          .enabled(false)
 
           GridItem() {
             Column() {
@@ -202,6 +216,7 @@ export struct TeachingPage {
                 .margin({ top: 12 })
             }
           }
+          .enabled(false)
 
           GridItem() {
             Column() {
@@ -212,14 +227,38 @@ export struct TeachingPage {
                 .fontColor('#666666')
                 .margin({ top: 12 })
             }
+            .onClick(() => {
+              this.pageInfos.pushPath({ name: 'testBuilder' })
+            })
           }
+          .enabled(false)
         }
         .height(this.screenWidth)
         .rowsTemplate('1fr 1fr')
         .columnsTemplate('1fr 1fr')
+
+        DragComponent({
+          src: $r('app.media.ai_service'),
+          imgOffSetX: this.screenWidth - 70,
+          imgOffSetY: this.screenHeight - 260,
+          onClickBtn: () => {
+            this.pageInfos.pushPath({ name: 'aIService' })
+          }
+        })
+
+        DragComponent({
+          src: $r('app.media.ai_helper'),
+          imgOffSetX: this.screenWidth - 70,
+          imgOffSetY: this.screenHeight - 200,
+          onClickBtn: () => {
+            this.pageInfos.pushPath({ name: 'aIHelper' })
+          }
+        })
       }
+
       .height('100%')
       .backgroundColor('#f1f1f1')
+
     }
     .onRefreshing(() => {
       this.handleSiteCountNum()

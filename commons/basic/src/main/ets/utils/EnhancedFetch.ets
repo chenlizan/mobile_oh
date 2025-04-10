@@ -30,11 +30,20 @@ interface Token {
   refresh_token_state?: string
 }
 
-export type PARAMS = Record<string, string | number | boolean | undefined | null | object> | Array<string> | Array<PARAMS>
+export type PARAMS = Record<string, string | number | boolean | undefined | null | object> | Array<string>
+  | Array<PARAMS>
 
 export const refreshTokenInfoWarp: Record<string, boolean> = {
   'isRefreshing': false,
 };
+
+const validateResponse = (success: boolean | undefined, code: number): boolean => {
+  if (_.isBoolean(success)) {
+    return success;
+  }
+
+  return code === 200 || code === 0;
+}
 
 const waitTokenRefresh = (url: string, options?: Options) => {
   for (let index = 0; index < 5; index++) {
@@ -116,7 +125,7 @@ const enhancedFetch = async (url: string, options?: Options) => {
 
       return result;
     }
-    if (result.success === false) {
+    if (!validateResponse(result.success, result.code)) {
       console.log(`Request error : ${url} - ${result.code} - ${result.message}`);
       const msg = String(getFriendlyMsg(result.code, result.message));
       if (msg !== '-') {
