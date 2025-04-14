@@ -1,15 +1,42 @@
-import { CustomModalDialog, ObjectUtil } from "@xy/basic";
+import { Api_Context, CCApi, ccApiGet, ccApiPost, CustomModalDialog, ObjectUtil, PreferenceStorage } from "@xy/basic";
 
 @Component
 export struct LoginRemindModal {
   @Link visible: boolean
   @Link login_info: ObjectUtil<never>
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context(this.preferenceStorage?.school?.domain)
   @State title: string = '账号安全提示'
+  @State unRemind: boolean = false
+
   onActive: () => void = () => {
   }
   onLogin: () => void = () => {
   }
   onDeal: () => void = () => {
+  }
+
+  _onLogin() {
+    this.noNoticed90Days();
+    this.onLogin();
+  }
+
+  _onDeal() {
+    this.noNoticed90Days();
+    this.onDeal();
+  }
+
+  async noNoticed90Days() {
+    let onlyExpired = this.judgeOnlyExpired(this.getQuestionText())
+    if (onlyExpired && this.unRemind) {
+      // 不再提醒
+      const data = this.login_info
+      const access_token = data.getValue('access_token');
+      const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.noNoticed90Days, {}, {"Authorization": 'Bearer ' + access_token})
+      if (response.code === 200) {
+        console.log('设置成功')
+      }
+    }
   }
 
   getQuestionText() {
@@ -28,6 +55,12 @@ export struct LoginRemindModal {
       remind.push('账号的密码超过90天未更换');
     }
     return remind;
+  };
+
+  judgeOnlyExpired = (questions: Array<string>) => {
+    return (
+      questions.length === 1 && questions[0] === '账号的密码超过90天未更换'
+    );
   };
 
   @Builder
@@ -99,29 +132,49 @@ export struct LoginRemindModal {
             this.onActive()
           })
       } else {
-        Button('继续登录', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.NORMAL })
-          .height(40)
-          .margin({ right: 8 })
-          .backgroundColor(Color.White)
-          .border({ width: 1, color: '#999999' })
-          .borderRadius(4)
-          .fontColor('#999999')
-          .onClick(() => {
-            this.onLogin()
-          })
+        if (this.judgeOnlyExpired(this.getQuestionText())) {
+         Row() {
+           Checkbox()
+             .select(this.unRemind)
+             .selectedColor(0x40A9FF)
+             .shape(CheckBoxShape.ROUNDED_SQUARE)
+             .onChange((value: boolean) => {
+               this.unRemind = value
+             })
+           Text('不再提醒')
+             .margin({left: 2})
+             .fontSize(14)
+             .fontColor('#999999')
+         }
+        } else {
+          Row()
+        }
 
-        Button('去处理', { type: ButtonType.Normal })
-          .height(40)
-          .margin({ right: 8 })
-          .borderRadius(4)
-          .onClick(() => {
-            this.onDeal()
-          })
+        Row() {
+          Button('继续登录', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.NORMAL })
+            .height(40)
+            .margin({ right: 8 })
+            .backgroundColor(Color.White)
+            .border({ width: 1, color: '#999999' })
+            .borderRadius(4)
+            .fontColor('#999999')
+            .onClick(() => {
+              this._onLogin()
+            })
+
+          Button('去处理', { type: ButtonType.Normal })
+            .height(40)
+            .margin({ right: 8 })
+            .borderRadius(4)
+            .onClick(() => {
+              this._onDeal()
+            })
+        }
       }
     }
     .width('100%')
     .margin({ bottom: 8 })
-    .justifyContent(FlexAlign.End)
+    .justifyContent(FlexAlign.SpaceBetween)
   }
 
   build() {

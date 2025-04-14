@@ -69,6 +69,7 @@ interface InterfaceCCApi {
   refreshToken: string;
   logout: string;
   getSchoolList: string;
+  noNoticed90Days: string;
   getDomainList: string;
   getTermList: string;
   findBackPassword: string;
@@ -175,6 +176,7 @@ export const CCApi: InterfaceCCApi = {
   refreshToken: 'user/refreshToken', // 刷新 token
   logout: 'user/outLoginCurrent', // 注销
   getSchoolList: 'base/school/list',
+  noNoticed90Days: 'user/noNoticed90Days',
   getDomainList: 'base/domain/list',
   getTermList: 'base/term/list',
   findBackPassword: 'user/findBackPassword',
