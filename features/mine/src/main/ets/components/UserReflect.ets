@@ -11,6 +11,7 @@ import { Api_Context, AppIcon, CCApi, ccApiPost,
 struct UserReflect {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack();
   @State screenWidth: number = 0
   @State title: string = ''
   @State content: string = ''
@@ -136,6 +137,7 @@ struct UserReflect {
     )
     if (response.code === 200) {
       CustomToast.toast_success('反馈成功!')
+      this.pageInfos.pop()
     }
   }
 
