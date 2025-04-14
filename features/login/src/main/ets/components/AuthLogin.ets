@@ -138,6 +138,7 @@ export struct AuthLogin {
       })
     }
     .title(CustomNavTitle('统一身份认证'))
+    .backgroundColor("#f1f1f1")
   }
 }
 

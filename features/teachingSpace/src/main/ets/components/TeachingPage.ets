@@ -216,7 +216,9 @@ export struct TeachingPage {
                 .margin({ top: 12 })
             }
           }
-          .enabled(false)
+          .onClick(() => {
+            this.pageInfos.pushPath({ name: 'taskRemind' })
+          })
 
           GridItem() {
             Column() {

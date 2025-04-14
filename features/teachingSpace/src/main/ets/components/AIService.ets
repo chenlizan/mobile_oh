@@ -26,6 +26,7 @@ struct AIService {
         .height('100%')
     }
     .title(CustomNavTitle('系统帮助'))
+    .backgroundColor("#f1f1f1")
   }
 }
 

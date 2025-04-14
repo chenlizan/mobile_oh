@@ -27,4 +27,5 @@ export class IconConstants {
   static readonly SCHOOL: string = '\ue804' //学校
   static readonly MAJOR: string = '\ue802' //院系
   static readonly PASS: string = '\ue803' //一卡通号
+  static readonly TIME: string = '\ue858' //时间
 }

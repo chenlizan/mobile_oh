@@ -52,6 +52,7 @@ struct UserNickname {
         .onChange((value: string) => this.text = value)
     }
     .title(CustomNavTitle('设置昵称', () => this.BuildNavRightBtn()))
+    .backgroundColor("#f1f1f1")
   }
 }
 

@@ -44,6 +44,10 @@ export { CustomToast } from './src/main/ets/components/CustomToast'
 
 export { CustomAlertDialog, AlertDialogParam } from './src/main/ets/components/CustomAlertDialog'
 
+export { CustomDatePickerDialog } from './src/main/ets/components/CustomDatePickerDialog'
+
+export { CustomTag } from './src/main/ets/components/CustomTag'
+
 export { Avatar } from "./src/main/ets/components/XyAvatar"
 
 export { AppIcon } from './src/main/ets/components/AppIcon'
@@ -70,4 +74,7 @@ export { isJSON,
   verifyPassWord,
   verifyNameIsMobile,
   getIdentityList,
-  passwordRules } from './src/main/ets/utils/BaseUtils'
+  passwordRules,
+  getTypeByTaskType,
+  getTypeByAssignToType,
+  navigateToResourceDetails } from './src/main/ets/utils/BaseUtils'

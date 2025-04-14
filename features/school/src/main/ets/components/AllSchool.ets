@@ -140,6 +140,7 @@ export struct AllSchool {
       .backgroundColor(Color.White)
     }
     .title(CustomNavTitle('全部开课院校'))
+    .backgroundColor("#f1f1f1")
   }
 }
 

@@ -25,7 +25,7 @@ export struct CustomListItem {
   /**
    * 展示文字
    */
-  @Prop text: string = '';
+  @Prop text: string = ''
   /**
    * 外边距
    */
@@ -43,17 +43,21 @@ export struct CustomListItem {
    */
   @Prop lineHeight: number | string | Resource = 30
   /**
+   * 文字颜色
+   */
+  @Prop fontColor: ResourceColor
+  /**
    * 文字粗细
    */
   @Prop fontWeight: FontWeight = FontWeight.Normal
   /**
    * 图标的builder
    */
-  @BuilderParam iconBuilder?: CustomBuilder;
+  @BuilderParam iconBuilder?: CustomBuilder
   /**
    * 操作的builder
    */
-  @BuilderParam operateBuilder?: CustomBuilder;
+  @BuilderParam operateBuilder?: CustomBuilder
   /**
    * 点击按钮
    */
@@ -67,6 +71,7 @@ export struct CustomListItem {
           this.iconBuilder()
         }
         Text(this.text)
+          .fontColor(this.fontColor)
           .fontSize(16)
           .fontWeight(this.fontWeight)
           .lineHeight(this.lineHeight)

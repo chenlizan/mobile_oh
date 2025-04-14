@@ -78,6 +78,7 @@ struct AIHelper {
         .height('100%')
     }
     .title(CustomNavTitle('AI助手'))
+    .backgroundColor("#f1f1f1")
   }
 }
 

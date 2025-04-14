@@ -15,6 +15,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "taskRemind",
+      "pageSourceFile": "src/main/ets/components/TaskRemind.ets",
+      "buildFunction": "TaskRemindBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

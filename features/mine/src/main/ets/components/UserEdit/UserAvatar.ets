@@ -185,6 +185,7 @@ struct UserAvatar {
             ListItem() {
               Image(this.getSysAvatarUrl(item.file_id))
                 .width(36)
+                .height(36)
                 .borderRadius(18)
                 .borderWidth(1)
                 .borderColor(_.includes(this.userInfo.avatar, item.file_id) ? '#40A9FF' : '#F1F1F1')

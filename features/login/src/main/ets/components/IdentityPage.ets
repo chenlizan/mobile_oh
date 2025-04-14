@@ -213,5 +213,6 @@ export struct IdentityPage {
       .margin({ bottom: 30 })
     }
     .title(CustomNavTitle(this.userInfo.nickname ? '我的小雅空间' : ''))
+    .backgroundColor("#f1f1f1")
   }
 }

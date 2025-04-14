@@ -1,26 +1,26 @@
 interface BaseApi {
-  baseApi_IM: string;
-  baseApi: string;
-  ccApi: string;
-  ccApi_datacenter: string;
-  ccApi_common: string;
-  base_homepage: string;
-  baseApi_inner: string;
-  baseApi_out: string;
-  statApi: string;
-  base_mobilepage: string;
-  managerApi: string;
-  lrsApi: string;
-  chatApi: string;
-  hostApi: string;
-  refererApi: string;
+  baseApi_IM: string
+  baseApi: string
+  ccApi: string
+  ccApi_datacenter: string
+  ccApi_common: string
+  base_homepage: string
+  baseApi_inner: string
+  baseApi_out: string
+  statApi: string
+  base_mobilepage: string
+  managerApi: string
+  lrsApi: string
+  chatApi: string
+  hostApi: string
+  refererApi: string
 }
 
 export class Api_Context {
   /**
    * 是否 测试环境。
    */
-  static isTest: boolean = false;
+  static isTest: boolean = false
   private api: BaseApi = {
     baseApi_IM: "",
     baseApi: "",
@@ -42,13 +42,13 @@ export class Api_Context {
 
   constructor(domain?: string) {
     if (typeof domain === 'string') {
-      this.api = this.getBaseApi(domain) as BaseApi;
+      this.api = this.getBaseApi(domain) as BaseApi
       this.domain = domain
     }
   }
 
   getApiPrefix(key: string) {
-    return Reflect.get(this.api, key) as string;
+    return Reflect.get(this.api, key) as string
   }
 
   getOpenApi() {
@@ -56,7 +56,7 @@ export class Api_Context {
       ? this.isStaging()
         ? 'https://stg-openai.ai-augmented.com/api/v1/chat/completions'
         : 'https://tst-openai.ai-augmented.com/api/v1/chat/completions'
-      : 'https://openai.ai-augmented.com/api/v1/chat/completions';
+      : 'https://openai.ai-augmented.com/api/v1/chat/completions'
   }
 
   getAIGlobalConfig() {
@@ -64,7 +64,7 @@ export class Api_Context {
       ? this.isStaging()
         ? 'https://stg-config.ai-augmented.com/api/v1/config/global'
         : 'https://tst-config.ai-augmented.com/api/v1/config/global'
-      : 'https://config.ai-augmented.com/api/v1/config/global';
+      : 'https://config.ai-augmented.com/api/v1/config/global'
   }
 
   getFaqDomain() {
@@ -72,7 +72,7 @@ export class Api_Context {
       ? this.isStaging()
         ? 'https://stg-faq.ai-augmented.com'
         : 'https://tst-faq.ai-augmented.com'
-      : 'https://faq.ai-augmented.com';
+      : 'https://faq.ai-augmented.com'
   }
 
   isStaging() {
@@ -80,31 +80,31 @@ export class Api_Context {
   }
 
   static getUserAgreement() {
-    return 'https://www.ai-augmented.com/user-agreement.html';
+    return 'https://www.ai-augmented.com/user-agreement.html'
   }
 
   static getPrivacyPolicy() {
-    return 'https://www.ai-augmented.com/privacy-agreement.html';
+    return 'https://www.ai-augmented.com/privacy-agreement.html'
   }
 
   getOfficeApi() {
-    return 'https://vip.ow365.cn/';
+    return 'https://vip.ow365.cn/'
   }
 
   getIpWhitelist() {
-    return 'https://config.ai-augmented.com/api/v1/config/isIpWhitelist';
+    return 'https://config.ai-augmented.com/api/v1/config/isIpWhitelist'
   }
 
   getApkDownloadApi() {
-    return 'https://www.ai-augmented.com/pages/app-download.html';
+    return 'https://www.ai-augmented.com/pages/app-download.html'
   }
 
   static getApplicationConfig() {
-    return 'https://catalog.ai-augmented.com/api/application/searchApplicationConfig';
+    return 'https://catalog.ai-augmented.com/api/application/searchApplicationConfig'
   }
 
   static getApplicationToken() {
-    return 'Basic eHlhdXRoX3NlcnZlcjoxeDhkTXNaMDJ6ZzBjN3BLMk9YN0NZVlM=';
+    return 'Basic eHlhdXRoX3NlcnZlcjoxeDhkTXNaMDJ6ZzBjN3BLMk9YN0NZVlM='
   }
 
   getBaseApi(domain: string): BaseApi {
@@ -124,6 +124,6 @@ export class Api_Context {
       chatApi: `https://${domain}.ai-augmented.com/app/jx-chat/`,
       hostApi: `https://${domain}.ai-augmented.com`,
       refererApi: `https://m.${domain}.ai-augmented.com`,
-    };
+    }
   }
 }
