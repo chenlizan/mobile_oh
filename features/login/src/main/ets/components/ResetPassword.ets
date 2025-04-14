@@ -31,10 +31,28 @@ export struct ResetPassword {
   @State password2: string = ''
   @State time: number = 60
   @State accounts: Array<PARAMS> = []
+  @State platform: string = ''
   private interval: number = 0
 
   aboutToDisappear() {
     clearInterval(this.interval);
+  }
+
+  aboutToAppear(): void {
+    this.getPlatformConfigBySchoolCertify()
+  }
+
+  async getPlatformConfigBySchoolCertify() {
+    const schoolCertify = this.preferenceStorage.school?.code
+    const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.gainSchoolId, {
+      'schoolCertify': schoolCertify,
+    })
+    if (response.code === 200) {
+      const school = _.find(response.result as Record<string, string>[], { schoolCertify })
+      if (school) {
+        this.platform = (school as Record<string, string>)?.projectTitle ?? ''
+      }
+    }
   }
 
   async getMobileValidCode() {
@@ -164,13 +182,13 @@ export struct ResetPassword {
         CustomField({
           value: $password1,
           iconCode: IconConstants.LOCK,
-          placeholder: '请输入新密码',
+          placeholder: `请输入${this.platform}新密码`,
           inputType: InputType.Password
         })
         CustomField({
           value: $password2,
           iconCode: IconConstants.LOCK,
-          placeholder: '请再次输入密码',
+          placeholder: `请再次输入${this.platform}密码`,
           inputType: InputType.Password
         })
 
