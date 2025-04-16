@@ -66,7 +66,6 @@ export struct CustomLocalH5 {
   controller: webview.WebviewController = new webview.WebviewController()
 
   getLrsHeader() {
-    this.preferenceStorage.access_token = undefined
     return ({
       'x-lrs-device': ``,
       'x-lrs-domain': ``,
@@ -124,6 +123,12 @@ export struct CustomLocalH5 {
               }
             })
           }
+        })
+        .onControllerAttached(()=>{
+          CustomToast.toast_loading('')
+        })
+        .onPageEnd(()=>{
+          CustomToast.hide()
         })
         .width('100%')
         .height('100%')
