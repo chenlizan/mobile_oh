@@ -111,6 +111,10 @@
     {
       "name": "teachingSpace",
       "srcPath": "./features/teachingSpace",
+    },
+    {
+      "name": "webview",
+      "srcPath": "./features/webview",
     }
   ]
 }

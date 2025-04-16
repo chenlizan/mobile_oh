@@ -1,0 +1,1 @@
+.container{position:fixed;top:0;right:0;bottom:0;left:0;height:100%!important;max-height:none!important}.container .viewer_container{display:flex;align-items:stretch;justify-content:stretch;height:100%}.container .viewer_container iframe{flex:1;height:100%}

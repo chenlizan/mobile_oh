@@ -168,7 +168,7 @@ export struct MinePage {
                 itemRadius: 8,
                 itemBorder: '',
                 onClickBtn: () => {
-                  this.pageInfos.pushPath({ name: "about" })
+                  this.pageInfos.pushPath({ name: "aIService1" })
                 }
               })
             }

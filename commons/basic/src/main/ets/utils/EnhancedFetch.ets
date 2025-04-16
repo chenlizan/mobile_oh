@@ -70,7 +70,7 @@ const refreshToken = async (url: string, options?: Options) => {
       const token = new ObjectUtil(response.result as ObjectOption<never>)
       preferenceStorage.access_token = token.getValue('access_token')
       preferenceStorage.refresh_token = token.getValue('refresh_token')
-      AppStorage.set<PreferenceStorage>('refresh_token_state', preferenceStorage)
+      AppStorage.set<PreferenceStorage>('PreferenceStorage', preferenceStorage)
       enhancedFetch(url, options)
     } else {
       if (preferenceStorage?.access_token && preferenceStorage.refresh_token) {

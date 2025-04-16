@@ -14,6 +14,7 @@ import {
   getTypeByTaskType,
   HomeApi,
   IconConstants,
+  navigateToResourceDetails,
   UserInfoModel,
   xyApiGet
 } from "@xy/basic"
@@ -67,7 +68,7 @@ struct TaskRemind {
         item.id = item.node_id;
         item.type = (response.data as Record<string, string>)?.type || item.type;
       }
-
+      navigateToResourceDetails(item, item?.task_role as number ?? 1)
     }
   }
 
@@ -356,6 +357,7 @@ struct TaskRemind {
                             item.end_time).format(
                               'YYYY/MM/DD HH:mm',
                             )}`)
+                              .margin({ left: 4 })
                               .fontColor('#a8a8a8')
                               .fontSize(12)
                             if (item.mark_mode === 3 || item.mark_mode === 4) {

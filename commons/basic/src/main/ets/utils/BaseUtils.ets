@@ -1,4 +1,5 @@
 import _ from "@wolfx/lodash"
+import dayjs from "dayjs"
 import { CryptoJS } from '@ohos/crypto-js'
 import { pinyin } from 'pinyin-pro'
 import { PARAMS } from "./EnhancedFetch"
@@ -307,86 +308,108 @@ export const getTypeByAssignToType = (type: number, finish_type: number) => {
 }
 
 /**
+ * 特殊角色 评审员、督导、管理员
+ */
+
+export const judgeRoleIsSpecial = (role: number) => {
+  return role === 5 || role === 8 || role === 6
+}
+
+/**
+ * 判断角色 是预览身份
+ */
+export const judgeRoleIsPreviewWeight = (role: number) => {
+  return role === 5 || role === 8 || role === 7
+}
+
+/**
+ * 判断课程是否结课
+ */
+export const judgeGroupIsEnd = (group: Record<string, string>, need_toast = true) => {
+  if (!_.isEmpty(group)) {
+    const end_time = group.end_time
+    if (dayjs().isAfter(dayjs(end_time))) {
+      need_toast && CustomToast.toast_info('课程已经结课，不允许操作')
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * 判断角色 是否可以操作课程
+ */
+export const judgeRoleHasCourseOperationWeight = (role: number) => {
+  return (
+    role !== 1 && !judgeRoleIsPreviewWeight(role) && !judgeRoleIsSpecial(role)
+  )
+}
+
+/**
  * 导航到资源详情
  */
-export const navigateToResourceDetails = (item: Record<string, string | number>, loginRole: number) => {
-  const showFinish = loginRole === 1 && item.published === 1 && item.task_type === 1
-  switch (item.type) {
-    case 2:
-      // // 笔记
-      // showNoteRecourse(
-      //   item,
-      //   navigation,
-      //   access_token,
-      //   refresh_token,
-      //   showFinish,
-      //   loginRole,
-      //   isSub,
-      // );
-      break;
-    case 3:
-      // 导图
-      // showMindMapRecourse(
-      //   item,
-      //   navigation,
-      //   access_token,
-      //   refresh_token,
-      //   showFinish,
-      //   loginRole,
-      //   isSub,
-      // );
-      break;
-    case 6:
-      // 网盘资源
-      // showDiskRecourse(
-      //   item,
-      //   navigation,
-      //   access_token,
-      //   refresh_token,
-      //   showFinish,
-      //   loginRole,
-      //   isSub,
-      // );
-      break;
-    case 7:
-      // 问答
-      // showQARecourse(item, navigation, access_token, refresh_token, loginRole, {
-      //   isSub,
-      // });
-      break;
-    case 8:
-      // 讨论
-      // showDiscussRecourse(
-      //   item,
-      //   navigation,
-      //   access_token,
-      //   refresh_token,
-      //   loginRole,
-      //   {
-      //     isSub,
-      //   },
-      // );
-      break;
-    case 9:
-      // 视频
-      // showVideoRecourse(item, navigation, showFinish, loginRole, isSub);
-      break;
-    case 10:
-      // 音频
-      // showAudioRecourse(item, navigation, showFinish, loginRole, isSub);
-      break;
-    case 11:
-      // 教学设计
-      // showTeachDesignRecourse(
-      //   item,
-      //   navigation,
-      //   access_token,
-      //   refresh_token,
-      //   loginRole,
-      //   isSub,
-      // );
-      break;
-    default:
-      break;
+export const navigateToResourceDetails =
+  (item: Record<string, string | number>, loginRole: number, isSub: boolean = false) => {
+    const pageInfos = AppStorage.get<NavPathStack>('pageInfos')
+    const showFinish = loginRole === 1 && item.published === 1 && item.task_type === 1
+    switch (item.type) {
+      case 2:
+        // 笔记
+        pageInfos?.pushPath({
+          name: 'noteRecourse',
+          param: JSON.stringify({
+            item,
+            loginRole,
+            isSub,
+            showFinish
+          })
+        })
+        break
+      case 3:
+        // 导图
+        pageInfos?.pushPath({
+          name: 'mindMapRecourse',
+          param: JSON.stringify({
+            item,
+            loginRole,
+            isSub,
+            showFinish
+          })
+        })
+        break
+      case 6:
+        // 网盘资源
+        // showDiskRecourse(
+        //   item,
+        //   navigation,
+        //   access_token,
+        //   refresh_token,
+        //   showFinish,
+        //   loginRole,
+        //   isSub,
+        // )
+        break
+      case 7:
+        // 问答
+        pageInfos?.pushPath({ name: 'questionRecourse', param: JSON.stringify({ item, loginRole, isSub }) })
+        break
+      case 8:
+        // 讨论
+        pageInfos?.pushPath({ name: 'discussRecourse', param: JSON.stringify({ item, loginRole, isSub }) })
+        break
+      case 9:
+        // 视频
+        // showVideoRecourse(item, navigation, showFinish, loginRole, isSub)
+        break
+      case 10:
+        // 音频
+        // showAudioRecourse(item, navigation, showFinish, loginRole, isSub)
+        break
+      case 11:
+        // 教学设计
+        pageInfos?.pushPath({ name: 'teachDesignRecourse', param: JSON.stringify({ item, loginRole, isSub }) })
+        break
+      default:
+        break
+    }
   }
-}

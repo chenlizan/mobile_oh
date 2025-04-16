@@ -1,0 +1,44 @@
+{
+  "routerMap": [
+    {
+      "name": "questionRecourse",
+      "pageSourceFile": "src/main/ets/components/QuestionRecourse.ets",
+      "buildFunction": "QuestionRecourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "discussRecourse",
+      "pageSourceFile": "src/main/ets/components/DiscussRecourse.ets",
+      "buildFunction": "DiscussRecourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "teachDesignRecourse",
+      "pageSourceFile": "src/main/ets/components/TeachDesignRecourse.ets",
+      "buildFunction": "TeachDesignRecourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "mindMapRecourse",
+      "pageSourceFile": "src/main/ets/components/MindMapRecourse.ets",
+      "buildFunction": "MindMapRecourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "noteRecourse",
+      "pageSourceFile": "src/main/ets/components/NoteRecourse.ets",
+      "buildFunction": "NoteRecourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    }
+  ]
+}
