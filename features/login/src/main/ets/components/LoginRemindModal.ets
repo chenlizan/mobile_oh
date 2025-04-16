@@ -29,7 +29,7 @@ export struct LoginRemindModal {
   async noNoticed90Days() {
     let onlyExpired = this.judgeOnlyExpired(this.getQuestionText())
     if (onlyExpired && this.unRemind) {
-      // 不再提醒
+      // 不再提示
       const data = this.login_info
       const access_token = data.getValue('access_token');
       const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.noNoticed90Days, {}, {"Authorization": 'Bearer ' + access_token})
@@ -141,7 +141,7 @@ export struct LoginRemindModal {
              .onChange((value: boolean) => {
                this.unRemind = value
              })
-           Text('不再提醒')
+           Text('不再提示')
              .margin({left: 2})
              .fontSize(14)
              .fontColor('#999999')
