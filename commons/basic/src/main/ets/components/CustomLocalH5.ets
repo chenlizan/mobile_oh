@@ -101,8 +101,8 @@ export struct CustomLocalH5 {
   build() {
     Column() {
       Web({
-        // src: 'resource://rawfile/localh5/index.html' + this.url,
-        src: $rawfile('test.html'),
+        src: 'resource://rawfile/localh5/index.html' + this.url,
+        // src: $rawfile('test.html'),
         controller: this.controller,
       })
         .domStorageAccess(true)
