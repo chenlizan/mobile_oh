@@ -46,7 +46,8 @@ export struct MainPage {
   }
 
   async getConfigCenter() {
-    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_out") + HomeApi.configSearch)
+    const response =
+      await xyApiGet(this.Api_Context.getApiPrefix("baseApi_out") + HomeApi.configSearch, { 'tags': 'front-end' })
     if (response.success) {
       const data = response.data as Record<string, string>[]
       this.preferenceStorage.configCenter = data

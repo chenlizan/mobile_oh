@@ -12,6 +12,7 @@ import {
   SystemApi,
   xyApiPost
 } from '../../../../Index'
+import { display } from '@kit.ArkUI'
 
 export class Toolkits {
   onGoBack() {
@@ -87,9 +88,9 @@ export class Toolkits {
       name: 'h5Resource',
       param: JSON.stringify({
         hideNav: dataSource.hideNav,
-        isLocal:dataSource.isLocal,
-        source_url:dataSource.url,
-        title:dataSource.title,
+        isLocal: dataSource.isLocal,
+        source_url: dataSource.url,
+        title: dataSource.title,
       })
     })
   }
@@ -202,6 +203,7 @@ export struct CustomLocalH5 {
   @Prop extraJavaScript: string = ''
   @Prop url: string = ''
   @Prop isLocal: boolean = true
+  @State screenHeight: number = 0
   @State scripts: Array<ScriptItem> = [
     { script: this.getJavaScript(), scriptRules: ['*'] }
   ]
@@ -227,6 +229,7 @@ export struct CustomLocalH5 {
   }
 
   aboutToAppear() {
+    this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
     webview.WebviewController.setWebDebuggingAccess(true)
     const queryParams: Record<string, string | number | undefined> = {}
     queryParams.school_code = this.preferenceStorage.school?.code
@@ -271,7 +274,7 @@ export struct CustomLocalH5 {
           CustomToast.hide()
         })
         .width('100%')
-        .height('100%')
+        .flexGrow(1)
     }
   }
 }

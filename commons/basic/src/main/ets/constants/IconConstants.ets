@@ -33,4 +33,5 @@ export class IconConstants {
   static readonly MORE: string = '\ue60a' //更多
   static readonly TO_DO_LIST: string = '\ue80e' //待办事项
   static readonly DOWNLOAD: string = '\ue88c' //下载
+  static readonly ROTATION: string = '\ue82f' //旋转
 }

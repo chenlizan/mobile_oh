@@ -1,9 +1,11 @@
 import { webview } from '@kit.ArkWeb'
+import { window } from '@kit.ArkUI'
 import _ from '@wolfx/lodash'
 import {
   AppIcon,
   CustomLocalH5,
   CustomNavTitle,
+  DownloadToLocal,
   getExtension,
   IconConstants,
   judgeCourseIsSP,
@@ -32,19 +34,19 @@ struct CodeResource {
 
   getUrlPath() {
     const item = this.param.item as Record<string, string>
-    let path = `#/CodeFilesViewer/${item.quote_id}/${getExtension(item.name,)}`;
-    return path;
+    let path = `#/CodeFilesViewer/${item.quote_id}/${getExtension(item.name,)}`
+    return path
   }
 
   @Builder
   BuildNavRightBtn() {
-    if(this.canDownload) {
+    if (this.canDownload) {
       AppIcon({
         iconCode: IconConstants.DOWNLOAD,
         iconColor: '#999999',
         iconSize: 16,
         onClickBtn: () => {
-          this.controller.refresh()
+          DownloadToLocal(this.param.item as Record<string, string | number>)
         }
       })
     }
@@ -54,6 +56,19 @@ struct CodeResource {
       iconSize: 16,
       onClickBtn: () => {
         this.controller.refresh()
+      }
+    })
+    AppIcon({
+      iconCode: IconConstants.ROTATION,
+      iconColor: '#999999',
+      iconSize: 16,
+      onClickBtn: async () => {
+        const windowClass = await window.getLastWindow(getContext())
+        if (windowClass.getPreferredOrientation() === window.Orientation.PORTRAIT) {
+          windowClass.setPreferredOrientation(window.Orientation.LANDSCAPE)
+        } else {
+          windowClass.setPreferredOrientation(window.Orientation.PORTRAIT)
+        }
       }
     })
   }

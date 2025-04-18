@@ -8,6 +8,7 @@ import {
   Toolkits,
   UserInfoModel
 } from '@xy/basic'
+import { KnowledgeBar } from './KnowledgeBar'
 
 class QuestionToolkits extends Toolkits {
   onRefreshTask() {
@@ -28,6 +29,7 @@ struct QuestionResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State knowledgePickerVisible: boolean = false
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
@@ -94,11 +96,14 @@ struct QuestionResource {
 
   build() {
     NavDestination() {
-      CustomLocalH5({
-        url: this.getUrlPath(),
-        extraJavaScript: this.injectedExtraJavaScript(),
-        toolkits: new QuestionToolkits()
-      })
+      Flex({ direction: FlexDirection.Column }) {
+        CustomLocalH5({
+          url: this.getUrlPath(),
+          extraJavaScript: this.injectedExtraJavaScript(),
+          toolkits: new QuestionToolkits()
+        })
+        KnowledgeBar()
+      }
     }
     .hideTitleBar(true)
   }
