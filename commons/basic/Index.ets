@@ -24,6 +24,7 @@ export * from './src/main/ets/model/SchoolModel'
 export * from './src/main/ets/model/SelectSpaceModel'
 export * from './src/main/ets/model/SystemNoticeModel'
 export * from './src/main/ets/model/UserInfoModel'
+export * from './src/main/ets/model/MessageCountModel'
 
 export * from './src/main/ets/utils/BaseUtils'
 export * from './src/main/ets/utils/BreakpointUtil'

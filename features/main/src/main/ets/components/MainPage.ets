@@ -6,6 +6,8 @@ import {
   ccApiGet,
   CommonConstants,
   HomeApi,
+  MessageApi,
+  MessageCountModel,
   PreferenceStorage,
   RouterConstants,
   SystemApi,
@@ -20,6 +22,7 @@ import { SystemNoticeModal } from './SystemNoticeModal';
 export struct MainPage {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  @StorageLink('messageCount') messageCount: MessageCountModel = new MessageCountModel()
   @Link globalPageIndex: string;
   @State backgroundImageY: number = 0;
   @State currentTabIndex: number = 0;
@@ -35,6 +38,7 @@ export struct MainPage {
     })
     this.getAuthStore()
     this.getConfigCenter()
+    this.getMessageUnReadCount()
   }
 
   async getAuthStore() {
@@ -52,6 +56,14 @@ export struct MainPage {
       const data = response.data as Record<string, string>[]
       this.preferenceStorage.configCenter = data
     }
+  }
+
+  async getMessageUnReadCount() {
+    // const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_out") + MessageApi.msgUnReadCount)
+    // if (response.success) {
+    //   const data = (response.data as Record<string, number>).un_read_count
+    //   this.messageCount.total_un_read_count = data
+    // }
   }
 
   @Builder

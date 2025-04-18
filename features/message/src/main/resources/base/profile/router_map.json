@@ -1,0 +1,12 @@
+{
+  "routerMap": [
+    {
+      "name": "messageTodo",
+      "pageSourceFile": "src/main/ets/components/MessageTodo.ets",
+      "buildFunction": "MessageTodoBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    }
+  ]
+}

@@ -32,6 +32,9 @@ export class IconConstants {
   static readonly WATCH: string = '\ue85d' //查看
   static readonly MORE: string = '\ue60a' //更多
   static readonly TO_DO_LIST: string = '\ue80e' //待办事项
+  static readonly COURSE_LIST: string = '\ue80b' //课程消息
+  static readonly PERSON_LIST: string = '\ue80d' //个人消息
+  static readonly SYSTEM_LIST: string = '\ue80a' //系统消息
   static readonly DOWNLOAD: string = '\ue88c' //下载
   static readonly ROTATION: string = '\ue82f' //旋转
 }
