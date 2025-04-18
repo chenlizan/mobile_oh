@@ -115,6 +115,10 @@
     {
       "name": "webview",
       "srcPath": "./features/webview",
+    },
+    {
+      "name": "message",
+      "srcPath": "./features/message",
     }
   ]
 }

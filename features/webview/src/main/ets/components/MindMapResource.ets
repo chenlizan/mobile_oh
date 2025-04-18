@@ -2,14 +2,14 @@ import _ from '@wolfx/lodash'
 import { Api_Context, CustomLocalH5, UserInfoModel } from '@xy/basic'
 
 @Component
-struct MindMapRecourse {
+struct MindMapResource {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('teachDesignRecourse')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('mindMapResource')[0]))
   }
 
   getUrlPath() {
@@ -40,6 +40,7 @@ struct MindMapRecourse {
     NavDestination() {
       CustomLocalH5({
         url: this.getUrlPath()
+
       })
     }
     .hideTitleBar(true)
@@ -47,6 +48,6 @@ struct MindMapRecourse {
 }
 
 @Builder
-export function MindMapRecourseBuilder() {
-  MindMapRecourse()
+export function MindMapResourceBuilder() {
+  MindMapResource()
 }

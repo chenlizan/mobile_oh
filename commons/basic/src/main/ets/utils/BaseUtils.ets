@@ -346,6 +346,88 @@ export const judgeRoleHasCourseOperationWeight = (role: number) => {
 }
 
 /**
+ * 获取文件后缀名
+ */
+export const getExtension = (filename: string = '') => {
+  return filename.split('.').pop()?.toLowerCase()
+}
+
+/**
+ * 行为记录埋点信息
+ */
+export const getLrsTraceElement = (data: Record<string, string | null> = {
+  'element_id': '',
+  'element_name': '',
+  'element_type': '',
+  'view_name': '',
+  'result': null,
+}) => {
+  let element: Record<string, string | Record<string, string>> = {};
+  if (data.element_id) {
+    element.element_id = data.element_id;
+  }
+  if (data.element_name) {
+    element.element_name = data.element_name;
+  }
+  if (data.element_type) {
+    element.element_type = data.element_type;
+  }
+  if (data.view_name) {
+    element.view_name = data.view_name;
+  }
+  if (!_.isEmpty(element)) {
+    if (data.result !== null) {
+      element.extra = { 'result': data.result };
+    }
+  }
+  return element;
+};
+
+/**
+ * 是否资源评审课程
+ */
+export const judgeCourseIsSP = (group: Record<string, number>) => {
+  return group?.spType == 1 || group?.sp_type == 1;
+};
+
+const videoFileMimetype = new Set(['video/mp4']);
+
+const videoFileExtensions = new Set([
+  '3gp',
+  'asf',
+  'avi',
+  'flv',
+  'f4v',
+  'm2t',
+  'm3u8',
+  'm4v',
+  'mj2',
+  'mjpeg',
+  'mkv',
+  'mov',
+  'mp4',
+  'mpe',
+  'mpg',
+  'mpeg',
+  'mts',
+  'qt',
+  'rm',
+  'rmvb',
+  'swf',
+  'ts',
+  'vob',
+  'wmv',
+])
+
+/**
+ * 判断文件是否为视频文件
+ */
+export function isVideoFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename);
+  return videoFileMimetype.has(mimetype) || videoFileExtensions.has(ext || '');
+}
+
+/**
  * 导航到资源详情
  */
 export const navigateToResourceDetails =
@@ -356,7 +438,7 @@ export const navigateToResourceDetails =
       case 2:
         // 笔记
         pageInfos?.pushPath({
-          name: 'noteRecourse',
+          name: 'noteResource',
           param: JSON.stringify({
             item,
             loginRole,
@@ -368,7 +450,7 @@ export const navigateToResourceDetails =
       case 3:
         // 导图
         pageInfos?.pushPath({
-          name: 'mindMapRecourse',
+          name: 'mindMapResource',
           param: JSON.stringify({
             item,
             loginRole,
@@ -379,35 +461,24 @@ export const navigateToResourceDetails =
         break
       case 6:
         // 网盘资源
-        // showDiskRecourse(
-        //   item,
-        //   navigation,
-        //   access_token,
-        //   refresh_token,
-        //   showFinish,
-        //   loginRole,
-        //   isSub,
-        // )
         break
       case 7:
         // 问答
-        pageInfos?.pushPath({ name: 'questionRecourse', param: JSON.stringify({ item, loginRole, isSub }) })
+        pageInfos?.pushPath({ name: 'questionResource', param: JSON.stringify({ item, loginRole, isSub }) })
         break
       case 8:
         // 讨论
-        pageInfos?.pushPath({ name: 'discussRecourse', param: JSON.stringify({ item, loginRole, isSub }) })
+        pageInfos?.pushPath({ name: 'discussResource', param: JSON.stringify({ item, loginRole, isSub }) })
         break
       case 9:
         // 视频
-        // showVideoRecourse(item, navigation, showFinish, loginRole, isSub)
         break
       case 10:
         // 音频
-        // showAudioRecourse(item, navigation, showFinish, loginRole, isSub)
         break
       case 11:
         // 教学设计
-        pageInfos?.pushPath({ name: 'teachDesignRecourse', param: JSON.stringify({ item, loginRole, isSub }) })
+        pageInfos?.pushPath({ name: 'teachDesignResource', param: JSON.stringify({ item, loginRole, isSub }) })
         break
       default:
         break

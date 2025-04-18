@@ -5,6 +5,10 @@
       "value": "首页"
     },
     {
+      "name": "tab_bar_message",
+      "value": "消息"
+    },
+    {
       "name": "tab_bar_mine",
       "value": "我的"
     }

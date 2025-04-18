@@ -18,7 +18,7 @@ import {
 
 @Component
 export struct MinePage {
-  @Link globalPageIndex: string;
+  @Link globalPageIndex: string
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
@@ -168,7 +168,7 @@ export struct MinePage {
                 itemRadius: 8,
                 itemBorder: '',
                 onClickBtn: () => {
-                  this.pageInfos.pushPath({ name: "aIService1" })
+                  this.pageInfos.pushPath({ name: "about" })
                 }
               })
             }

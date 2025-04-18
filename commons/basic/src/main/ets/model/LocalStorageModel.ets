@@ -14,5 +14,6 @@ export class PreferenceStorage {
   saveUsername?: string
   savePassword?: string
   node_key?: string
-  currentTeam?: Record<string, string>
+  currentTeam?: Record<string, string | number>
+  configCenter?: Record<string, string>[]
 }

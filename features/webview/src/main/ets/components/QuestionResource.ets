@@ -24,14 +24,14 @@ class QuestionToolkits extends Toolkits {
 }
 
 @Component
-struct QuestionRecourse {
+struct QuestionResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('questionRecourse')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('questionResource')[0]))
   }
 
   getUrlPath() {
@@ -105,6 +105,6 @@ struct QuestionRecourse {
 }
 
 @Builder
-export function QuestionRecourseBuilder() {
-  QuestionRecourse()
+export function QuestionResourceBuilder() {
+  QuestionResource()
 }

@@ -31,6 +31,10 @@ export struct CustomListItem {
    */
   @Prop itemMargin: Margin | Length | LocalizedMargin = ''
   /**
+   * 内边距
+   */
+  @Prop itemPadding: Padding | Length | LocalizedPadding = '16'
+  /**
    * 边框圆角
    */
   @Prop itemRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = ''
@@ -46,6 +50,10 @@ export struct CustomListItem {
    * 文字颜色
    */
   @Prop fontColor: ResourceColor
+  /**
+   * 文字大小
+   */
+  @Prop fontSize: number | string | Resource = 16
   /**
    * 文字粗细
    */
@@ -72,10 +80,9 @@ export struct CustomListItem {
         }
         Text(this.text)
           .fontColor(this.fontColor)
-          .fontSize(16)
+          .fontSize(this.fontSize)
           .fontWeight(this.fontWeight)
           .lineHeight(this.lineHeight)
-
       }
 
       if (typeof this.operateBuilder === 'function') {
@@ -85,7 +92,7 @@ export struct CustomListItem {
       }
     }
     .width('100%')
-    .padding('16')
+    .padding(this.itemPadding)
     .margin(this.itemMargin)
     .backgroundColor(Color.White)
     .borderWidth(this.itemBorder)

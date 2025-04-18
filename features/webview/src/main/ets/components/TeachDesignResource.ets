@@ -2,12 +2,12 @@ import _ from '@wolfx/lodash'
 import { CustomLocalH5 } from '@xy/basic'
 
 @Component
-struct TeachDesignRecourse {
+struct TeachDesignResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('teachDesignRecourse')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('teachDesignResource')[0]))
   }
 
   getUrlPath() {
@@ -27,6 +27,6 @@ struct TeachDesignRecourse {
 }
 
 @Builder
-export function TeachDesignRecourseBuilder() {
-  TeachDesignRecourse()
+export function TeachDesignResourceBuilder() {
+  TeachDesignResource()
 }

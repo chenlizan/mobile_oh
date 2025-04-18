@@ -1,41 +1,65 @@
 {
   "routerMap": [
     {
-      "name": "questionRecourse",
-      "pageSourceFile": "src/main/ets/components/QuestionRecourse.ets",
-      "buildFunction": "QuestionRecourseBuilder",
+      "name": "questionResource",
+      "pageSourceFile": "src/main/ets/components/QuestionResource.ets",
+      "buildFunction": "QuestionResourceBuilder",
       "data": {
         "description": "this is pageOne"
       }
     },
     {
-      "name": "discussRecourse",
-      "pageSourceFile": "src/main/ets/components/DiscussRecourse.ets",
-      "buildFunction": "DiscussRecourseBuilder",
+      "name": "discussResource",
+      "pageSourceFile": "src/main/ets/components/DiscussResource.ets",
+      "buildFunction": "DiscussResourceBuilder",
       "data": {
         "description": "this is pageOne"
       }
     },
     {
-      "name": "teachDesignRecourse",
-      "pageSourceFile": "src/main/ets/components/TeachDesignRecourse.ets",
-      "buildFunction": "TeachDesignRecourseBuilder",
+      "name": "teachDesignResource",
+      "pageSourceFile": "src/main/ets/components/TeachDesignResource.ets",
+      "buildFunction": "TeachDesignResourceBuilder",
       "data": {
         "description": "this is pageOne"
       }
     },
     {
-      "name": "mindMapRecourse",
-      "pageSourceFile": "src/main/ets/components/MindMapRecourse.ets",
-      "buildFunction": "MindMapRecourseBuilder",
+      "name": "mindMapResource",
+      "pageSourceFile": "src/main/ets/components/MindMapResource.ets",
+      "buildFunction": "MindMapResourceBuilder",
       "data": {
         "description": "this is pageOne"
       }
     },
     {
-      "name": "noteRecourse",
-      "pageSourceFile": "src/main/ets/components/NoteRecourse.ets",
-      "buildFunction": "NoteRecourseBuilder",
+      "name": "noteResource",
+      "pageSourceFile": "src/main/ets/components/NoteResource.ets",
+      "buildFunction": "NoteResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "qaAreaResource",
+      "pageSourceFile": "src/main/ets/components/QAAreaResource.ets",
+      "buildFunction": "QAAreaResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "codeResource",
+      "pageSourceFile": "src/main/ets/components/CodeResource.ets",
+      "buildFunction": "CodeResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "h5Resource",
+      "pageSourceFile": "src/main/ets/components/H5Resource.ets",
+      "buildFunction": "H5ResourceBuilder",
       "data": {
         "description": "this is pageOne"
       }

@@ -1,9 +1,18 @@
 import { emitter } from '@kit.BasicServicesKit';
 import _ from '@wolfx/lodash';
-import { Api_Context, CCApi, ccApiGet, CommonConstants, PreferenceStorage, RouterConstants,
+import {
+  Api_Context,
+  CCApi,
+  ccApiGet,
+  CommonConstants,
+  HomeApi,
+  PreferenceStorage,
+  RouterConstants,
   SystemApi,
-  xyApiGet } from '@xy/basic';
+  xyApiGet
+} from '@xy/basic';
 import { HomePage } from '@xy/home'
+import { MessagePage } from '@xy/message';
 import { MinePage } from '@xy/mine'
 import { SystemNoticeModal } from './SystemNoticeModal';
 
@@ -25,6 +34,7 @@ export struct MainPage {
       this.globalPageIndex = RouterConstants.LOGIN_PAGE_URL
     })
     this.getAuthStore()
+    this.getConfigCenter()
   }
 
   async getAuthStore() {
@@ -32,6 +42,14 @@ export struct MainPage {
     if (response.success) {
       const profile = (response.data as Record<string, Record<string, Record<string, string>>>).auth.profile
       this.preferenceStorage.node_key = profile.node_key
+    }
+  }
+
+  async getConfigCenter() {
+    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_out") + HomeApi.configSearch)
+    if (response.success) {
+      const data = response.data as Record<string, string>[]
+      this.preferenceStorage.configCenter = data
     }
   }
 
@@ -68,11 +86,18 @@ export struct MainPage {
               $r('app.string.tab_bar_home'), 0))
 
             TabContent() {
+              MessagePage({ globalPageIndex: this.globalPageIndex })
+            }
+            .tabBar(this.BuildTabs($r('app.media.tab_message_active'), $r('app.media.tab_message'),
+              $r('app.string.tab_bar_message'), 1))
+            .backgroundColor(Color.White)
+
+            TabContent() {
               MinePage({ globalPageIndex: this.globalPageIndex })
             }
             .tabBar(this.BuildTabs($r('app.media.tab_profile_active'), $r('app.media.tab_profile'),
-              $r('app.string.tab_bar_mine'), 1))
-            .backgroundColor(Color.White)
+              $r('app.string.tab_bar_mine'), 2))
+
           }
           .vertical(this.breakPoint === CommonConstants.BREAK_POINT_LG)
           .barWidth(this.breakPoint === CommonConstants.BREAK_POINT_LG ?

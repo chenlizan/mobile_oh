@@ -28,4 +28,9 @@ export class IconConstants {
   static readonly MAJOR: string = '\ue802' //院系
   static readonly PASS: string = '\ue803' //一卡通号
   static readonly TIME: string = '\ue858' //时间
+  static readonly REFRESH: string = '\ue72c' //刷新
+  static readonly WATCH: string = '\ue85d' //查看
+  static readonly MORE: string = '\ue60a' //更多
+  static readonly TO_DO_LIST: string = '\ue80e' //待办事项
+  static readonly DOWNLOAD: string = '\ue88c' //下载
 }

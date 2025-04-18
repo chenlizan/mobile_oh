@@ -12,14 +12,14 @@ class DiscussToolkits extends Toolkits {
 }
 
 @Component
-struct DiscussRecourse {
+struct DiscussResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('discussRecourse')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('discussResource')[0]))
   }
 
   getUrlPath() {
@@ -69,6 +69,6 @@ struct DiscussRecourse {
 }
 
 @Builder
-export function DiscussRecourseBuilder() {
-  DiscussRecourse()
+export function DiscussResourceBuilder() {
+  DiscussResource()
 }

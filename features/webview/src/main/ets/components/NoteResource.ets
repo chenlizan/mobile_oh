@@ -1,14 +1,14 @@
 import _ from '@wolfx/lodash'
-import { Api_Context, CustomLocalH5, judgeRoleHasCourseOperationWeight, UserInfoModel } from '@xy/basic'
+import { CustomLocalH5, judgeRoleHasCourseOperationWeight, UserInfoModel } from '@xy/basic'
 
 @Component
-struct NoteRecourse {
+struct NoteResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('noteRecourse')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('noteResource')[0]))
   }
 
   getUrlPath() {
@@ -54,6 +54,6 @@ struct NoteRecourse {
 }
 
 @Builder
-export function NoteRecourseBuilder() {
-  NoteRecourse()
+export function NoteResourceBuilder() {
+  NoteResource()
 }

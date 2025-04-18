@@ -8,6 +8,7 @@
   "dependencies": {
     "@xy/basic": "file:../../commons/basic",
     "@xy/home": "file:../../features/home",
+    "@xy/message": "file:../../features/message",
     "@xy/mine": "file:../../features/mine",
     "@xy/webview": "file:../../features/webview"
   }

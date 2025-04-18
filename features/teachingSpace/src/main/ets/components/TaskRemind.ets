@@ -301,9 +301,10 @@ struct TaskRemind {
                 Column() {
                   if (this.sections[this.currentIndex]?.type === 'exam') {
                     Row() {
-                      Checkbox()
+                      Checkbox({})
                         .margin({ left: 12 })
                         .shape(CheckBoxShape.ROUNDED_SQUARE)
+                        .select($$this.onlyCanFinish)
                         .selectedColor('#40A9FF')
                       Text('仅显示可完成任务')
                         .fontColor('#40A9FF')

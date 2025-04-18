@@ -1,3 +1,5 @@
+import { vibrator } from "@kit.SensorServiceKit"
+
 @Component
 export struct CustomDatePickerDialog {
   @BuilderParam titleBuilder?: CustomBuilder
@@ -97,7 +99,10 @@ struct CustomDatePickerDialogView {
           top: 20,
           bottom: 20
         })
-        .onDateChange((value: Date) => this.value = value)
+        .onDateChange((value: Date) => {
+          this.value = value
+          vibrator.startVibration({ type: 'preset', effectId: 'haptic.effect.soft' }, { id: 0, usage: 'touch' })
+        })
     }
     .height(this.dialogHeight)
     .borderRadius(8)

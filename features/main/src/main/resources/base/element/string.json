@@ -17,6 +17,10 @@
       "value": "home"
     },
     {
+      "name": "tab_bar_message",
+      "value": "message"
+    },
+    {
       "name": "tab_bar_mine",
       "value": "mine"
     }
