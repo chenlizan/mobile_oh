@@ -1,15 +1,46 @@
 import { display } from "@kit.ArkUI";
-import { AppIcon, CustomList, CustomListItem, IconConstants } from "@xy/basic";
+import { Api_Context, AppIcon, CustomList, CustomListItem, IconConstants, MessageApi,
+  MessageCountModel,
+  xyApiGet } from "@xy/basic";
 
 
 @Component
 export struct MessagePage {
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
+  @StorageLink('messageCount') messageCount: MessageCountModel = new MessageCountModel()
   @Link globalPageIndex: string
   @State isRefreshing: boolean = false
   @State screenWidth: number = 0
 
   aboutToAppear(): void {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
+
+    this.getMsgUnReadInfo()
+  }
+
+  async getMsgUnReadInfo() {
+    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgUnReadTipCount)
+    if (response.success) {
+      const data: Record<string, number> = response.data as Record<string, number>
+
+      const course_un_read_count =
+        data.task_un_read_count +
+        data.announcement_un_read_count +
+        data.subgroup_un_read_count +
+        data.discussion_un_read_count +
+        data.qa_un_read_count;
+
+      this.messageCount.todo_un_read_count = data.todo_un_read_count
+      this.messageCount.course_un_read_count = course_un_read_count
+      this.messageCount.person_un_read_count = data.person_un_read_count
+      this.messageCount.system_un_read_count = data.system_un_read_count
+      this.messageCount.task_un_read_count = data.task_un_read_count
+      this.messageCount.announcement_un_read_count = data.announcement_un_read_count
+      this.messageCount.subgroup_un_read_count = data.subgroup_un_read_count
+      this.messageCount.discussion_un_read_count = data.discussion_un_read_count
+      this.messageCount.qa_un_read_count = data.qa_un_read_count
+    }
   }
 
   @Builder
@@ -43,7 +74,7 @@ export struct MessagePage {
   }
 
   @Builder
-  BuildLeftIcon(iconCode: IconConstants) {
+  BuildLeftIcon(iconCode: IconConstants, iconColor: ResourceColor) {
     Column() {
       AppIcon({
         iconCode: iconCode,
@@ -55,15 +86,15 @@ export struct MessagePage {
     .height(48)
     .margin({ right: 10 })
     .justifyContent(FlexAlign.Center)
-    .backgroundColor('#709DDD')
+    .backgroundColor(iconColor)
     .borderRadius(4)
   }
 
   @Builder
-  BuildOperate() {
+  BuildOperate(count: number) {
     Row() {
       Badge({
-        count: 2,
+        count: count,
         position: BadgePosition.Left,
         style: { badgeSize: 8, fontSize: 0 }
       }) {
@@ -81,16 +112,59 @@ export struct MessagePage {
         this.BuildHeader()
         CustomList({ listPadding: { left: 16, right: 16 } }) {
           CustomListItem({
-            iconBuilder: () => this.BuildLeftIcon(IconConstants.TO_DO_LIST),
-            operateBuilder: () => this.BuildOperate(),
+            iconBuilder: () => this.BuildLeftIcon(IconConstants.TO_DO_LIST, '#709DDD'),
+            operateBuilder: () => this.BuildOperate(this.messageCount.todo_un_read_count),
             text: '待办事项',
             fontSize: 14,
             lineHeight: 14,
             itemRadius: 4,
             itemPadding: 8,
+            itemMargin: { top: 8 },
             itemBorder: '',
             onClickBtn: () => {
-              // this.pageInfos.pushPath({ name: 'userReport' })
+              this.pageInfos.pushPath({ name: 'messageTodo' })
+            }
+          })
+          CustomListItem({
+            iconBuilder: () => this.BuildLeftIcon(IconConstants.COURSE_LIST, '#45BA94'),
+            operateBuilder: () => this.BuildOperate(this.messageCount.course_un_read_count),
+            text: '课程消息',
+            fontSize: 14,
+            lineHeight: 14,
+            itemRadius: 4,
+            itemPadding: 8,
+            itemMargin: { top: 8 },
+            itemBorder: '',
+            onClickBtn: () => {
+              // this.pageInfos.pushPath({ name: 'messageCourse' })
+            }
+          })
+          CustomListItem({
+            iconBuilder: () => this.BuildLeftIcon(IconConstants.PERSON_LIST, '#F27D5D'),
+            operateBuilder: () => this.BuildOperate(this.messageCount.person_un_read_count),
+            text: '个人消息',
+            fontSize: 14,
+            lineHeight: 14,
+            itemRadius: 4,
+            itemPadding: 8,
+            itemMargin: { top: 8 },
+            itemBorder: '',
+            onClickBtn: () => {
+              // this.pageInfos.pushPath({ name: 'messagePerson' })
+            }
+          })
+          CustomListItem({
+            iconBuilder: () => this.BuildLeftIcon(IconConstants.SYSTEM_LIST, '#7BA5E1'),
+            operateBuilder: () => this.BuildOperate(this.messageCount.system_un_read_count),
+            text: '系统消息',
+            fontSize: 14,
+            lineHeight: 14,
+            itemRadius: 4,
+            itemPadding: 8,
+            itemMargin: { top: 8 },
+            itemBorder: '',
+            onClickBtn: () => {
+              // this.pageInfos.pushPath({ name: 'messageSystem' })
             }
           })
         }
