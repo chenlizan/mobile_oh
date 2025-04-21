@@ -14,10 +14,11 @@ export * from "./src/main/ets/components/XyAvatar"
 export * from './src/main/ets/config/ApiConfig'
 export * from './src/main/ets/config/Context'
 
-export * from './src/main/ets/constants/CommonConstants';
+export * from './src/main/ets/constants/CommonConstants'
 export * from './src/main/ets/constants/IconConstants'
 export * from './src/main/ets/constants/MessageDict'
 export * from './src/main/ets/constants/RouterConstants'
+export * from './src/main/ets/constants/MessageConstants'
 
 export * from './src/main/ets/model/LocalStorageModel'
 export * from './src/main/ets/model/SchoolModel'
@@ -33,3 +34,4 @@ export * from './src/main/ets/utils/EnhancedFetch'
 export * from './src/main/ets/utils/Logger'
 export * from './src/main/ets/utils/ObjectUtil'
 export * from './src/main/ets/utils/PreferenceUtil'
+export * from './src/main/ets/utils/UserUtils'
