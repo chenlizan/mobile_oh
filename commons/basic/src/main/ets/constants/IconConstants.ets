@@ -37,4 +37,5 @@ export class IconConstants {
   static readonly SYSTEM_LIST: string = '\ue80a' //系统消息
   static readonly DOWNLOAD: string = '\ue88c' //下载
   static readonly ROTATION: string = '\ue82f' //旋转
+  static readonly OTHER: string = '\ue829' //其他
 }

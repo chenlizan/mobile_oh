@@ -11,7 +11,7 @@ import {
   RouterConstants,
   SystemApi,
   xyApiPost
-} from '../../../../Index'
+} from '@xy/basic/Index'
 import { display } from '@kit.ArkUI'
 
 export class Toolkits {

@@ -1,5 +1,6 @@
 import _ from '@wolfx/lodash'
-import { CustomLocalH5, CustomToast, judgeGroupIsEnd, PreferenceStorage, Toolkits, UserInfoModel } from '@xy/basic'
+import { CustomToast, judgeGroupIsEnd, PreferenceStorage, UserInfoModel } from '@xy/basic'
+import { CustomLocalH5, Toolkits } from './CustomLocalH5'
 
 class DiscussToolkits extends Toolkits {
   onGetKeyboardSpace() {

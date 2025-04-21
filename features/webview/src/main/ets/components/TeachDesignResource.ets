@@ -1,5 +1,5 @@
 import _ from '@wolfx/lodash'
-import { CustomLocalH5 } from '@xy/basic'
+import { CustomLocalH5 } from './CustomLocalH5'
 
 @Component
 struct TeachDesignResource {

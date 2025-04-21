@@ -20,6 +20,11 @@ export struct CustomTag {
    * 外边距
    */
   @Prop tagMargin: Margin | Length | LocalizedMargin = ''
+  /**
+   * 点击按钮
+   */
+  onClickBtn: (event: ClickEvent) => void = () => {
+  }
 
   build() {
     Text(this.text)
@@ -34,5 +39,6 @@ export struct CustomTag {
       .borderColor(this.tagBorderColor)
       .fontColor(this.fontColor)
       .fontSize(this.fontSize)
+      .onClick(this.onClickBtn)
   }
 }

@@ -1,5 +1,6 @@
 import _ from '@wolfx/lodash'
-import { Api_Context, CustomLocalH5, UserInfoModel } from '@xy/basic'
+import { Api_Context, UserInfoModel } from '@xy/basic'
+import { CustomLocalH5 } from './CustomLocalH5'
 
 @Component
 struct MindMapResource {

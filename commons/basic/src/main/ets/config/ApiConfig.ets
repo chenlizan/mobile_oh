@@ -418,8 +418,10 @@ interface InterfaceHomeApi {
   getResourceRecordHistory: string;
   getResourceByQrcode: string;
   getResourceKnowledge: string;
+  getKnowledgeKgs: string;
   getSurveyKnowledgeBind: string;
   getResourceBindTag: string;
+  getLabelKgs: string;
   updateResourceAttribute: string;
   checkSurveyScore: string;
   getRemoteControlPage: string;
@@ -695,9 +697,11 @@ export const HomeApi: InterfaceHomeApi = {
   recordResourceHistory: 'resource/history/user/view',
   getResourceRecordHistory: 'resource/history/user/view',
   getResourceByQrcode: 'resource/qrcode/permission',
-  getResourceKnowledge: 'graphs/kg/group/knowledge/bind',
+  getResourceKnowledge: 'graphs/kg/group/knowledge/bind/v2',
+  getKnowledgeKgs: 'graphs/group/knowledge/kgs',
   getSurveyKnowledgeBind: 'survey/knowledge/questions',
-  getResourceBindTag: 'graphs/kg/group/label/bind',
+  getResourceBindTag: 'graphs/kg/group/label/bind/v2',
+  getLabelKgs: 'graphs/group/label/kgs',
   updateResourceAttribute: 'resource/batch/update/attribute',
   checkSurveyScore: 'survey/question/score/check',
   getRemoteControlPage: 'auth/user/be_control_page',

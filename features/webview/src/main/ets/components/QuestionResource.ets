@@ -1,13 +1,6 @@
 import _ from '@wolfx/lodash'
-import {
-  CustomLocalH5,
-  CustomToast,
-  judgeGroupIsEnd,
-  judgeRoleIsSpecial,
-  PreferenceStorage,
-  Toolkits,
-  UserInfoModel
-} from '@xy/basic'
+import { CustomToast, judgeGroupIsEnd, judgeRoleIsSpecial, PreferenceStorage, UserInfoModel } from '@xy/basic'
+import { CustomLocalH5, Toolkits } from './CustomLocalH5'
 import { KnowledgeBar } from './KnowledgeBar'
 
 class QuestionToolkits extends Toolkits {
@@ -102,7 +95,7 @@ struct QuestionResource {
           extraJavaScript: this.injectedExtraJavaScript(),
           toolkits: new QuestionToolkits()
         })
-        KnowledgeBar()
+        KnowledgeBar({ item: this.param.item as Record<string, string> })
       }
     }
     .hideTitleBar(true)

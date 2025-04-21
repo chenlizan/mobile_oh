@@ -3,7 +3,6 @@ import { window } from '@kit.ArkUI'
 import _ from '@wolfx/lodash'
 import {
   AppIcon,
-  CustomLocalH5,
   CustomNavTitle,
   DownloadToLocal,
   getExtension,
@@ -12,6 +11,7 @@ import {
   judgeRoleHasCourseOperationWeight,
   PreferenceStorage
 } from '@xy/basic'
+import { CustomLocalH5 } from './CustomLocalH5'
 
 @Component
 struct CodeResource {

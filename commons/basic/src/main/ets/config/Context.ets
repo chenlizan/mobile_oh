@@ -20,7 +20,7 @@ export class Api_Context {
   /**
    * 是否 测试环境。
    */
-  static isTest: boolean = false
+  static isTest: boolean = true
   private api: BaseApi = {
     baseApi_IM: "",
     baseApi: "",

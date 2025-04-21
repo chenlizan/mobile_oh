@@ -1,6 +1,7 @@
 import _ from '@wolfx/lodash'
 import { webview } from '@kit.ArkWeb'
-import { AppIcon, CustomLocalH5, CustomNavTitle, IconConstants } from '@xy/basic'
+import { AppIcon, CustomNavTitle, IconConstants } from '@xy/basic'
+import { CustomLocalH5 } from './CustomLocalH5'
 
 @Component
 struct H5Resource {

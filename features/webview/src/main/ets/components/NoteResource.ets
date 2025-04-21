@@ -1,5 +1,6 @@
 import _ from '@wolfx/lodash'
-import { CustomLocalH5, judgeRoleHasCourseOperationWeight, UserInfoModel } from '@xy/basic'
+import { judgeRoleHasCourseOperationWeight, UserInfoModel } from '@xy/basic'
+import { CustomLocalH5 } from './CustomLocalH5'
 
 @Component
 struct NoteResource {
