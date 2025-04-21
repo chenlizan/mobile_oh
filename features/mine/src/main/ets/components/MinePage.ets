@@ -71,7 +71,7 @@ export struct MinePage {
               Column() {
                 Avatar({ avatar: $avatar })
                 Row() {
-                  Text((this.userInfo.fileCapacity as Record<string, string>).caseName)
+                  Text((this.userInfo.fileCapacity as Record<string, string>)?.caseName)
                     .padding({
                       top: 4,
                       bottom: 4,

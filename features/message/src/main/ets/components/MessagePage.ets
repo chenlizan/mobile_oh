@@ -91,10 +91,58 @@ export struct MessagePage {
   }
 
   @Builder
-  BuildOperate(count: number) {
+  BuildTodoOperate() {
     Row() {
       Badge({
-        count: count,
+        count: this.messageCount.todo_un_read_count > 0 ? 1 : 0,
+        position: BadgePosition.Left,
+        style: { badgeSize: 8, fontSize: 0 }
+      }) {
+        Text()
+          .margin({ right: 20 })
+      }
+
+      AppIcon({ iconCode: IconConstants.RIGHT })
+    }
+  }
+
+  @Builder
+  BuildCourseOperate() {
+    Row() {
+      Badge({
+        count: this.messageCount.course_un_read_count > 0 ? 1 : 0,
+        position: BadgePosition.Left,
+        style: { badgeSize: 8, fontSize: 0 }
+      }) {
+        Text()
+          .margin({ right: 20 })
+      }
+
+      AppIcon({ iconCode: IconConstants.RIGHT })
+    }
+  }
+
+  @Builder
+  BuildPersonOperate() {
+    Row() {
+      Badge({
+        count: this.messageCount.person_un_read_count > 0 ? 1 : 0,
+        position: BadgePosition.Left,
+        style: { badgeSize: 8, fontSize: 0 }
+      }) {
+        Text()
+          .margin({ right: 20 })
+      }
+
+      AppIcon({ iconCode: IconConstants.RIGHT })
+    }
+  }
+
+  @Builder
+  BuildSystemOperate() {
+    Row() {
+      Badge({
+        count: this.messageCount.system_un_read_count > 0 ? 1 : 0,
         position: BadgePosition.Left,
         style: { badgeSize: 8, fontSize: 0 }
       }) {
@@ -113,7 +161,7 @@ export struct MessagePage {
         CustomList({ listPadding: { left: 16, right: 16 } }) {
           CustomListItem({
             iconBuilder: () => this.BuildLeftIcon(IconConstants.TO_DO_LIST, '#709DDD'),
-            operateBuilder: () => this.BuildOperate(this.messageCount.todo_un_read_count),
+            operateBuilder: () => this.BuildTodoOperate(),
             text: '待办事项',
             fontSize: 14,
             lineHeight: 14,
@@ -127,7 +175,7 @@ export struct MessagePage {
           })
           CustomListItem({
             iconBuilder: () => this.BuildLeftIcon(IconConstants.COURSE_LIST, '#45BA94'),
-            operateBuilder: () => this.BuildOperate(this.messageCount.course_un_read_count),
+            operateBuilder: () => this.BuildCourseOperate(),
             text: '课程消息',
             fontSize: 14,
             lineHeight: 14,
@@ -141,7 +189,7 @@ export struct MessagePage {
           })
           CustomListItem({
             iconBuilder: () => this.BuildLeftIcon(IconConstants.PERSON_LIST, '#F27D5D'),
-            operateBuilder: () => this.BuildOperate(this.messageCount.person_un_read_count),
+            operateBuilder: () => this.BuildPersonOperate(),
             text: '个人消息',
             fontSize: 14,
             lineHeight: 14,
@@ -155,7 +203,7 @@ export struct MessagePage {
           })
           CustomListItem({
             iconBuilder: () => this.BuildLeftIcon(IconConstants.SYSTEM_LIST, '#7BA5E1'),
-            operateBuilder: () => this.BuildOperate(this.messageCount.system_un_read_count),
+            operateBuilder: () => this.BuildSystemOperate(),
             text: '系统消息',
             fontSize: 14,
             lineHeight: 14,
@@ -174,6 +222,7 @@ export struct MessagePage {
       .backgroundColor('#f1f1f1')
     }
     .onRefreshing(() => {
+      this.getMsgUnReadInfo()
       setTimeout(() => {
         this.isRefreshing = false
       }, 500)

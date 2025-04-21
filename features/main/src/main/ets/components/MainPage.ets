@@ -20,8 +20,8 @@ import { SystemNoticeModal } from './SystemNoticeModal';
 
 @Component
 export struct MainPage {
-  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
-  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context(this.preferenceStorage?.school?.domain)
   @StorageLink('messageCount') messageCount: MessageCountModel = new MessageCountModel()
   @Link globalPageIndex: string;
   @State backgroundImageY: number = 0;
@@ -59,21 +59,35 @@ export struct MainPage {
   }
 
   async getMessageUnReadCount() {
-    // const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_out") + MessageApi.msgUnReadCount)
-    // if (response.success) {
-    //   const data = (response.data as Record<string, number>).un_read_count
-    //   this.messageCount.total_un_read_count = data
-    // }
+    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgUnReadCount)
+    if (response.success) {
+      const data = (response.data as Record<string, number>).un_read_count
+      this.messageCount.total_un_read_count = data
+    }
   }
 
   @Builder
   BuildTabs(icon: Resource, unIcon: Resource, title: ResourceStr, index: number) {
     Column() {
-      Image(this.currentTabIndex === index ? icon : unIcon)
-        .width(this.currentTabIndex === index ? $r('app.float.common_select_image_width') :
-        $r('app.float.common_image_width'))
-        .height(this.currentTabIndex === index ? $r('app.float.common_select_image_height') :
-        $r('app.float.common_image_height'))
+      if (index === 1) {
+        Badge({
+          count: this.messageCount.total_un_read_count > 0 ? 1 : 0,
+          position: BadgePosition.RightTop,
+          style: { badgeSize: 8, fontSize: 0 }
+        }) {
+          Image(this.currentTabIndex === index ? icon : unIcon)
+            .width(this.currentTabIndex === index ? $r('app.float.common_select_image_width') :
+            $r('app.float.common_image_width'))
+            .height(this.currentTabIndex === index ? $r('app.float.common_select_image_height') :
+            $r('app.float.common_image_height'))
+        }
+      } else {
+        Image(this.currentTabIndex === index ? icon : unIcon)
+          .width(this.currentTabIndex === index ? $r('app.float.common_select_image_width') :
+          $r('app.float.common_image_width'))
+          .height(this.currentTabIndex === index ? $r('app.float.common_select_image_height') :
+          $r('app.float.common_image_height'))
+      }
 
       if (this.currentTabIndex !== index) {
         Text(title)

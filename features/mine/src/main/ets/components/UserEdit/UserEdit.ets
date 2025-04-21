@@ -140,7 +140,7 @@ struct UserEdit {
         })
         CustomListItem({
           text: "用户级别",
-          operateBuilder: () => this.BuildTextItem((this.userInfo.fileCapacity as Record<string, string>).caseName),
+          operateBuilder: () => this.BuildTextItem((this.userInfo.fileCapacity as Record<string, string>)?.caseName),
           itemBorder: {},
           itemMargin: { top: 16 },
           onClickBtn: () => this.pageInfos.pushPath({ name: 'userLevelInfo' })
