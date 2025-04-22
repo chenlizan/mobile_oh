@@ -202,7 +202,8 @@ struct KnowledgeModal {
 @Component
 export struct KnowledgeBar {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
-  @Prop item: Record<string, string>
+  @Prop item: Record<string, string | number>
+  @Prop loginRole: number
   @State tabArray: Array<string> = ['知识点', '标签']
   @State currentIndex: number = 0
   @State indicatorLeftMargin: number = 16
@@ -219,8 +220,8 @@ export struct KnowledgeBar {
       currentIndex: $currentIndex,
       indicatorLeftMargin: $indicatorLeftMargin,
       indicatorWidth: $indicatorWidth,
-      paper_id: this.item.paper_id,
-      group_id: this.item.group_id,
+      paper_id: this.item.paper_id as string,
+      group_id: this.item.group_id as string,
       knowledge: this.knowledge,
       tags: this.tags
     }),
@@ -333,11 +334,13 @@ export struct KnowledgeBar {
         .borderRadius(1)
         .margin({ left: this.indicatorLeftMargin, top: 50 })
     }
+    .visibility((_.isEmpty(this.knowledge) && _.isEmpty(this.tags) && this.loginRole === 1) ? Visibility.None :
+    Visibility.Visible)
   }
 }
 
 @CustomDialog
-export struct LeftTab {
+struct LeftTab {
   @Link tabArray: Array<string>
   @Link currentIndex: number
   @Link indicatorLeftMargin: number
@@ -417,17 +420,17 @@ export struct LeftTab {
           top: 4,
           bottom: 4
         })
-        .fontColor('#40A9FF')
+        .fontColor(_.isEmpty(item.kg_ids) ? '#1EB38F' : '#40A9FF')
         .fontSize(12)
         .onClick(() => {
           this.curr_type = type
           this.curr_item = item
           this.knowledgeVisible = true
         })
-      Divider().vertical(true).color('#40A9FF').height(14).strokeWidth(1)
+      Divider().vertical(true).color(_.isEmpty(item.kg_ids) ? '#1EB38F' : '#40A9FF').height(14).strokeWidth(1)
       AppIcon({
         iconCode: IconConstants.OTHER,
-        iconColor: '#40A9FF',
+        iconColor: _.isEmpty(item.kg_ids) ? '#1EB38F' : '#40A9FF',
         iconPadding: {
           left: 8,
           right: 8,
@@ -443,7 +446,7 @@ export struct LeftTab {
     }
     .margin({ right: 8 })
     .borderWidth(1)
-    .borderColor('#40A9FF')
+    .borderColor(_.isEmpty(item.kg_ids) ? '#1EB38F' : '#40A9FF')
   }
 
   @Builder

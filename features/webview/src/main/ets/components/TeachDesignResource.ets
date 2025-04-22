@@ -1,9 +1,11 @@
 import _ from '@wolfx/lodash'
 import { CustomLocalH5 } from './CustomLocalH5'
+import { webview } from '@kit.ArkWeb'
 
 @Component
 struct TeachDesignResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
+  @State controller: webview.WebviewController = new webview.WebviewController()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
@@ -19,7 +21,8 @@ struct TeachDesignResource {
   build() {
     NavDestination() {
       CustomLocalH5({
-        url: this.getUrlPath()
+        url: this.getUrlPath(),
+        controller: this.controller
       })
     }
     .hideTitleBar(true)

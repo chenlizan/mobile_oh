@@ -2,6 +2,7 @@ import _ from '@wolfx/lodash'
 import { CustomToast, judgeGroupIsEnd, judgeRoleIsSpecial, PreferenceStorage, UserInfoModel } from '@xy/basic'
 import { CustomLocalH5, Toolkits } from './CustomLocalH5'
 import { KnowledgeBar } from './KnowledgeBar'
+import { webview } from '@kit.ArkWeb'
 
 class QuestionToolkits extends Toolkits {
   onRefreshTask() {
@@ -22,6 +23,7 @@ struct QuestionResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State controller: webview.WebviewController = new webview.WebviewController()
   @State knowledgePickerVisible: boolean = false
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
@@ -93,9 +95,12 @@ struct QuestionResource {
         CustomLocalH5({
           url: this.getUrlPath(),
           extraJavaScript: this.injectedExtraJavaScript(),
-          toolkits: new QuestionToolkits()
+          toolkits: new QuestionToolkits(),
+          controller: this.controller
         })
-        KnowledgeBar({ item: this.param.item as Record<string, string> })
+        if (!this.param.isSub && !this.param.isDocument && !this.param.fromBridge) {
+          KnowledgeBar({ item: this.param.item as Record<string, string> })
+        }
       }
     }
     .hideTitleBar(true)

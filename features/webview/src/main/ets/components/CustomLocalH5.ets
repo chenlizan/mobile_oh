@@ -198,7 +198,7 @@ export class Toolkits {
 @Component
 export struct CustomLocalH5 {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
-  @Prop controller: webview.WebviewController = new webview.WebviewController()
+  @Link controller: webview.WebviewController
   @Prop toolkits: Toolkits | null = null
   @Prop extraJavaScript: string = ''
   @Prop url: string = ''

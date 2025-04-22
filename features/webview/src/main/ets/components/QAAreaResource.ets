@@ -1,12 +1,14 @@
 import _ from '@wolfx/lodash'
 import { judgeGroupIsEnd, PreferenceStorage, UserInfoModel } from '@xy/basic'
 import { CustomLocalH5 } from './CustomLocalH5'
+import { webview } from '@kit.ArkWeb'
 
 @Component
 struct QAAreaResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State controller: webview.WebviewController = new webview.WebviewController()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
@@ -51,6 +53,7 @@ struct QAAreaResource {
       CustomLocalH5({
         url: this.getUrlPath(),
         extraJavaScript: this.injectedExtraJavaScript(),
+        controller: this.controller
       })
     }
     .hideTitleBar(true)

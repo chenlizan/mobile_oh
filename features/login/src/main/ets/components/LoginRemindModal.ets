@@ -8,7 +8,6 @@ export struct LoginRemindModal {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context(this.preferenceStorage?.school?.domain)
   @State title: string = '账号安全提示'
   @State unRemind: boolean = false
-
   onActive: () => void = () => {
   }
   onLogin: () => void = () => {
@@ -32,7 +31,8 @@ export struct LoginRemindModal {
       // 不再提示
       const data = this.login_info
       const access_token = data.getValue('access_token');
-      const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.noNoticed90Days, {}, {"Authorization": 'Bearer ' + access_token})
+      const response = await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.noNoticed90Days, {},
+        { "Authorization": 'Bearer ' + access_token })
       if (response.code === 200) {
         console.log('设置成功')
       }
@@ -128,24 +128,25 @@ export struct LoginRemindModal {
           .height(40)
           .margin({ right: 8 })
           .borderRadius(4)
+          .backgroundColor(0x40A9FF)
           .onClick(() => {
             this.onActive()
           })
       } else {
         if (this.judgeOnlyExpired(this.getQuestionText())) {
-         Row() {
-           Checkbox()
-             .select(this.unRemind)
-             .selectedColor(0x40A9FF)
-             .shape(CheckBoxShape.ROUNDED_SQUARE)
-             .onChange((value: boolean) => {
-               this.unRemind = value
-             })
-           Text('不再提示')
-             .margin({left: 2})
-             .fontSize(14)
-             .fontColor('#999999')
-         }
+          Row() {
+            Checkbox()
+              .select(this.unRemind)
+              .selectedColor(0x40A9FF)
+              .shape(CheckBoxShape.ROUNDED_SQUARE)
+              .onChange((value: boolean) => {
+                this.unRemind = value
+              })
+            Text('不再提示')
+              .margin({ left: 2 })
+              .fontSize(14)
+              .fontColor('#999999')
+          }
         } else {
           Row()
         }
@@ -166,6 +167,7 @@ export struct LoginRemindModal {
             .height(40)
             .margin({ right: 8 })
             .borderRadius(4)
+            .backgroundColor(0x40A9FF)
             .onClick(() => {
               this._onDeal()
             })
@@ -174,7 +176,7 @@ export struct LoginRemindModal {
     }
     .width('100%')
     .margin({ bottom: 8 })
-    .justifyContent(FlexAlign.SpaceBetween)
+    .justifyContent(login_info.getValue('needActive') ? FlexAlign.End : FlexAlign.SpaceBetween)
   }
 
   build() {

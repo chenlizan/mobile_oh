@@ -1,12 +1,14 @@
 import _ from '@wolfx/lodash'
 import { Api_Context, UserInfoModel } from '@xy/basic'
 import { CustomLocalH5 } from './CustomLocalH5'
+import { webview } from '@kit.ArkWeb'
 
 @Component
 struct MindMapResource {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State controller: webview.WebviewController = new webview.WebviewController()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
@@ -40,8 +42,8 @@ struct MindMapResource {
   build() {
     NavDestination() {
       CustomLocalH5({
-        url: this.getUrlPath()
-
+        url: this.getUrlPath(),
+        controller: this.controller
       })
     }
     .hideTitleBar(true)
