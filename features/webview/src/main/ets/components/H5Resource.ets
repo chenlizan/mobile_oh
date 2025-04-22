@@ -1,11 +1,12 @@
 import _ from '@wolfx/lodash'
 import { webview } from '@kit.ArkWeb'
-import { AppIcon, CustomNavTitle, IconConstants } from '@xy/basic'
+import { AppIcon, CustomNavTitle, IconConstants, judgeGroupIsEnd, PreferenceStorage } from '@xy/basic'
 import { CustomLocalH5 } from './CustomLocalH5'
 
 @Component
 struct H5Resource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @State controller: webview.WebviewController = new webview.WebviewController()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
@@ -16,6 +17,15 @@ struct H5Resource {
   getUrlPath() {
     let path = this.param.source_url as string
     return path;
+  }
+
+  injectedExtraJavaScript = () => {
+    const currentTeam = this.preferenceStorage.currentTeam
+    let extra = ''
+    if (!_.isEmpty(currentTeam)) {
+      extra += `window.courseEnd=${judgeGroupIsEnd(currentTeam as Record<string, string>, false)}`
+    }
+    return `${extra}`
   }
 
   @Builder
@@ -43,7 +53,8 @@ struct H5Resource {
     NavDestination() {
       CustomLocalH5({
         controller: this.controller,
-        url: this.getUrlPath()
+        url: this.getUrlPath(),
+        extraJavaScript: this.injectedExtraJavaScript(),
       })
     }
     .title(CustomNavTitle(this.param.title as string, () => this.BuildNavRightBtn()))

@@ -1,6 +1,8 @@
 import _ from '@wolfx/lodash'
 import { CustomToast, judgeGroupIsEnd, PreferenceStorage, UserInfoModel } from '@xy/basic'
 import { CustomLocalH5, Toolkits } from './CustomLocalH5'
+import { KnowledgeBar } from './KnowledgeBar'
+import { webview } from '@kit.ArkWeb'
 
 class DiscussToolkits extends Toolkits {
   onGetKeyboardSpace() {
@@ -17,6 +19,7 @@ struct DiscussResource {
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State controller: webview.WebviewController = new webview.WebviewController()
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
@@ -59,11 +62,17 @@ struct DiscussResource {
 
   build() {
     NavDestination() {
-      CustomLocalH5({
-        url: this.getUrlPath(),
-        extraJavaScript: this.injectedExtraJavaScript(),
-        toolkits: new DiscussToolkits()
-      })
+      Flex({ direction: FlexDirection.Column }) {
+        CustomLocalH5({
+          url: this.getUrlPath(),
+          extraJavaScript: this.injectedExtraJavaScript(),
+          toolkits: new DiscussToolkits(),
+          controller: this.controller
+        })
+        if (!this.param.isSub && !this.param.fromBridge) {
+          KnowledgeBar({ item: this.param.item as Record<string, string> })
+        }
+      }
     }
     .hideTitleBar(true)
   }

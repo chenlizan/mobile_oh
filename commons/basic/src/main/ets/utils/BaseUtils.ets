@@ -346,13 +346,6 @@ export const judgeRoleHasCourseOperationWeight = (role: number) => {
 }
 
 /**
- * 获取文件后缀名
- */
-export const getExtension = (filename: string = '') => {
-  return filename.split('.').pop()?.toLowerCase()
-}
-
-/**
  * 行为记录埋点信息
  */
 export const getLrsTraceElement = (data: Record<string, string | null> = {
@@ -389,6 +382,35 @@ export const getLrsTraceElement = (data: Record<string, string | null> = {
 export const judgeCourseIsSP = (group: Record<string, number>) => {
   return group?.spType == 1 || group?.sp_type == 1;
 };
+
+export function getTimeState(task: Record<string, string | number>, lang = 'en') {
+  const momentNow = dayjs();
+  const momentStart = dayjs(task.start_time);
+  const momentEnd = dayjs(task.end_time);
+  if (momentNow.isBefore(momentStart)) {
+    return lang === 'cn' ? '未开始' : 'future';
+  } else if (momentNow.isAfter(momentEnd)) {
+    if (task.mark_mode === 3 || task.mark_mode === 4) {
+      const mark_end_moment = dayjs(task.mark_end_time);
+      if (momentNow.isBefore(mark_end_moment)) {
+        return lang === 'cn' ? task.mark_mode === 3 ? '自评中' : '互评中' : 'checking';
+      }
+    }
+    return lang === 'cn' ? '已截止' : 'end';
+  } else {
+    if (task._taskTypeText === '自主观看' || task._taskTypeText === '讨论') {
+      return lang === 'cn' ? '进行中' : 'going';
+    }
+    return lang === 'cn' ? '答题中' : 'going';
+  }
+}
+
+/**
+ * 获取文件后缀名
+ */
+export const getExtension = (filename: string = '') => {
+  return filename.split('.').pop()?.toLowerCase()
+}
 
 const videoFileMimetype = new Set(['video/mp4']);
 
@@ -427,6 +449,32 @@ export function isVideoFile(filename: string, mimetype: string) {
   return videoFileMimetype.has(mimetype) || videoFileExtensions.has(ext || '');
 }
 
+const codeFileExtensions = new Set([
+  'py',
+  'c',
+  'cpp',
+  'cs',
+  'css',
+  'go',
+  'html',
+  'js',
+  'sql',
+  'tex',
+  'ts',
+  'java',
+  'md',
+  'xml',
+  'json',
+]);
+
+/**
+ * 判断文件是否为代码文件
+ */
+function isCodeFile(filename: string) {
+  const ext = getExtension(filename);
+  return codeFileExtensions.has(ext || '');
+}
+
 /**
  * 导航到资源详情
  */
@@ -461,6 +509,20 @@ export const navigateToResourceDetails =
         break
       case 6:
         // 网盘资源
+        if (isCodeFile(item.name as string)) {
+          pageInfos?.pushPath({
+            name: 'codeResource',
+            param: JSON.stringify({
+              isCourse: true,
+              item,
+              loginRole,
+              isSub,
+              showFinish
+            })
+          })
+        } else {
+          CustomToast.toast_fail('移动客户端暂不支持打开此类型文件')
+        }
         break
       case 7:
         // 问答
