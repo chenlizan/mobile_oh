@@ -700,7 +700,7 @@ export const HomeApi: InterfaceHomeApi = {
   getResourceKnowledge: 'graphs/kg/group/knowledge/bind/v2',
   getKnowledgeKgs: 'graphs/group/knowledge/kgs',
   getSurveyKnowledgeBind: 'survey/knowledge/questions',
-  getResourceBindTag: 'graphs/kg/group/label/bind/v2',
+  getResourceBindTag: 'graphs/kg/group/label/bind/for_mobile/v2',
   getLabelKgs: 'graphs/group/label/kgs',
   updateResourceAttribute: 'resource/batch/update/attribute',
   checkSurveyScore: 'survey/question/score/check',
