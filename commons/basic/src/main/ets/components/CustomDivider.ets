@@ -14,10 +14,12 @@ export struct CustomDivider {
       .layoutWeight(1)
       .borderColor('#33999999')
 
-      Text(this.text)
-        .margin(10)
-        .fontSize(13)
-        .fontColor('#999999')
+      if (this.text) {
+        Text(this.text)
+          .margin(10)
+          .fontSize(13)
+          .fontColor('#999999')
+      }
 
       Row() {
       }
