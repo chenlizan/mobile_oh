@@ -12,3 +12,10 @@ export class MessageCountModel {
   chat_c2c_un_read_count: number = 0
   chat_group_un_read_count: number = 0
 }
+
+export class MessageSettingModel {
+  title: string = ''
+  showSubs: boolean = true
+  subMsgType: string = ""
+  subs: Record<string, string | number | boolean>[] = []
+}
