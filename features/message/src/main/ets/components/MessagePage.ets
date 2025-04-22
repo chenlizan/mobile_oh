@@ -278,7 +278,6 @@ export struct MessagePage {
 
 @CustomDialog
 export struct MessageSettingDialog {
-  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @Prop settings: Record<string, string | Array<number>>[] = []
   @State msgSetting: MessageSettingModel[] = []
   @State screenWidth: number = 0
@@ -340,43 +339,49 @@ export struct MessageSettingDialog {
   }
 
   onSelectAll = (value: boolean) => {
-    const new_settings = _.map(this.settings, setting => {
-      const selected_msg_codes: Array<number> = [];
-      const item = _.find(this.msgSetting, { subMsgType: setting.subMsgType }) as MessageSettingModel
-      _.map(item.subs, (i: Record<string, string | number | boolean>) => {
-        if (i.disabled || value) {
-          selected_msg_codes.push(i.code as number);
-        }
+    if (value !== this.judgeMsgSettingCheckAll()) {
+      const new_settings = _.map(this.settings, setting => {
+        const selected_msg_codes: Array<number> = [];
+        const item = _.find(this.msgSetting, { subMsgType: setting.subMsgType }) as MessageSettingModel
+        _.map(item.subs, (i: Record<string, string | number | boolean>) => {
+          if (i.disabled || value) {
+            selected_msg_codes.push(i.code as number);
+          }
+        });
+        setting.selected_msg_codes = selected_msg_codes;
+        return setting;
       });
-      setting.selected_msg_codes = selected_msg_codes;
-      return setting;
-    });
 
-    this.onUpdateSetting(new_settings);
+      this.onUpdateSetting(new_settings);
+      this.settings = new_settings;
+    }
   };
   onSelectOptions = (value: boolean, subMsgType: string, code: number) => {
-    const new_settings = _.map(this.settings, setting => {
-      if (setting.subMsgType === subMsgType) {
-        let selected_msg_codes = setting.selected_msg_codes as Array<number>;
-        const include = _.includes(selected_msg_codes, code);
-        if (value) {
-          if (!include) {
-            selected_msg_codes.push(code);
+    if (value !== this.judgeMsgSettingCheck(subMsgType, code)) {
+      const new_settings = _.map(this.settings, setting => {
+        if (setting.subMsgType === subMsgType) {
+          let selected_msg_codes = setting.selected_msg_codes as Array<number>;
+          const include = _.includes(selected_msg_codes, code);
+          if (value) {
+            if (!include) {
+              selected_msg_codes.push(code);
+            }
+          } else {
+            if (include) {
+              selected_msg_codes = _.filter(
+                selected_msg_codes,
+                item => item !== code,
+              );
+            }
           }
-        } else {
-          if (include) {
-            selected_msg_codes = _.filter(
-              selected_msg_codes,
-              item => item !== code,
-            );
-          }
-        }
 
-        setting.selected_msg_codes = selected_msg_codes
-      }
-      return setting;
-    });
-    this.onUpdateSetting(new_settings);
+          setting.selected_msg_codes = selected_msg_codes
+        }
+        return setting;
+      });
+      this.onUpdateSetting(new_settings);
+      this.settings = new_settings;
+    }
   };
   judgeMsgSettingCheckAll = () => {
     const unChecks = _.filter(this.settings, setting => {
