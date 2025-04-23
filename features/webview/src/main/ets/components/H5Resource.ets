@@ -35,6 +35,7 @@ struct H5Resource {
       //   iconCode: IconConstants.WATCH,
       //   iconColor: '#999999',
       //   iconSize: 16,
+      //   iconMargin: { right: 10 },
       //   onClickBtn: () => {
       //   }
       // })

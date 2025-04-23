@@ -23,7 +23,7 @@ struct NavTitle {
     Row() {
       Row() {
         Text(this.text)
-          .width(this.screenWidth - 112)
+          .width(this.screenWidth - 136)
           .fontSize(16)
           .fontColor('#404040')
           .textAlign(TextAlign.Center)

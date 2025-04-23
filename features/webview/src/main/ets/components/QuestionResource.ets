@@ -5,6 +5,14 @@ import { KnowledgeBar } from './KnowledgeBar'
 import { webview } from '@kit.ArkWeb'
 
 class QuestionToolkits extends Toolkits {
+  private _onChangeKnowledgeStatus: (v: boolean) => void = () => {
+  }
+
+  constructor(onChangeKnowledgeStatus: (v: boolean) => void) {
+    super()
+    this._onChangeKnowledgeStatus = onChangeKnowledgeStatus
+  }
+
   onRefreshTask() {
     CustomToast.toast_fail('onRefreshTask 没实现')
   }
@@ -13,8 +21,8 @@ class QuestionToolkits extends Toolkits {
     CustomToast.toast_fail('onRefreshResource 没实现')
   }
 
-  onChangeKnowledgeStatus() {
-    CustomToast.toast_fail('onChangeKnowledgeStatus 没实现')
+  onChangeKnowledgeStatus(dataSource: Record<string, boolean>) {
+    this._onChangeKnowledgeStatus(dataSource.status)
   }
 }
 
@@ -25,6 +33,7 @@ struct QuestionResource {
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @State controller: webview.WebviewController = new webview.WebviewController()
   @State knowledgePickerVisible: boolean = false
+  @State showKnowledge: boolean = true
   private param: Record<string, string | number | boolean | Record<string, string>> = {}
 
   aboutToAppear(): void {
@@ -89,13 +98,17 @@ struct QuestionResource {
     return `${_siteId}${_courseEnd}${extra}`
   }
 
+  toolkitOnChangeKnowledgeStatus(value: boolean) {
+    this.showKnowledge = value
+  }
+
   build() {
     NavDestination() {
       Flex({ direction: FlexDirection.Column }) {
         CustomLocalH5({
           url: this.getUrlPath(),
           extraJavaScript: this.injectedExtraJavaScript(),
-          toolkits: new QuestionToolkits(),
+          toolkits: new QuestionToolkits(this.toolkitOnChangeKnowledgeStatus),
           controller: this.controller
         })
         if (!this.param.isSub && !this.param.isDocument && !this.param.fromBridge) {

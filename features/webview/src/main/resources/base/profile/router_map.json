@@ -63,6 +63,22 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "imageResource",
+      "pageSourceFile": "src/main/ets/components/ImageResource.ets",
+      "buildFunction": "ImageResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "officeResource",
+      "pageSourceFile": "src/main/ets/components/OfficeResource.ets",
+      "buildFunction": "OfficeResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

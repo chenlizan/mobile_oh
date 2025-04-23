@@ -355,53 +355,53 @@ export const getLrsTraceElement = (data: Record<string, string | null> = {
   'view_name': '',
   'result': null,
 }) => {
-  let element: Record<string, string | Record<string, string>> = {};
+  let element: Record<string, string | Record<string, string>> = {}
   if (data.element_id) {
-    element.element_id = data.element_id;
+    element.element_id = data.element_id
   }
   if (data.element_name) {
-    element.element_name = data.element_name;
+    element.element_name = data.element_name
   }
   if (data.element_type) {
-    element.element_type = data.element_type;
+    element.element_type = data.element_type
   }
   if (data.view_name) {
-    element.view_name = data.view_name;
+    element.view_name = data.view_name
   }
   if (!_.isEmpty(element)) {
     if (data.result !== null) {
-      element.extra = { 'result': data.result };
+      element.extra = { 'result': data.result }
     }
   }
-  return element;
-};
+  return element
+}
 
 /**
  * 是否资源评审课程
  */
 export const judgeCourseIsSP = (group: Record<string, number>) => {
-  return group?.spType == 1 || group?.sp_type == 1;
-};
+  return group?.spType == 1 || group?.sp_type == 1
+}
 
 export function getTimeState(task: Record<string, string | number>, lang = 'en') {
-  const momentNow = dayjs();
-  const momentStart = dayjs(task.start_time);
-  const momentEnd = dayjs(task.end_time);
+  const momentNow = dayjs()
+  const momentStart = dayjs(task.start_time)
+  const momentEnd = dayjs(task.end_time)
   if (momentNow.isBefore(momentStart)) {
-    return lang === 'cn' ? '未开始' : 'future';
+    return lang === 'cn' ? '未开始' : 'future'
   } else if (momentNow.isAfter(momentEnd)) {
     if (task.mark_mode === 3 || task.mark_mode === 4) {
-      const mark_end_moment = dayjs(task.mark_end_time);
+      const mark_end_moment = dayjs(task.mark_end_time)
       if (momentNow.isBefore(mark_end_moment)) {
-        return lang === 'cn' ? task.mark_mode === 3 ? '自评中' : '互评中' : 'checking';
+        return lang === 'cn' ? task.mark_mode === 3 ? '自评中' : '互评中' : 'checking'
       }
     }
-    return lang === 'cn' ? '已截止' : 'end';
+    return lang === 'cn' ? '已截止' : 'end'
   } else {
     if (task._taskTypeText === '自主观看' || task._taskTypeText === '讨论') {
-      return lang === 'cn' ? '进行中' : 'going';
+      return lang === 'cn' ? '进行中' : 'going'
     }
-    return lang === 'cn' ? '答题中' : 'going';
+    return lang === 'cn' ? '答题中' : 'going'
   }
 }
 
@@ -412,7 +412,7 @@ export const getExtension = (filename: string = '') => {
   return filename.split('.').pop()?.toLowerCase()
 }
 
-const videoFileMimetype = new Set(['video/mp4']);
+const videoFileMimetype = new Set(['video/mp4'])
 
 const videoFileExtensions = new Set([
   '3gp',
@@ -445,8 +445,8 @@ const videoFileExtensions = new Set([
  * 判断文件是否为视频文件
  */
 export function isVideoFile(filename: string, mimetype: string) {
-  const ext = getExtension(filename);
-  return videoFileMimetype.has(mimetype) || videoFileExtensions.has(ext || '');
+  const ext = getExtension(filename)
+  return videoFileMimetype.has(mimetype) || videoFileExtensions.has(ext || '')
 }
 
 const codeFileExtensions = new Set([
@@ -465,14 +465,157 @@ const codeFileExtensions = new Set([
   'md',
   'xml',
   'json',
-]);
+])
 
 /**
  * 判断文件是否为代码文件
  */
 function isCodeFile(filename: string) {
-  const ext = getExtension(filename);
-  return codeFileExtensions.has(ext || '');
+  const ext = getExtension(filename)
+  return codeFileExtensions.has(ext || '')
+}
+
+const imageFileMimetype = new Set([
+  'image/bmp',
+  'image/gif',
+  'image/jpg',
+  'image/jpeg',
+  'image/png',
+])
+
+const imageFileExtensions = new Set(['jpg', 'jpeg', 'bmp', 'gif', 'png'])
+
+/**
+ * 判断文件是否为图片文件
+ */
+export function isImageFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return (
+    imageFileMimetype.has(mimetype) ||
+    imageFileExtensions.has(ext || '') ||
+    String(mimetype).startsWith('image')
+  )
+}
+
+const zipFileMimetype = new Set([
+  'application/x-zip-compressed',
+  'application/zip',
+])
+
+const zipFileExtensions = new Set(['zip', 'rar', '7z'])
+
+function isZipFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return zipFileMimetype.has(mimetype) || zipFileExtensions.has(ext || '')
+}
+
+const jsonFileExtensions = new Set(['json'])
+
+const jsonFileMimetype = new Set(['application/json'])
+
+function isJsonFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return jsonFileMimetype.has(mimetype) || jsonFileExtensions.has(ext || '')
+}
+
+const txtFileExtensions = new Set(['txt'])
+
+const txtFileMimetype = new Set(['text/plain'])
+
+function isTxtFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return txtFileMimetype.has(mimetype) || txtFileExtensions.has(ext || '')
+}
+
+const pdfFileExtensions = new Set(['pdf'])
+
+const pdfFileMimetype = new Set(['application/pdf'])
+
+function isPdfFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return pdfFileMimetype.has(mimetype) || pdfFileExtensions.has(ext || '')
+}
+
+const docFileExtensions = new Set(['doc', 'docx'])
+
+const docFileMimetype = new Set([
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-works',
+])
+
+function isDocFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return docFileMimetype.has(mimetype) || docFileExtensions.has(ext || '')
+}
+
+const pptFileExtensions = new Set(['ppt', 'pptx'])
+
+const pptFileMimetype = new Set([
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+])
+
+function isPptFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return pptFileMimetype.has(mimetype) || pptFileExtensions.has(ext || '')
+}
+
+const xlsFileExtensions = new Set(['xls', 'xlsx'])
+
+const xlsFileMimetype = new Set([
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+])
+
+function isXlsFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return xlsFileMimetype.has(mimetype) || xlsFileExtensions.has(ext || '')
+}
+
+export function getDefaultExtensionFromMimeType(mimetype: string) {
+  if (docFileMimetype.has(mimetype)) {
+    return '.docx'
+  }
+  if (pptFileMimetype.has(mimetype)) {
+    return '.pptx'
+  }
+  if (xlsFileMimetype.has(mimetype)) {
+    return '.xlsx'
+  }
+  if (pdfFileMimetype.has(mimetype)) {
+    return '.pdf'
+  }
+  return null
+}
+
+function isOffice(filename: string, mimetype: string) {
+  return (
+    isDocFile(filename, mimetype) ||
+    isPptFile(filename, mimetype) ||
+    isXlsFile(filename, mimetype)
+  )
+}
+
+function needUseOffice365(name: string, mimetype: string) {
+  return (
+    isZipFile(name, mimetype) ||
+    isJsonFile(name, mimetype) ||
+    isTxtFile(name, mimetype)
+  )
+}
+
+function needUseNewOffice(name: string, mimetype: string) {
+  return isOffice(name, mimetype) || isPdfFile(name, mimetype)
+}
+
+/**
+ * 判断文件是否为图片文件
+ */
+export function isOfficeFile(filename: string, mimetype: string) {
+  return (
+    needUseOffice365(filename, mimetype) || needUseNewOffice(filename, mimetype)
+  )
 }
 
 /**
@@ -508,10 +651,31 @@ export const navigateToResourceDetails =
         })
         break
       case 6:
-        // 网盘资源
         if (isCodeFile(item.name as string)) {
           pageInfos?.pushPath({
             name: 'codeResource',
+            param: JSON.stringify({
+              isCourse: true,
+              item,
+              loginRole,
+              isSub,
+              showFinish
+            })
+          })
+        } else if (isImageFile(item.name as string, item.mimetype as string)) {
+          pageInfos?.pushPath({
+            name: 'imageResource',
+            param: JSON.stringify({
+              isCourse: true,
+              item,
+              loginRole,
+              isSub,
+              showFinish
+            })
+          })
+        } else if (isOfficeFile(item.name as string, item.mimetype as string)) {
+          pageInfos?.pushPath({
+            name: 'officeResource',
             param: JSON.stringify({
               isCourse: true,
               item,

@@ -6,10 +6,11 @@ import { webview } from '@kit.ArkWeb'
 
 class DiscussToolkits extends Toolkits {
   onGetKeyboardSpace() {
-    CustomToast.toast_fail('onGetKeyboardSpace 没实现')
+    return 0
   }
 
   onRefreshTask() {
+    // 改变的缓存数据
     CustomToast.toast_fail('onRefreshTask 没实现')
   }
 }
@@ -70,7 +71,7 @@ struct DiscussResource {
           controller: this.controller
         })
         if (!this.param.isSub && !this.param.fromBridge) {
-          KnowledgeBar({ item: this.param.item as Record<string, string> })
+          KnowledgeBar({ item: this.param.item as Record<string, string>, loginRole: this.param.loginRole as number })
         }
       }
     }

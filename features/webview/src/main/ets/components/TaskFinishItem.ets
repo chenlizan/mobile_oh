@@ -25,7 +25,7 @@ export struct TaskFinishItem {
   @Prop isSub: boolean = false
   @Prop item: Record<string, string | number> = {}
   @Prop isAutocomplete: boolean = false
-  @Prop watchLimit: boolean = false
+  @Prop watchLimit: boolean = true
   @Prop media_id: string = ''
   @State finish: boolean = false
   @State is_latest: boolean = false
@@ -189,17 +189,19 @@ struct WatchRemindModal {
   BuildModalContent() {
     Column() {
       Text(`已学习${transTimeHms(this.time)}，连续观看时间未达要求，至少观看${this.min_minutes}分钟`)
-        .padding(16)
+        .padding({ left: 16, right: 16, bottom: 32 })
       Text('*刷新或离开页面将会重置任务计时')
+        .padding({ left: 16, right: 16, bottom: 16 })
         .fontColor('#FF4040')
         .fontSize(12)
     }
+    .alignItems(HorizontalAlign.Start)
   }
 
   @Builder
   BuildModalFooter() {
     Row() {
-      Text('知道了')
+      Text('我知道了')
         .padding(10)
         .fontColor('#40A9FF')
         .onClick(() => {
@@ -216,7 +218,9 @@ struct WatchRemindModal {
     CustomModalDialog({
       visible: $visible,
       title: this.title,
-      dialogHeight: 300,
+      dialogHeight: 180,
+      hideCloseBtn: Visibility.Hidden,
+      hideDivider: Visibility.Hidden,
       contentBuilder: () => this.BuildModalContent(),
       footerBuilder: () => this.BuildModalFooter()
     })
