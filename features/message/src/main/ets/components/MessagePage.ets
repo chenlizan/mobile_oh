@@ -24,21 +24,8 @@ export struct MessagePage {
   @State isRefreshing: boolean = false
   @State screenWidth: number = 0
   @State settings: Record<string, string | Array<number>>[] = []
-  onUpdateSetting: (settings: Record<string, string | Array<number>>[]) => void = async (settings) => {
-      const response = await xyApiPost(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgSetting, {"settings": settings})
-      if (response.success) {
-        const data = response.data as Record<string, string | number | Record<string, string | Array<number>>[]>
-        this.settings = data?.settings as Record<string, string | Array<number>>[]
-        CustomToast.toast_success("设置成功")
-      } else {
-        CustomToast.toast_fail(response.message)
-      }
-  }
   dialogController: CustomDialogController = new CustomDialogController({
-    builder: MessageSettingDialog({
-      settings: this.settings,
-      onUpdateSetting: this.onUpdateSetting
-    }),
+    builder: MessageSettingDialog({}),
     alignment: DialogAlignment.Bottom,
     customStyle: true,
     cancel: () => this.dialogController.close(),
@@ -51,11 +38,7 @@ export struct MessagePage {
     this.onRefresh()
   }
 
-  onRefresh() {
-    this.getMsgUnReadInfo()
-  }
-
-  async getMsgUnReadInfo() {
+  async onRefresh() {
     const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgUnReadTipCount)
     if (response.success) {
       const data: Record<string, number> = response.data as Record<string, number>
@@ -79,15 +62,6 @@ export struct MessagePage {
     }
   }
 
-  async onShowMsgSetting() {
-    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgSetting)
-    if (response.success) {
-      const data = response.data as Record<string, string | number | Record<string, string | Array<number>>[]>
-      this.settings = data?.settings as Record<string, string | Array<number>>[]
-    }
-    this.dialogController.open()
-  }
-
   @Builder
   BuildHeader() {
     RelativeContainer() {
@@ -105,7 +79,7 @@ export struct MessagePage {
           iconCode: IconConstants.MORE,
           iconSize: 24,
           onClickBtn: () => {
-            this.onShowMsgSetting()
+            this.dialogController.open()
           }
         })
       }
@@ -278,16 +252,14 @@ export struct MessagePage {
 
 @CustomDialog
 export struct MessageSettingDialog {
-  @Prop settings: Record<string, string | Array<number>>[] = []
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @State settings: Record<string, string | Array<number>>[] = []
   @State msgSetting: MessageSettingModel[] = []
   @State screenWidth: number = 0
   @State screenHeight: number = 0
   private controller: CustomDialogController
 
-  onUpdateSetting: (setting: Record<string, string | Array<number>>[]) => void = (settings) => {
-  }
-
-  aboutToAppear(): void {
+  async aboutToAppear() {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
     this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
 
@@ -336,6 +308,12 @@ export struct MessageSettingDialog {
           { "code": 250002, "title": '发起提问被回答', "disabled": false }]
       }
     ]
+
+    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgSetting)
+    if (response.success) {
+      const data = response.data as Record<string, string | number | Record<string, string | Array<number>>[]>
+      this.settings = data?.settings as Record<string, string | Array<number>>[]
+    }
   }
 
   onSelectAll = (value: boolean) => {
@@ -353,7 +331,6 @@ export struct MessageSettingDialog {
       });
 
       this.onUpdateSetting(new_settings);
-      this.settings = new_settings;
     }
   };
   onSelectOptions = (value: boolean, subMsgType: string, code: number) => {
@@ -380,9 +357,18 @@ export struct MessageSettingDialog {
         return setting;
       });
       this.onUpdateSetting(new_settings);
-      this.settings = new_settings;
     }
   };
+  onUpdateSetting = async (settings: Record<string, string | Array<number>>[]) => {
+    const response =
+      await xyApiPost(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.msgSetting, { "settings": settings })
+    if (response.success) {
+      this.settings = settings
+      CustomToast.toast_success("设置成功")
+    } else {
+      CustomToast.toast_fail(response.message)
+    }
+  }
   judgeMsgSettingCheckAll = () => {
     const unChecks = _.filter(this.settings, setting => {
       const msgSetting = _.find(this.msgSetting, { subMsgType: setting.subMsgType }) as MessageSettingModel
