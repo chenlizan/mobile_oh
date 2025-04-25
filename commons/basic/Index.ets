@@ -1,5 +1,6 @@
 export * from './src/main/ets/components/AppIcon'
 export * from './src/main/ets/components/CustomAlertDialog'
+export * from './src/main/ets/components/CustomAudio'
 export * from './src/main/ets/components/CustomDatePickerDialog'
 export * from './src/main/ets/components/CustomDivider'
 export * from './src/main/ets/components/CustomField'

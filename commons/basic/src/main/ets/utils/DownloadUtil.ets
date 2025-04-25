@@ -128,7 +128,8 @@ export const decryptOffice365DES = (encryptedMessage: string) => {
       .replace(/_/g, '+')/**/
       .replace(/\*/g, '/')
       .replace(/-/g, '=')
-    const decrypted = cryptoJs.DES.decrypt(cryptoJs.enc.Base64.parse(correctedMessage).toString(),
+    const decrypted = cryptoJs.DES.decrypt(
+      { 'ciphertext': cryptoJs.enc.Base64.parse(correctedMessage) } as cryptoJs.lib.CipherParams,
       key,
       {
         iv: iv,
