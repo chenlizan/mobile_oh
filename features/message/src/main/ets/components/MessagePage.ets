@@ -25,7 +25,7 @@ export struct MessagePage {
   @State screenWidth: number = 0
   @State settings: Record<string, string | Array<number>>[] = []
   dialogController: CustomDialogController = new CustomDialogController({
-    builder: MessageSettingDialog({}),
+    builder: MessageSettingDialog(),
     alignment: DialogAlignment.Bottom,
     customStyle: true,
     cancel: () => this.dialogController.close(),

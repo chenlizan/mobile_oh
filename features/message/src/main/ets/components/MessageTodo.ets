@@ -3,12 +3,19 @@ import _ from "@wolfx/lodash"
 import {
   Api_Context,
   AppIcon,
+  CustomAlertDialog,
+  AlertDialogParam,
+  CustomDivider,
+  CustomList,
+  CustomListItem,
   CustomNavTitle,
+  CustomToast,
   getMemberRole,
   IconConstants,
   MessageApi,
   MessageContentType,
-  xyApiGet
+  xyApiGet,
+  xyApiPost
 } from "@xy/basic"
 import dayjs from "dayjs"
 
@@ -21,6 +28,24 @@ struct MessageTodo {
   @State onlyUnread: boolean = true
   @State last_msg_id: string | null = null
   @State msgData: Record<string, string | number | boolean>[] = []
+  onChangeUnread: (check: boolean) => void = (check) => {
+    this.onlyUnread = check
+    this.handleRefresh();
+  }
+  onDeleteAll: () => void = () => {
+    this.handleDeleteAll()
+  }
+  dialogController: CustomDialogController = new CustomDialogController({
+    builder: MessageSettingDialog({
+      onlyUnread: this.onlyUnread,
+      onChangeUnread: this.onChangeUnread,
+      onDeleteAll: this.onDeleteAll,
+    }),
+    alignment: DialogAlignment.Center,
+    customStyle: true,
+    cancel: () => this.dialogController.close(),
+    closeAnimation: { duration: 0 }
+  })
 
   aboutToAppear(): void {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
@@ -28,12 +53,38 @@ struct MessageTodo {
     this.handleRefresh()
   }
 
+  handleDeleteAll = () => {
+    if (_.isEmpty(this.msgData)) {
+      CustomToast.toast_info('暂无待办事项消息');
+      return;
+    }
+    this.dialogController.close()
+
+    CustomAlertDialog({
+      title: '请确认',
+      message: '是否确定删除所有待办事项（最多100条）？删除后将无法恢复',
+      onClickBtn: () => {
+        const ids = _.map(this.msgData, msg => msg.id);
+        xyApiPost(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.delSelectedMsg, {
+          "message_ids": ids.slice(0, 100),
+        }).then(response => {
+          if (response.success) {
+            CustomToast.toast_success("待办事项全部删除成功");
+          }
+        })
+      }
+    } as AlertDialogParam)
+  }
+
   handleRefresh = async () => {
-    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.queryTodoNotices, {
-      "page_size": 20,
-      "msg_status": this.onlyUnread ? 0 : null,
-      "last_msg_id": this.last_msg_id,
-    })
+    let body: Record<string, string | number> = {"page_size": 20};
+    if (this.onlyUnread) {
+      body.msg_status = 0
+    }
+    if (this.last_msg_id) {
+      body.last_msg_id = this.last_msg_id
+    }
+    const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.queryTodoNotices, body)
 
     if (response.success) {
       const data = response.data as Record<string, string | number | Record<string, string | number>[]>
@@ -159,6 +210,7 @@ struct MessageTodo {
       iconCode: IconConstants.MORE,
       iconSize: 24,
       onClickBtn: () => {
+        this.dialogController.open()
       }
     })
   }
@@ -167,6 +219,17 @@ struct MessageTodo {
     NavDestination() {
       Refresh({ refreshing: $$this.isRefreshing }) {
         Column() {
+          if (_.isEmpty(this.msgData)) {
+            Text(`暂无${this.onlyUnread ? "未处理的" : ""}代办事项`)
+              .fontColor('#999')
+              .fontSize(15)
+              .fontWeight(400)
+              .width('100%')
+              .textAlign(TextAlign.Center)
+              .height(300)
+          } else {
+
+          }
         }
         .width(this.screenWidth - 24)
       }
@@ -176,6 +239,74 @@ struct MessageTodo {
     }
     .title(CustomNavTitle('代办事项', () => this.BuildNavRightBtn()))
     .backgroundColor("#f1f1f1")
+  }
+}
+
+@CustomDialog
+export struct MessageSettingDialog {
+  @Prop onlyUnread: boolean = true
+  @State screenWidth: number = 0
+  @State screenHeight: number = 0
+  private controller: CustomDialogController
+  onChangeUnread: (check: boolean) => void = () => {
+  }
+  onDeleteAll: () => void = () => {
+  }
+  async aboutToAppear() {
+    this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
+    this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
+  }
+
+  @Builder
+  BuildOperate() {
+    Checkbox()
+      .select(this.onlyUnread)
+      .selectedColor('#40A9FF')
+      .shape(CheckBoxShape.ROUNDED_SQUARE)
+      .onChange((value: boolean) => {
+        this.onChangeUnread(value)
+      })
+  }
+
+  build() {
+    Column() {
+      Text("列表选项")
+        .fontColor('#000')
+        .fontSize(16)
+        .fontWeight('bold')
+        .padding({ top: 16, bottom: 12 })
+        .width('100%')
+        .textAlign(TextAlign.Center)
+      Text("仅保留7天内的消息")
+        .fontColor('#000')
+        .fontSize(15)
+        .fontWeight(400)
+        .backgroundColor('#F1F1F1')
+        .padding({ left: 16 })
+        .height(44)
+        .width('100%')
+
+      CustomList() {
+        CustomListItem({
+          text: '仅看未处理',
+          itemRadius: 8,
+          itemBorder: '',
+          operateBuilder: () => this.BuildOperate(),
+        })
+        CustomDivider()
+        CustomListItem({
+          text: '全部清空',
+          itemRadius: 8,
+          itemBorder: '',
+          onClickBtn: () => {
+            this.onDeleteAll()
+          }
+        })
+      }
+    }
+    .width(this.screenWidth - 40)
+    .borderRadius(8)
+    .backgroundColor(Color.White)
   }
 }
 
