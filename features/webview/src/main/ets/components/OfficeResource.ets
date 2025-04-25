@@ -7,6 +7,7 @@ import {
   Api_Context,
   AppIcon,
   CustomNavTitle,
+  CustomToast,
   DownloadToLocal,
   getDefaultExtensionFromMimeType,
   getExtension,
@@ -130,6 +131,12 @@ struct OfficeResource {
           .width('100%')
           .flexGrow(1)
           .backgroundColor(Color.Black)
+          .onControllerAttached(() => {
+            CustomToast.toast_loading('')
+          })
+          .onPageEnd(() => {
+            CustomToast.hide()
+          })
 
         if (!this.param.isSub && !this.param.isDocument && !this.param.fromBridge) {
           KnowledgeBar({ item: this.param.item as Record<string, string>, loginRole: this.param.loginRole as number })

@@ -618,6 +618,24 @@ export function isOfficeFile(filename: string, mimetype: string) {
   )
 }
 
+const audioFileExtensions = new Set([
+  'm4a',
+  'aac',
+  'mp3',
+  'ogg',
+  'wav',
+  'amr',
+])
+
+const audioFileMimetype = new Set(['audio/x-m4a'])
+
+export function isAudioFile(filename: string, mimetype: string) {
+  const ext = getExtension(filename)
+  return (
+    audioFileMimetype.has(mimetype) || audioFileExtensions.has(ext || '')
+  )
+}
+
 /**
  * 导航到资源详情
  */
@@ -651,7 +669,18 @@ export const navigateToResourceDetails =
         })
         break
       case 6:
-        if (isCodeFile(item.name as string)) {
+        if (isAudioFile(item.name as string, item.mimetype as string)) {
+          pageInfos?.pushPath({
+            name: 'audioResource',
+            param: JSON.stringify({
+              isCourse: true,
+              item,
+              loginRole,
+              isSub,
+              showFinish
+            })
+          })
+        } else if (isCodeFile(item.name as string)) {
           pageInfos?.pushPath({
             name: 'codeResource',
             param: JSON.stringify({
@@ -701,6 +730,16 @@ export const navigateToResourceDetails =
         break
       case 10:
         // 音频
+        pageInfos?.pushPath({
+          name: 'audioResource',
+          param: JSON.stringify({
+            isCourse: true,
+            item,
+            loginRole,
+            isSub,
+            showFinish
+          })
+        })
         break
       case 11:
         // 教学设计
