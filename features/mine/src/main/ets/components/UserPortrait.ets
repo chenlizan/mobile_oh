@@ -375,6 +375,8 @@ struct UserPortrait {
               }
             })
           }
+          .width('100%')
+          .height(110)
           .listDirection(Axis.Horizontal)
         }
         .width('100%')

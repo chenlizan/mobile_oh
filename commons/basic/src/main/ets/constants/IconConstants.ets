@@ -38,4 +38,7 @@ export class IconConstants {
   static readonly DOWNLOAD: string = '\ue88c' //下载
   static readonly ROTATION: string = '\ue811' //旋转
   static readonly OTHER: string = '\ue829' //其他
+  static readonly SEARCH: string = '\uf2a6' //搜索
+  static readonly FILTER: string = '\ue810' //筛选
+  static readonly NOTHING: string = '\ue617'
 }

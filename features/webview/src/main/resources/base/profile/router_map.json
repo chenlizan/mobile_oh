@@ -87,6 +87,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "videoResource",
+      "pageSourceFile": "src/main/ets/components/VideoResource.ets",
+      "buildFunction": "VideoResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

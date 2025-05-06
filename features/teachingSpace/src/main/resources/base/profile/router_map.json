@@ -23,6 +23,38 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "courseList",
+      "pageSourceFile": "src/main/ets/components/CourseList.ets",
+      "buildFunction": "CourseListBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "searchCourse",
+      "pageSourceFile": "src/main/ets/components/SearchCourse.ets",
+      "buildFunction": "SearchCourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "createCourse",
+      "pageSourceFile": "src/main/ets/components/CreateCourse.ets",
+      "buildFunction": "CreateCourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "joinCourse",
+      "pageSourceFile": "src/main/ets/components/JoinCourse.ets",
+      "buildFunction": "JoinCourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

@@ -7,5 +7,6 @@
   "license": "Apache-2.0",
   "packageType": "InterfaceHar",
   "dependencies": {
+    "premierlibrary": "file:./libs/apsaravideo_player_sdk_harmonyosnext_20241030.har",
   }
 }

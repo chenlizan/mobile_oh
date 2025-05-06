@@ -29,7 +29,6 @@ struct TaskRemind {
   @State fontColor: string = '#182431'
   @State selectedFontColor: string = '#40A9FF'
   @State currentIndex: number = 0
-  @State selectedIndex: number = 0
   @State title: string = '任务截止时间'
   @State datePickerVisible: boolean = false
   @State wait_check: Record<string, number>[] = []
@@ -244,16 +243,16 @@ struct TaskRemind {
   BuildTabBar(index: number, name: string) {
     Column() {
       Text(name)
-        .fontColor(this.selectedIndex === index ? this.selectedFontColor : this.fontColor)
+        .fontColor(this.currentIndex === index ? this.selectedFontColor : this.fontColor)
         .fontSize(16)
-        .fontWeight(this.selectedIndex === index ? 500 : 400)
+        .fontWeight(this.currentIndex === index ? 500 : 400)
         .lineHeight(22)
         .margin({ top: 10, bottom: 10 })
       Divider()
         .width('80%')
         .strokeWidth(2)
         .color('#40A9FF')
-        .opacity(this.selectedIndex === index ? 1 : 0)
+        .opacity(this.currentIndex === index ? 1 : 0)
     }.width('100%')
   }
 
@@ -325,15 +324,22 @@ struct TaskRemind {
                           .width('100%')
                           .justifyContent(FlexAlign.SpaceBetween)
 
-                          Row() {
+                          Flex() {
                             Row() {
                               Text('来自')
                                 .fontColor('#a8a8a8')
                                 .fontSize(12)
+                                .margin({ right: 4 })
                               Text(item.group_name as string)
                                 .fontColor('#666666')
                                 .fontSize(12)
+                                .width(this.screenWidth / 2.2)
+                                .maxLines(1)
+                                .textOverflow({ overflow: TextOverflow.Ellipsis })
+                                .ellipsisMode(EllipsisMode.END)
+                                .wordBreak(WordBreak.BREAK_ALL)
                             }
+                            .flexGrow(2)
 
                             Row() {
                               if (item.mark_mode === 3 || item.mark_mode === 4) {
@@ -347,10 +353,11 @@ struct TaskRemind {
                                 CustomTag({ text: getTypeByTaskType(item.task_type as number) })
                               }
                             }
+                            .justifyContent(FlexAlign.End)
+                            .flexGrow(1)
                           }
                           .width('100%')
                           .padding({ top: 8, bottom: 8 })
-                          .justifyContent(FlexAlign.SpaceBetween)
 
                           Row() {
                             AppIcon({ iconCode: IconConstants.TIME, iconColor: '#a8a8a8' })
@@ -395,7 +402,6 @@ struct TaskRemind {
           .borderRadius(4)
           .onChange((index: number) => {
             this.currentIndex = index
-            this.selectedIndex = index
           })
 
           CustomDatePickerDialog({

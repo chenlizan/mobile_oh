@@ -1,16 +1,16 @@
-import { webview } from '@kit.ArkWeb';
-import { Api_Context, CustomModalDialog, CustomNavTitle, PreferenceStorage, UserInfoModel } from '@xy/basic';
+import { webview } from '@kit.ArkWeb'
+import { Api_Context, CustomModalDialog, CustomNavTitle, PreferenceStorage, UserInfoModel } from '@xy/basic'
 
 @Component
 struct UserReport {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
-  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage();
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @State source_url: string = ''
   @State title: string = '选择学校'
   @State visible: boolean = false
-  controller: webview.WebviewController = new webview.WebviewController();
+  controller: webview.WebviewController = new webview.WebviewController()
 
   aboutToAppear(): void {
     const schools = this.userInfo.schools

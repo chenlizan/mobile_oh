@@ -713,6 +713,17 @@ export const navigateToResourceDetails =
               showFinish
             })
           })
+        } else if (isVideoFile(item.name as string, item.mimetype as string)) {
+          pageInfos?.pushPath({
+            name: 'videoResource',
+            param: JSON.stringify({
+              isCourse: true,
+              item,
+              loginRole,
+              isSub,
+              showFinish
+            })
+          })
         } else {
           CustomToast.toast_fail('移动客户端暂不支持打开此类型文件')
         }
@@ -727,6 +738,16 @@ export const navigateToResourceDetails =
         break
       case 9:
         // 视频
+        pageInfos?.pushPath({
+          name: 'videoResource',
+          param: JSON.stringify({
+            isCourse: true,
+            item,
+            loginRole,
+            isSub,
+            showFinish
+          })
+        })
         break
       case 10:
         // 音频

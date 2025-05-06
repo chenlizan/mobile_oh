@@ -10,7 +10,7 @@
     "@xy/main": "file:../../features/main",
     "@xy/login": "file:../../features/login",
     "@xy/agreement": "file:../../features/agreement",
-    "@xy/school": "file:../../features/school"
+    "@xy/school": "file:../../features/school",
   }
 }
 
