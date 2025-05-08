@@ -325,6 +325,7 @@ interface InterfaceMineApi {
   thirdToolPersonal: string;
   sharedPersonal: string;
   collectionPersonal: string;
+  chatPersonal: string,
 }
 
 export const MineApi: InterfaceMineApi = {
@@ -337,6 +338,7 @@ export const MineApi: InterfaceMineApi = {
   thirdToolPersonal: 'thirdTool/queryThirdToolByAuthorId',
   sharedPersonal: 'ta_node/shared/personal',
   collectionPersonal: 'ta_node/collection/personal',
+  chatPersonal: 'chat/user/data',
 };
 
 interface InterfaceHomeApi {

@@ -1,6 +1,10 @@
 import _ from "@wolfx/lodash"
 import dayjs from "dayjs"
-import { Api_Context, ccApiGet, CustomNavTitle, HomeApi, MineApi, UserInfoModel, xyApiGet } from "@xy/basic"
+import { Api_Context, AppIcon, ccApiGet, CustomNavTitle,
+  CustomPopup,
+  HomeApi,
+  IconConstants,
+  MineApi, UserInfoModel, xyApiGet } from "@xy/basic"
 
 interface PORTRAIT {
   title?: string
@@ -12,6 +16,7 @@ interface PORTRAIT {
   subTitle?: string
   count?: number
   courseConfig?: number
+  tips?: string
 }
 
 @Component
@@ -60,6 +65,7 @@ struct UserPortrait {
         used: useSpace,
         usedPercent: useSpacePercent,
         total: allSpace,
+        tips: `我的文档、课程中使用的资源都共用同一存储空间，当前免费用户的存储空间为${allSpace}G`,
         isDisk: true,
       })
       this.portrait.push({
@@ -68,6 +74,7 @@ struct UserPortrait {
         used: useMedia,
         usedPercent: useMediaPercent,
         total: allMedia,
+        tips: `由于流媒体需要转码，因此我的文档、课程中使用的流媒体单独计算使用量，当前免费用户的流媒体最大支持${allMedia}G`,
         isDisk: true,
       })
     }
@@ -99,6 +106,7 @@ struct UserPortrait {
         subTitle: '进行中',
         count: createdStartCount,
         desc: `可开课数量限制为${(this.userInfo.fileCapacity as Record<string, string>)?.selfCreateSiteCount ?? 0}`,
+        tips: `用户创建的课程来源有自建课程以及教务排课，用户创建课程的数量限制为${(this.userInfo.fileCapacity as Record<string, string>)?.selfCreateSiteCount ?? 0}`,
       })
       this.portrait.push({
         title: '参与课程',
@@ -106,6 +114,7 @@ struct UserPortrait {
         subTitle: '进行中',
         count: joinedStartCount,
         desc: '可参与课程不限',
+        tips: '用户可以以加入的形式参与课程，用户参与课程的数量不做限制',
       })
     }
 
@@ -128,6 +137,7 @@ struct UserPortrait {
             subTitle: '图谱节点数',
             count: (kgSpace.verticesCount ?? 0) as number,
             desc: `可创建图谱数量限制为${(this.userInfo.fileCapacity as Record<string, string>)?.tpCount ?? 0}`,
+            tips: `统计已创建的图谱总数及节点总数量，创建图谱的数量限制为${(this.userInfo.fileCapacity as Record<string, string>)?.tpCount ?? 0}`,
           })
         }
       }
@@ -143,6 +153,8 @@ struct UserPortrait {
           count: (evaluationSpace.evaluationScaleItemsCount ?? 0) as number,
           desc: `可创建评价量规数量限制为${(courseConfig.evaluation_scale as Record<string, number>)?.setting_max_count ??
             0}`,
+          tips: `统计已创建的评价量规总数及评价条目总数量，创建评价量规的数量限制为${(courseConfig.evaluation_scale as Record<string, number>)?.setting_max_count ??
+            0}`,
         })
       }
 
@@ -157,6 +169,8 @@ struct UserPortrait {
           count: qbSpace.questionsInBankCount ?? 0,
           desc: `可创建题库数量限制为${(courseConfig.evaluation_scale as Record<string, number>)?.max_store_count ??
             0}`,
+          tips: `统计已创建的题库总数及题目总数量，创建题库的数量限制为${(courseConfig.evaluation_scale as Record<string, number>)?.max_store_count ??
+            0}`,
         })
       }
 
@@ -170,6 +184,7 @@ struct UserPortrait {
           subTitle: '个人添加应用数量',
           count: thirdToolSpace.insertCount ?? 0,
           desc: `可创建应用数量限制为${thirdToolSpace.insertMaxCount ?? 0}`,
+          tips: `统计个人应用及收藏的应用总数量，创建应用的数量限制为${thirdToolSpace.insertMaxCount ?? 0}`,
         })
       }
 
@@ -184,6 +199,7 @@ struct UserPortrait {
         subTitle: '分享中',
         count: sharedSpace.sharingResourceCount ?? 0,
         desc: '可分享个数不限',
+        tips: '统计已分享的个数以及正在分享中的个数，可分享个数不限',
       })
     }
 
@@ -196,6 +212,20 @@ struct UserPortrait {
         subTitle: '已过期',
         count: collectionSpace.collectionExpiredCount ?? 0,
         desc: '可收藏资源数量不限',
+        tips: '统计已收藏的资源数量以及已过期收藏资源数量，可收藏资源数量不限',
+      })
+    }
+
+    response = await xyApiGet(this.Api_Context.getApiPrefix('statApi') + MineApi.chatPersonal)
+    if (response.success) {
+      const chatSpace: Record<string, number> = response.data as Record<string, number>
+      this.portrait.push({
+        title: '私信/群聊消息总数',
+        total: (chatSpace.single_message_count ?? 0) + (chatSpace.group_message_count ?? 0),
+        subTitle: '创建群聊',
+        count: chatSpace.group_chat_count ?? 0,
+        desc: '可创建群聊数量不限',
+        tips: '统计私信/群聊消息总数量以及创建群聊数量，可创建群聊数量不限',
       })
     }
   }
@@ -234,10 +264,28 @@ struct UserPortrait {
   }
 
   @Builder
+  BuildPopupContent() {
+    AppIcon({
+      iconCode: IconConstants.INFO,
+      iconSize: 16,
+      iconColor: '#999999',
+    }).enabled(false)
+  }
+
+  @Builder
   BuildCourseItem(portrait: PORTRAIT) {
     Column() {
-      Text(portrait.title)
-        .fontSize(12)
+      Row() {
+        Text(portrait.title)
+          .fontSize(12)
+        CustomPopup({
+          contentBuilder: () => this.BuildPopupContent(),
+          tips: portrait.tips
+        })
+      }
+      .width("100%")
+      .justifyContent(FlexAlign.SpaceBetween)
+
       Row() {
         Text(String(portrait.total))
           .fontColor('#fcbb34')
@@ -271,8 +319,17 @@ struct UserPortrait {
   @Builder
   BuildDiskItem(portrait: PORTRAIT) {
     Column() {
-      Text(portrait.title)
-        .fontSize(12)
+      Row() {
+        Text(portrait.title)
+          .fontSize(12)
+        CustomPopup({
+          contentBuilder: () => this.BuildPopupContent(),
+          tips: portrait.tips
+        })
+      }
+      .width("100%")
+      .justifyContent(FlexAlign.SpaceBetween)
+
       Row() {
         Text(String(portrait.used))
           .fontColor('#fcbb34')
