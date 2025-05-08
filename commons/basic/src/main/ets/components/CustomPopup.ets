@@ -49,7 +49,10 @@ export struct CustomPopup {
         textColor: this.tipsColor
       },
       placement: this.placement,
-      backgroundBlurStyle: BlurStyle.NONE
+      backgroundBlurStyle: BlurStyle.NONE,
+      onStateChange: (e)=> { // 返回当前的气泡状态
+        this.showPopup = e.isVisible;
+      }
     })
   }
 }
