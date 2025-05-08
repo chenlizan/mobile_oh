@@ -35,7 +35,9 @@ function AlertDialogComponent(params: AlertDialogParam) {
           iconSize: 20,
           iconColor: '#999999',
           onClickBtn: () => {
-            params.onCloseBtn()
+            if (params.onCloseBtn) {
+              params.onCloseBtn()
+            }
             params.hide()
           }
         })
