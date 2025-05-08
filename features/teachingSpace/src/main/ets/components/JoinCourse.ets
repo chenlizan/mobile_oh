@@ -1,12 +1,234 @@
-import { CustomNavTitle } from "@xy/basic"
+import { url } from "@kit.ArkTS"
+import { display } from "@kit.ArkUI"
+import { scanBarcode } from "@kit.ScanKit"
+import _ from "@wolfx/lodash"
+import {
+  Api_Context,
+  AppIcon,
+  AlertDialogParam,
+  CustomAlertDialog,
+  CustomNavTitle,
+  CustomToast,
+  HomeApi,
+  IconConstants,
+  UserInfoModel,
+  xyApiGet,
+  CustomModalDialog,
+  xyApiPost
+} from "@xy/basic"
+
+interface Option {
+  value: string
+  class_id: string
+}
 
 @Component
 struct JoinCourse {
+  @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
+  @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @State screenWidth: number = 0
+  @State isRefreshing: boolean = false
+  @State visible: boolean = false
+  @State title: string = '申请设置'
+  @State classList: Option[] = []
+  private group_id: string = ''
+  private join_type: number = 0
+  private class_id: string = ''
+  private role: number = 1
+
+  aboutToAppear(): void {
+    this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
+  }
+
+  @Builder
+  BuildNavRightBtn() {
+    AppIcon({
+      iconCode: IconConstants.SCAN,
+      iconSize: 16,
+      onClickBtn: async () => {
+        const scanResult = await scanBarcode.startScanForResult(getContext())
+        const data = scanResult.originalValue
+        if (data.indexOf('joinGroupQrCode') > -1) {
+          const urlObject = url.URL.parseURL(scanResult.originalValue)
+          const params = new url.URLParams(urlObject.search)
+          if (params.get("qrtype") === 'JOIN_GROUP') {
+            const response = await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.groupQr +
+              `/${params.get("group_id")}`)
+            if (response.success) {
+              const data = response.data as Record<string, number>
+              if (data.join_type === 3) {
+                CustomToast.toast_fail('禁止加入')
+                return
+              }
+              if (data.lock === 2) {
+                CustomToast.toast_fail('课程已锁定')
+                return
+              }
+              if (data.identity_flag === 1 && this.userInfo.isRealStudent) {
+                CustomToast.toast_fail('该课程仅允许教师加入')
+                return
+              }
+              if (this.userInfo.isSchoolFellow) {
+                CustomToast.toast_fail('校友可以直接访问课程进行学习，不必加入课程')
+                return
+              }
+              CustomAlertDialog({
+                'title': '提示',
+                'message': `是否加入课程`,
+                onClickBtn: () => {
+                  xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.groupClassList + '/' +
+                  params.get("group_id"))
+                    .then((response) => {
+                      this.classList =
+                        _.map(response.data, (item: Record<string, string>) => {
+                          return { 'value': item.class_name, class_id: item.class_id } as Option
+                        })
+                      this.visible = true
+                      this.group_id = params.get("group_id") as string
+                      this.join_type = data.join_type
+                    })
+                }
+              } as AlertDialogParam)
+            }
+          }
+        }
+      }
+    })
+  }
+
+  @Builder
+  BuildModalContent() {
+    Column() {
+      Row() {
+        Text('教学班级')
+        Select(this.classList)
+          .selected(0)
+          .value(this.classList.length > 0 ? this.classList[0].value : '')
+          .onSelect((index: number, text?: string | undefined) => {
+            const data = _.find(this.classList, { value: text })
+            this.class_id = data?.class_id as string
+          })
+      }
+      .justifyContent(FlexAlign.SpaceBetween)
+      .width('100%')
+      .padding(12)
+
+      Divider()
+      Row() {
+        Text('课内身份')
+        Select([{ value: '学生' }, { value: '助教' }, { value: '教师' }])
+          .selected(0)
+          .value('学生')
+          .onSelect((index: number, text?: string | undefined) => {
+            if (text === '学生') {
+              this.role = 1
+            } else if (text === '助教') {
+              this.role = 2
+            } else if (text === '教师') {
+              this.role = 4
+            }
+          })
+      }
+      .justifyContent(FlexAlign.SpaceBetween)
+      .width('100%')
+      .padding(12)
+    }
+    .padding({ left: 16, right: 16 })
+  }
+
+  @Builder
+  BuildModalFooter() {
+    Row() {
+      Button('取消', { type: ButtonType.Normal })
+        .height(40)
+        .fontColor('#999999')
+        .backgroundColor(Color.White)
+        .borderWidth({ top: 1 })
+        .borderColor('#33999999')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 8,
+          bottomRight: 0
+        })
+        .flexGrow(1)
+        .onClick(() => this.visible = false)
+      Button('确定', { type: ButtonType.Normal })
+        .height(40)
+        .backgroundColor('#40A9FF')
+        .borderWidth({ top: 1 })
+        .borderColor('#40A9FF')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 0,
+          bottomRight: 8
+        })
+        .flexGrow(1)
+        .onClick(async () => {
+          if (this.join_type === 2) {
+            const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.joinGroupNoVerify,
+              {
+                'group_id': this.group_id,
+                'class_id': this.class_id,
+                'role': this.role,
+              })
+            if (response.success) {
+              CustomToast.toast_success('已加入开放群组')
+            }
+          } else if (this.join_type === 1) {
+            const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.joinGroup,
+              {
+                'group_id': this.group_id,
+                'class_id': this.class_id,
+                'role': this.role,
+              })
+            if (response.success) {
+              CustomToast.toast_success('加入申请已发送，7天内有效')
+            }
+            this.visible = false
+          }
+        })
+    }
+    .width('100%')
+  }
+
   build() {
     NavDestination() {
+      Refresh({ refreshing: $$this.isRefreshing }) {
+        Flex({ direction: FlexDirection.Column }) {
+          Search({ placeholder: '请输入课程空间编号' })
+            .margin({ left: 12, right: 12, bottom: 4 })
+            .backgroundColor(Color.White)
+            .borderRadius(4)
+            .flexShrink(0)
+            .onSubmit((value: string) => {
+            })
+          Column() {
+            Text('暂无数据')
+              .fontColor('#999999')
+          }
+          .flexGrow(1)
+          .justifyContent(FlexAlign.Center)
+          .width(this.screenWidth)
+        }
+      }
+      .onRefreshing(() => {
+        setTimeout(() => {
+          this.isRefreshing = false
+        }, 500)
+      })
 
+      CustomModalDialog({
+        visible: $visible,
+        title: this.title,
+        dialogHeight: 208,
+        hideCloseBtn: Visibility.Hidden,
+        contentBuilder: () => this.BuildModalContent(),
+        footerBuilder: () => this.BuildModalFooter(),
+      })
     }
-    .title(CustomNavTitle('加入课程'))
+    .title(CustomNavTitle('加入课程', () => this.BuildNavRightBtn()))
     .backgroundColor("#f1f1f1")
   }
 }

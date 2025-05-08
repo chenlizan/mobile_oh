@@ -7,6 +7,7 @@ import {
   ccApiGet,
   ccApiPost,
   CustomNavTitle,
+  CustomToast,
   HomeApi,
   IconConstants,
   UserInfoModel,
@@ -14,6 +15,9 @@ import {
 } from "@xy/basic"
 
 class MenuParam {
+  filterIndex: number = 0
+  role: number = 0
+  origin_type: string = ''
   hide: () => void = () => {
   }
 }
@@ -31,7 +35,7 @@ function BuildHeaderMenu(params: MenuParam) {
       })
       .onClick(() => {
         const pageInfos = AppStorage.get<NavPathStack>('pageInfos')
-        pageInfos?.pushPath({ name: 'createCourse' })
+        pageInfos?.pushPath({ name: 'createCourse', param: JSON.stringify({ 'timeFlag': params.filterIndex + 1 }) })
         params.hide()
       })
     Divider()
@@ -45,6 +49,11 @@ function BuildHeaderMenu(params: MenuParam) {
       })
       .onClick(() => {
         const pageInfos = AppStorage.get<NavPathStack>('pageInfos')
+        const userInfo = AppStorage.get<UserInfoModel>('UserInfo')
+        if (userInfo?.isSchoolFellow) {
+          CustomToast.toast_fail('校友可以直接访问课程进行学习，不必加入课程')
+          return
+        }
         pageInfos?.pushPath({ name: 'joinCourse' })
         params.hide()
       })
@@ -78,7 +87,7 @@ function BuildLongPressMenu(params: MenuParam) {
         bottom: 12
       })
     Divider()
-    Text('退出课程')
+    Text(params.role === 3 && params.origin_type === '2' ? '删除课程' : '退出课程')
       .fontColor('#40A9FF')
       .padding({
         left: 24,
@@ -323,6 +332,7 @@ struct CourseList {
             customDialog.dispose()
           }
         }
+        params.filterIndex = this.filterIndex
         const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildHeaderMenu), params)
         const promptAction = uiContext.getPromptAction()
         promptAction.openCustomDialog(customDialog)
@@ -766,6 +776,8 @@ struct CourseList {
                     const windowClass = await window.getLastWindow(getContext())
                     const uiContext = windowClass.getUIContext()
                     const params = new MenuParam()
+                    params.role = Number(item.role)
+                    params.origin_type = item.origin_type
                     params.hide = () => {
                       if (promptAction && customDialog) {
                         promptAction.closeCustomDialog(customDialog)

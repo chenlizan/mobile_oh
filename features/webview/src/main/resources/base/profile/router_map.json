@@ -95,6 +95,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "courseDescription",
+      "pageSourceFile": "src/main/ets/components/CourseDescription.ets",
+      "buildFunction": "CourseDescriptionBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }
