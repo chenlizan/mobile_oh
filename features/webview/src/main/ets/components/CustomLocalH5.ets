@@ -200,6 +200,7 @@ export struct CustomLocalH5 {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @Link controller: webview.WebviewController
   @Prop toolkits: Toolkits | null = null
+  @Prop methodList: string[] = []
   @Prop extraJavaScript: string = ''
   @Prop url: string = ''
   @Prop isLocal: boolean = true
@@ -253,7 +254,7 @@ export struct CustomLocalH5 {
           methodList: ['onGoBack', 'onTokenInvalid', 'onCheckMicroPhonePermission', 'onOpenSystemSetting',
             'onShowTeachDesign', 'onShowQAArea', 'onShowMindMap', 'onShowNote', 'onShowDiscuss', 'onShowPaper',
             'onShowCode', 'onShowOffice', 'onShowImage', 'onShowAudio', 'onShowVideo', 'onRecodeLrsTrace',
-            'onGetLrsHeader'],
+            'onGetLrsHeader'].concat(this.methodList),
           controller: this.controller,
         })
         .onPermissionRequest((event) => {

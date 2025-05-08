@@ -15,6 +15,24 @@ export const isJSON = (str: string): boolean => {
   }
 }
 
+export const translateRichText = (text: string) => {
+  let desc = ''
+  if (_.trim(text) && isJSON(text)) {
+    const blocks = (JSON.parse(text) as Record<string, string>).blocks
+    if (!_.isEmpty(blocks)) {
+      _.map(blocks, (block: Record<string, string>) => {
+        const text = block.text ? block.text : ''
+        desc = desc + text + '\n'
+      })
+    } else {
+      desc = ''
+    }
+  } else {
+    desc = text
+  }
+  return _.trim(desc) ? desc : ''
+}
+
 export const getApiHostDomain = (url: string): string => {
   if (url) {
     const baseArr = url.split('//')

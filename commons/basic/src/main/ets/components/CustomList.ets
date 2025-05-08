@@ -59,6 +59,10 @@ export struct CustomListItem {
    */
   @Prop fontWeight: FontWeight = FontWeight.Normal
   /**
+   *
+   */
+  @Prop required: boolean = false
+  /**
    * 图标的builder
    */
   @BuilderParam iconBuilder?: CustomBuilder
@@ -77,6 +81,13 @@ export struct CustomListItem {
       Row() {
         if (typeof this.iconBuilder === 'function') {
           this.iconBuilder()
+        }
+        if (this.required) {
+          Text('*')
+            .fontColor(Color.Red)
+            .fontSize(this.fontSize)
+            .fontWeight(this.fontWeight)
+            .lineHeight(this.lineHeight)
         }
         Text(this.text)
           .fontColor(this.fontColor)
