@@ -280,7 +280,7 @@ struct UserPortrait {
           .fontSize(12)
         CustomPopup({
           contentBuilder: () => this.BuildPopupContent(),
-          text: portrait.tips
+          tips: portrait.tips
         })
       }
       .width("100%")
@@ -324,7 +324,7 @@ struct UserPortrait {
           .fontSize(12)
         CustomPopup({
           contentBuilder: () => this.BuildPopupContent(),
-          text: portrait.tips
+          tips: portrait.tips
         })
       }
       .width("100%")

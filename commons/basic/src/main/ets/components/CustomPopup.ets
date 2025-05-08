@@ -6,13 +6,17 @@ export struct CustomPopup {
    */
   @BuilderParam contentBuilder?: CustomBuilder
   /**
-   * 展示文字
+   * 显示文字
    */
   @Prop text: string = ''
   /**
-   * 文字颜色
+   * tips 文字
    */
-  @Prop textColor: ResourceColor = Color.White;
+  @Prop tips: string = ''
+  /**
+   * tips 文字颜色
+   */
+  @Prop tipsColor: ResourceColor = Color.White;
   /**
    * 背景颜色
    */
@@ -29,7 +33,7 @@ export struct CustomPopup {
   @State showPopup: boolean = false;
 
   build() {
-    Button() {
+    Button(this.text) {
       if (typeof this.contentBuilder === 'function') {
         this.contentBuilder()
       }
@@ -39,10 +43,10 @@ export struct CustomPopup {
       this.showPopup = !this.showPopup;
     })
     .bindPopup(this.showPopup, {
-      message: this.text,
+      message: this.tips,
       popupColor: this.popupColor,
       messageOptions: {
-        textColor: this.textColor
+        textColor: this.tipsColor
       },
       placement: this.placement,
       backgroundBlurStyle: BlurStyle.NONE
