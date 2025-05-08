@@ -11,6 +11,7 @@ export * from './src/main/ets/components/CustomTag'
 export * from './src/main/ets/components/CustomToast'
 export * from './src/main/ets/components/CustomVideo'
 export * from "./src/main/ets/components/XyAvatar"
+export * from "./src/main/ets/components/CustomPopup"
 
 export * from './src/main/ets/config/ApiConfig'
 export * from './src/main/ets/config/Context'
