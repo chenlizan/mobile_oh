@@ -31,6 +31,7 @@ struct JoinCourse {
   @State visible: boolean = false
   @State title: string = '申请设置'
   @State classList: Option[] = []
+  @State resultGroup: Record<string, string>[] = []
   private group_id: string = ''
   private join_type: number = 0
   private class_id: string = ''
@@ -38,6 +39,42 @@ struct JoinCourse {
 
   aboutToAppear(): void {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
+  }
+
+  handleJoinStep(data: Record<string, number | string>, group_id: string) {
+    if (data.join_type === 3) {
+      CustomToast.toast_fail('禁止加入')
+      return
+    }
+    if (data.lock === 2) {
+      CustomToast.toast_fail('课程已锁定')
+      return
+    }
+    if (data.identity_flag === 1 && this.userInfo.isRealStudent) {
+      CustomToast.toast_fail('该课程仅允许教师加入')
+      return
+    }
+    if (this.userInfo.isSchoolFellow) {
+      CustomToast.toast_fail('校友可以直接访问课程进行学习，不必加入课程')
+      return
+    }
+    CustomAlertDialog({
+      'title': '提示',
+      'message': `是否加入课程`,
+      onClickBtn: () => {
+        xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.groupClassList + '/' + group_id)
+          .then((response) => {
+            this.classList =
+              _.map(response.data, (item: Record<string, string>) => {
+                return { 'value': item.class_name, class_id: item.class_id } as Option
+              })
+            this.visible = true
+            this.group_id = group_id
+            this.class_id = this.classList[0].class_id
+            this.join_type = data.join_type as number
+          })
+      }
+    } as AlertDialogParam)
   }
 
   @Builder
@@ -56,39 +93,7 @@ struct JoinCourse {
               `/${params.get("group_id")}`)
             if (response.success) {
               const data = response.data as Record<string, number>
-              if (data.join_type === 3) {
-                CustomToast.toast_fail('禁止加入')
-                return
-              }
-              if (data.lock === 2) {
-                CustomToast.toast_fail('课程已锁定')
-                return
-              }
-              if (data.identity_flag === 1 && this.userInfo.isRealStudent) {
-                CustomToast.toast_fail('该课程仅允许教师加入')
-                return
-              }
-              if (this.userInfo.isSchoolFellow) {
-                CustomToast.toast_fail('校友可以直接访问课程进行学习，不必加入课程')
-                return
-              }
-              CustomAlertDialog({
-                'title': '提示',
-                'message': `是否加入课程`,
-                onClickBtn: () => {
-                  xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.groupClassList + '/' +
-                  params.get("group_id"))
-                    .then((response) => {
-                      this.classList =
-                        _.map(response.data, (item: Record<string, string>) => {
-                          return { 'value': item.class_name, class_id: item.class_id } as Option
-                        })
-                      this.visible = true
-                      this.group_id = params.get("group_id") as string
-                      this.join_type = data.join_type
-                    })
-                }
-              } as AlertDialogParam)
+              this.handleJoinStep(data, params.get('group_id') as string)
             }
           }
         }
@@ -202,15 +207,147 @@ struct JoinCourse {
             .backgroundColor(Color.White)
             .borderRadius(4)
             .flexShrink(0)
-            .onSubmit((value: string) => {
+            .onChange(async (value: string) => {
+              const response =
+                await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.queryGroup, { 'key': value })
+              if (response.success) {
+                this.resultGroup = (_.isEmpty(response.data) ? [] : [response.data]) as Record<string, string>[]
+              }
             })
-          Column() {
-            Text('暂无数据')
-              .fontColor('#999999')
+          if (_.isEmpty(this.resultGroup)) {
+            Column() {
+              Text('暂无数据')
+                .fontColor('#999999')
+            }
+            .flexGrow(1)
+            .justifyContent(FlexAlign.Center)
+            .width(this.screenWidth)
+          } else {
+            Column() {
+              Flex({ direction: FlexDirection.Row }) {
+                if (this.resultGroup[0].course_property === '2') {
+                  Text('MOOC')
+                    .padding({
+                      left: 8,
+                      right: 8,
+                      top: 4,
+                      bottom: 4
+                    })
+                    .backgroundColor('#EBEDF0')
+                    .borderRadius(2)
+                    .fontColor('#FCBB34')
+                    .fontSize(14)
+                }
+                Text(this.resultGroup[0].name)
+              }
+
+              Flex({ direction: FlexDirection.Row }) {
+                Text((() => {
+                  const content: string[] = []
+                  content.push(!_.trim(this.resultGroup[0].school_name) ? '自由课程（无学校）' :
+                  this.resultGroup[0].school_name)
+                  if (!!_.trim(this.resultGroup[0].teacher_names)) {
+                    content.push(this.resultGroup[0].teacher_names)
+                  }
+                  return content.join(' | ')
+                })())
+                  .fontColor('#B9B9B9')
+                  .fontSize(13)
+                  .maxLines(1)
+                  .textOverflow({ overflow: TextOverflow.Ellipsis })
+                  .ellipsisMode(EllipsisMode.END)
+                  .wordBreak(WordBreak.BREAK_ALL)
+              }
+              .padding({ top: 10 })
+
+              Flex({ direction: FlexDirection.Row }) {
+                Text((() => {
+                  switch (this.resultGroup[0].public_type) {
+                    case '1':
+                      return `私有课程`
+                    case '2':
+                      return `课内公开`
+                    case '3':
+                      return `校内公开`
+                    case '4':
+                      return `全网公开`
+                    default:
+                      return null
+                  }
+                })
+                ())
+                  .textAlign(TextAlign.Center)
+                  .padding({
+                    left: 8,
+                    right: 8,
+                    top: 4,
+                    bottom: 4
+                  })
+                  .fontColor('#999999')
+                  .fontSize(13)
+                  .backgroundColor('#EBEDF0')
+                  .borderRadius(2)
+                  .borderRadius({ bottomLeft: 4, bottomRight: 4 })
+
+                Text((() => {
+                  switch (this.resultGroup[0].public_type) {
+                    case '1':
+                      return '*私有课程仅教师可以查看'
+                    case '2':
+                      return '*课程内的成员可以查看课程'
+                    case '3':
+                      return '*校内用户可以查看课程'
+                    case '4':
+                      return '*课程全网可见'
+                    default:
+                      return ''
+                  }
+                })
+                ())
+                  .textAlign(TextAlign.Center)
+                  .padding({
+                    left: 8,
+                    right: 8,
+                    top: 4,
+                    bottom: 4
+                  })
+                  .fontColor('#B9B9B9')
+                  .fontSize(13)
+              }
+              .padding({ top: 10 })
+
+              Row() {
+                Row() {
+                }
+                .height(1)
+                .borderWidth({ top: 1 })
+                .layoutWeight(1)
+                .borderColor('#40A9FF')
+                .borderStyle(BorderStyle.Dashed)
+              }
+              .padding({ top: 10 })
+
+              Flex({ direction: FlexDirection.Row }) {
+                Text('课程介绍')
+              }
+              .padding({ top: 10 })
+
+              Flex({ direction: FlexDirection.Row, justifyContent: FlexAlign.Center }) {
+                Text(_.trim(this.resultGroup[0].desc) ? _.trim(this.resultGroup[0].desc) : '暂无简介内容')
+                  .fontColor('#B9B9B9')
+                  .fontSize(13)
+              }
+              .padding(_.trim(this.resultGroup[0].desc) ? 8 : 25)
+            }
+            .width(this.screenWidth - 24)
+            .margin(12)
+            .padding(10)
+            .backgroundColor(Color.White)
+            .borderRadius(4)
+            .onClick(() => {
+              this.handleJoinStep(this.resultGroup[0], this.resultGroup[0].id)
+            })
           }
-          .flexGrow(1)
-          .justifyContent(FlexAlign.Center)
-          .width(this.screenWidth)
         }
       }
       .onRefreshing(() => {
@@ -228,12 +365,14 @@ struct JoinCourse {
         footerBuilder: () => this.BuildModalFooter(),
       })
     }
+
     .title(CustomNavTitle('加入课程', () => this.BuildNavRightBtn()))
     .backgroundColor("#f1f1f1")
   }
 }
 
 @Builder
-export function JoinCourseBuilder() {
+export function
+JoinCourseBuilder() {
   JoinCourse()
 }

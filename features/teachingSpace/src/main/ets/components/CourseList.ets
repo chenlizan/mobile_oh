@@ -432,7 +432,7 @@ struct CourseList {
 
           List() {
             ForEach((() => {
-              const schoolList: Record<string, string>[] = [];
+              const schoolList: Record<string, string>[] = []
               if (this.currentIndex > 1) {
                 return schoolList
               }
@@ -444,7 +444,7 @@ struct CourseList {
                   ),
                   'school_name',
                 ),
-              );
+              )
               if (schoolKeys.length > 0) {
                 schoolList.push({
                   'title': '所有课程'
@@ -698,21 +698,21 @@ struct CourseList {
                             return [item.term_name, (() => {
                               switch (item.public_type) {
                                 case '1':
-                                  return `私有`;
+                                  return `私有`
                                 case '2':
-                                  return `课内`;
+                                  return `课内`
                                 case '3':
-                                  return `校内`;
+                                  return `校内`
                                 case '4':
-                                  return `全网`;
+                                  return `全网`
                                 default:
-                                  return null;
+                                  return null
                               }
                             })(), (() => {
                               if (item.origin_type === '2') {
-                                return '自主开课';
+                                return '自主开课'
                               } else {
-                                return '教务开课';
+                                return '教务开课'
                               }
                             })()].join(' | ')
                           })())
