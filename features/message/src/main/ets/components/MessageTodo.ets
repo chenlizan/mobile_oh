@@ -396,7 +396,7 @@ struct MessageTodo {
             List() {
               ForEach(this.msgData, (item: Record<string, string | number | boolean>, index: number) => {
                 ListItem() {
-                  Flex({ alignItems: ItemAlign.Center }) {
+                  Row() {
                     Badge({
                       count: item.status === 0 ? 1 : 0,
                       position: BadgePosition.RightTop,
@@ -409,13 +409,13 @@ struct MessageTodo {
                     }.margin({ right: 10 })
 
                     Column() {
-                      Flex({ alignItems: ItemAlign.Center }) {
+                      Row() {
                         if (item.link_group) {
                           Text(item.title as string)
                             .fontColor('#40A9FF')
                             .fontSize(15)
                             .fontWeight(400)
-                            .flexGrow(1)
+                            .layoutWeight(1)
                             .textOverflow({ overflow: TextOverflow.Ellipsis })
                             .maxLines(1)
                             .onClick(() => this.onEnterGroup(item.group_id as string))
@@ -426,7 +426,7 @@ struct MessageTodo {
                             .fontWeight(400)
                             .textOverflow({ overflow: TextOverflow.Ellipsis })
                             .maxLines(1)
-                            .flexGrow(1)
+                            .layoutWeight(1)
                         }
                         Text(dayjs(item.createAt as string).format('MM月DD日 HH:mm'))
                           .fontColor('#999')
@@ -442,7 +442,7 @@ struct MessageTodo {
                         }
                       }.margin({ bottom: 12 })
 
-                      Flex({ alignItems: ItemAlign.Center }) {
+                      Row() {
                         Text(item.content as string)
                           .fontColor('#999')
                           .fontSize(13)
@@ -450,28 +450,28 @@ struct MessageTodo {
                           .textOverflow({ overflow: TextOverflow.Ellipsis })
                           .maxLines(1)
                           .margin({ right: 4 })
-                          .flexGrow(1)
+                          .layoutWeight(1)
 
                         if (item.status === 0) {
                           if (item.msgCode === MessageContentType.Invite_To_Group ||
                             item.msgCode === MessageContentType.Apply_Clone_Group ||
                             item.msgCode === MessageContentType.Apply_Be_Friend ||
                             item.msgCode === MessageContentType.Apply_Merge_Group) {
-                            Button('同意', { type: ButtonType.Normal })
-                              .height(32)
-                              .padding({left: 6, right: 6})
+                            Text('同意')
+                              .padding(8)
+                              .fontSize(13)
                               .fontColor(Color.White)
                               .backgroundColor('#40A9FF')
                               .borderRadius(4)
                               .margin({ right: 4 })
                               .onClick(() => this.onAcceptPress(item, 1))
-                            Button('拒绝', { type: ButtonType.Normal })
-                              .height(32)
-                              .padding({left: 6, right: 6})
-                              .fontColor('#999999')
+                            Text('拒绝')
+                              .padding(8)
+                              .fontSize(13)
                               .backgroundColor(Color.White)
-                              .borderWidth(1)
+                              .fontColor('#999999')
                               .borderColor('#F5F5F5')
+                              .borderWidth(1)
                               .borderRadius(4)
                               .onClick(() => this.onAcceptPress(item, 2))
                           }
@@ -497,8 +497,7 @@ struct MessageTodo {
                             .fontWeight(400)
                         }
                       }
-                    }.flexGrow(1)
-
+                    }.layoutWeight(1)
                   }.padding(12)
                   .borderWidth({ bottom: 1 })
                   .borderColor({ bottom: '#ebebeb' })

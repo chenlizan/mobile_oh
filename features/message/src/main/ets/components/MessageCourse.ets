@@ -538,7 +538,7 @@ struct MessageCourse {
               List() {
                 ForEach(this.msgData, (item: Record<string, string | number | boolean>, index: number) => {
                   ListItem() {
-                    Flex({ alignItems: ItemAlign.Center }) {
+                    Row() {
                       Badge({
                         count: item.status === 0 ? 1 : 0,
                         position: BadgePosition.RightTop,
@@ -551,13 +551,13 @@ struct MessageCourse {
                       }.margin({ right: 10 })
 
                       Column() {
-                        Flex({ alignItems: ItemAlign.Center }) {
+                        Row() {
                           if (item.link_group) {
                             Text(item.title as string)
                               .fontColor('#40A9FF')
                               .fontSize(15)
                               .fontWeight(400)
-                              .flexGrow(1)
+                              .layoutWeight(1)
                               .textOverflow({ overflow: TextOverflow.Ellipsis })
                               .maxLines(1)
                               .onClick(() => this.onEnterGroup(item.group_id as string))
@@ -568,7 +568,7 @@ struct MessageCourse {
                               .fontWeight(400)
                               .textOverflow({ overflow: TextOverflow.Ellipsis })
                               .maxLines(1)
-                              .flexGrow(1)
+                              .layoutWeight(1)
                           }
                           Text(dayjs(item.createAt as string).format('MM月DD日 HH:mm'))
                             .fontColor('#999')
@@ -584,7 +584,7 @@ struct MessageCourse {
                           }
                         }.margin({ bottom: 12 })
 
-                        Flex({ alignItems: ItemAlign.Center }) {
+                        Row() {
                           Text(item.content as string)
                             .fontColor('#999')
                             .fontSize(13)
@@ -592,7 +592,7 @@ struct MessageCourse {
                             .textOverflow({ overflow: TextOverflow.Ellipsis })
                             .maxLines(1)
                             .margin({ right: 4 })
-                            .flexGrow(1)
+                            .layoutWeight(1)
 
                           if (item.msgCode === MessageContentType.Publish_Evaluation_Activity) {
                             Row() {
@@ -609,17 +609,17 @@ struct MessageCourse {
                             }
                             .onClick(() => this.onEnterAppraise(item as Record<string, string | number>))
                           }
-                          Button('删除', { type: ButtonType.Normal })
-                            .height(32)
-                            .padding({left: 6, right: 6})
-                            .fontColor('#999999')
+                          Text('删除')
+                            .padding(8)
+                            .fontSize(13)
                             .backgroundColor(Color.White)
-                            .borderWidth(1)
+                            .fontColor('#999999')
                             .borderColor('#F5F5F5')
+                            .borderWidth(1)
                             .borderRadius(4)
                             .onClick(() => this.onDeletePress(item as Record<string, string | number>))
                         }
-                      }.flexGrow(1)
+                      }.layoutWeight(1)
                     }.padding(12)
                     .borderWidth({ bottom: 1 })
                     .borderColor({ bottom: '#ebebeb' })
