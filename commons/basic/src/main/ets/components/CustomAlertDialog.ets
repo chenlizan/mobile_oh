@@ -5,15 +5,15 @@ import { IconConstants } from "../constants/IconConstants"
 export class AlertDialogParam {
   message: string = ''
   title: string = ''
-  dialogHeight: Length = 0
-  autoCancel: boolean = false
-  hideCloseBtn: Visibility = Visibility.Visible
-  hideDivider: Visibility = Visibility.Visible
-  onCloseBtn: () => void = () => {
+  dialogHeight?: Length = 0
+  autoCancel?: boolean = false
+  hideCloseBtn?: Visibility = Visibility.Visible
+  hideDivider?: Visibility = Visibility.Visible
+  onCloseBtn?: () => void = () => {
   }
-  onClickBtn: () => void = () => {
+  onClickBtn?: () => void = () => {
   }
-  hide: () => void = () => {
+  hide?: () => void = () => {
   }
 }
 
@@ -38,7 +38,9 @@ function AlertDialogComponent(params: AlertDialogParam) {
             if (params.onCloseBtn) {
               params.onCloseBtn()
             }
-            params.hide()
+            if(params.hide) {
+              params.hide()
+            }
           }
         })
           .visibility(params.hideCloseBtn)
@@ -92,7 +94,9 @@ function AlertDialogComponent(params: AlertDialogParam) {
           if (params.onCloseBtn) {
             params.onCloseBtn()
           }
-          params.hide()
+          if(params.hide) {
+            params.hide()
+          }
         })
       Button('确定', { type: ButtonType.Normal })
         .height(40)
@@ -110,7 +114,9 @@ function AlertDialogComponent(params: AlertDialogParam) {
           if (params.onClickBtn) {
             params.onClickBtn()
           }
-          params.hide()
+          if(params.hide) {
+            params.hide()
+          }
         })
     }
     .width('100%')
