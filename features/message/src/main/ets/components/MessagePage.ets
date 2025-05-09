@@ -204,7 +204,7 @@ export struct MessagePage {
             itemMargin: { top: 8 },
             itemBorder: '',
             onClickBtn: () => {
-              // this.pageInfos.pushPath({ name: 'messageCourse' })
+              this.pageInfos.pushPath({ name: 'messageCourse' })
             }
           })
           CustomListItem({
