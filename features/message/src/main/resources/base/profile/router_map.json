@@ -7,6 +7,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "messageCourse",
+      "pageSourceFile": "src/main/ets/components/MessageCourse.ets",
+      "buildFunction": "MessageCourseBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

@@ -41,5 +41,6 @@ export class IconConstants {
   static readonly SEARCH: string = '\uf2a6' //搜索
   static readonly FILTER: string = '\ue810' //筛选
   static readonly NOTHING: string = '\ue617'
+  static readonly NEXT_ACTIVITY: string = '\ue6cc'
   static readonly QRCODE: string = '\ue8c0' //二维码
 }
