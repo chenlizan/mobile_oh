@@ -119,6 +119,10 @@
     {
       "name": "message",
       "srcPath": "./features/message",
+    },
+    {
+      "name": "courseDetail",
+      "srcPath": "./features/courseDetail",
     }
   ]
 }

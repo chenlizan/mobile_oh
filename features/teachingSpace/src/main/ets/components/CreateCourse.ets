@@ -373,7 +373,8 @@ struct CreateCourse {
           .width('100%')
           .margin({ top: 12 })
           .borderRadius(0)
-          .backgroundColor('#40A9FF')// .enabled(false)
+          .backgroundColor('#40A9FF')
+          .enabled(!!_.trim(this.siteName))
           .onClick(async () => {
             if (!_.trim(this.siteName)) {
               CustomToast.toast_info('课程内容为空，无法创建课程')
@@ -413,10 +414,10 @@ struct CreateCourse {
                 'title': '提示',
                 'message': `课程《${group.name}》（课程号：${group.key}）已经创建成功，教师、助教可任意修改目录结构并选择目录上传课件进行备课、授课、布置作业、扫码添加成员等。是否进入课程？`,
                 onCloseBtn: () => {
-                  this.pageInfos.pop()
+                  this.pageInfos.pop({ refresh: true })
                 },
                 onClickBtn: () => {
-                  this.pageInfos.replacePath({ name: '', param: group })
+                  this.pageInfos.replacePath({ name: 'courseDetailPage', param: group })
                 }
               } as AlertDialogParam)
             }

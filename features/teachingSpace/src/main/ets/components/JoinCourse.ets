@@ -2,10 +2,10 @@ import { url } from "@kit.ArkTS"
 import { display } from "@kit.ArkUI"
 import { scanBarcode } from "@kit.ScanKit"
 import _ from "@wolfx/lodash"
+import dayjs from "dayjs"
 import {
   Api_Context,
   AppIcon,
-  AlertDialogParam,
   CustomAlertDialog,
   CustomNavTitle,
   CustomToast,
@@ -42,6 +42,14 @@ struct JoinCourse {
   }
 
   handleJoinStep(data: Record<string, number | string>, group_id: string) {
+    if (data?.filed === 1) {
+      CustomToast.toast_fail('课程已归档')
+      return
+    }
+    if (data?.member_staus === 2) {
+      CustomToast.toast_fail('你已经是课程成员了~')
+      return
+    }
     if (data.join_type === 3) {
       CustomToast.toast_fail('禁止加入')
       return
@@ -58,6 +66,17 @@ struct JoinCourse {
       CustomToast.toast_fail('校友可以直接访问课程进行学习，不必加入课程')
       return
     }
+    if (data?.public_type === '1' && this.userInfo.id !== data?.creator) {
+      CustomToast.toast_fail('该课程未公开，无法加入')
+      return
+    }
+    if (data?.end_time) {
+      if (dayjs().isAfter(dayjs(data.end_time))) {
+        CustomToast.toast_fail('课程已经结课，不允许操作')
+        return
+      }
+    }
+
     CustomAlertDialog({
       'title': '提示',
       'message': `是否加入课程`,
@@ -74,7 +93,7 @@ struct JoinCourse {
             this.join_type = data.join_type as number
           })
       }
-    } as AlertDialogParam)
+    })
   }
 
   @Builder
@@ -208,12 +227,24 @@ struct JoinCourse {
             .borderRadius(4)
             .flexShrink(0)
             .onChange(async (value: string) => {
+              if (_.isEmpty(value)) {
+                this.resultGroup = []
+              }
               const response =
                 await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.queryGroup, { 'key': value })
               if (response.success) {
                 this.resultGroup = (_.isEmpty(response.data) ? [] : [response.data]) as Record<string, string>[]
               }
             })
+          Row() {
+            Text('*仅搜索校内公开与全网公开的课程')
+              .fontColor('#B9B9B9')
+              .fontSize(13)
+          }
+          .justifyContent(FlexAlign.End)
+          .width(this.screenWidth - 24)
+          .margin({ left: 12, right: 12, top: 12 })
+
           if (_.isEmpty(this.resultGroup)) {
             Column() {
               Text('暂无数据')
@@ -287,7 +318,7 @@ struct JoinCourse {
                   .fontSize(13)
                   .backgroundColor('#EBEDF0')
                   .borderRadius(2)
-                  .borderRadius({ bottomLeft: 4, bottomRight: 4 })
+                  .borderRadius(4)
 
                 Text((() => {
                   switch (this.resultGroup[0].public_type) {

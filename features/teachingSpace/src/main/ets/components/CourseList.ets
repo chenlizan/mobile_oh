@@ -1,24 +1,37 @@
 import { ComponentContent, display, window } from "@kit.ArkUI"
 import _ from "@wolfx/lodash"
+import dayjs from "dayjs"
 import {
   Api_Context,
   AppIcon,
   CCApi,
   ccApiGet,
   ccApiPost,
+  CustomAlertDialog,
   CustomNavTitle,
   CustomToast,
   HomeApi,
   IconConstants,
+  PreferenceStorage,
   UserInfoModel,
-  xyApiGet
+  xyApiGet,
+  xyApiPost
 } from "@xy/basic"
 
 class MenuParam {
+  creator: string = ''
+  group_id: string = ''
+  course_property: string = ''
+  end_time: string = ''
   filterIndex: number = 0
+  lock: number = 0
   role: number = 0
+  name: string = ''
   origin_type: string = ''
+  public_type: string = ''
   hide: () => void = () => {
+  }
+  refresh: () => void = () => {
   }
 }
 
@@ -35,7 +48,11 @@ function BuildHeaderMenu(params: MenuParam) {
       })
       .onClick(() => {
         const pageInfos = AppStorage.get<NavPathStack>('pageInfos')
-        pageInfos?.pushPath({ name: 'createCourse', param: JSON.stringify({ 'timeFlag': params.filterIndex + 1 }) })
+        pageInfos?.pushPath({
+          name: 'createCourse', param: JSON.stringify({ 'timeFlag': params.filterIndex + 1 }), onPop: () => {
+            params.refresh()
+          }
+        })
         params.hide()
       })
     Divider()
@@ -54,7 +71,11 @@ function BuildHeaderMenu(params: MenuParam) {
           CustomToast.toast_fail('校友可以直接访问课程进行学习，不必加入课程')
           return
         }
-        pageInfos?.pushPath({ name: 'joinCourse' })
+        pageInfos?.pushPath({
+          name: 'joinCourse', onPop: () => {
+            params.refresh()
+          }
+        })
         params.hide()
       })
     Divider()
@@ -86,6 +107,7 @@ function BuildLongPressMenu(params: MenuParam) {
         top: 12,
         bottom: 12
       })
+      .onClick(() => enterCourse(params))
     Divider()
     Text(params.role === 3 && params.origin_type === '2' ? '删除课程' : '退出课程')
       .fontColor('#40A9FF')
@@ -94,6 +116,50 @@ function BuildLongPressMenu(params: MenuParam) {
         right: 24,
         top: 12,
         bottom: 12
+      })
+      .onClick(async () => {
+        if (dayjs().isAfter(dayjs(params.end_time))) {
+          CustomToast.toast_fail('课程已经结课，不允许操作')
+          return
+        }
+        if (params.lock === 2) {
+          CustomToast.toast_fail('本课程已锁定，暂不支持退出课程')
+          return
+        }
+        if (params.role === 2 && params.origin_type === '0' || params.origin_type === '1') {
+          CustomToast.toast_fail('该课程为教务中心开课，不允许删除')
+          return
+        }
+        if (params.role === 3 && params.course_property === '2') {
+          CustomToast.toast_fail('不可以删除mooc课程')
+          return
+        }
+        const is_creator = params.role === 3 && params.origin_type === '2'
+        CustomAlertDialog({
+          'title': '提示',
+          'message': is_creator ? `删除课程后不可恢复，确定要删除课程《${params.name}》吗？` :
+            `是否退出课程《${params.name}》`,
+          onClickBtn: async () => {
+            const Api_Context = AppStorage.get<Api_Context>('Api_Context')
+            if (is_creator) {
+              const response = await xyApiPost(Api_Context?.getApiPrefix('baseApi_inner') + HomeApi.deleteGroup,
+                { 'group_id': params.group_id })
+              if (response.success) {
+                CustomToast.toast_success('课程删除成功')
+                params.refresh()
+                params.hide()
+              }
+            } else {
+              const response = await xyApiPost(Api_Context?.getApiPrefix('baseApi_inner') + HomeApi.quitGroup,
+                { 'group_id': params.group_id })
+              if (response.success) {
+                CustomToast.toast_success('退出成功')
+                params.refresh()
+                params.hide()
+              }
+            }
+          }
+        })
       })
     Divider()
     Text('取消')
@@ -113,11 +179,43 @@ function BuildLongPressMenu(params: MenuParam) {
   .borderRadius(8)
 }
 
+const enterCourse = async (params: MenuParam) => {
+  const pageInfos = AppStorage.get<NavPathStack>('pageInfos')
+  const userInfo = AppStorage.get<UserInfoModel>('UserInfo')
+  const Api_Context = AppStorage.get<Api_Context>('Api_Context')
+  if (params.role === 1 && dayjs(params.end_time).isBefore(dayjs())) {
+    const can_watch_module = await (async (): Promise<string[]> => {
+      const response = await xyApiGet(Api_Context?.getApiPrefix('baseApi_inner') + HomeApi.groupFiledSetting,
+        { 'group_id': params.group_id },)
+      if (response?.success) {
+        const data = response.data as Record<string, Record<string, Array<string>>>
+        if (data.end_setting) {
+          return data.end_setting.can_watch_module ?? []
+        }
+      }
+      return []
+    })()
+    if (_.isEmpty(can_watch_module)) {
+      CustomToast.toast_fail('本课程已结课，教师已设置为不可访问')
+      return
+    }
+  }
+  if (params.public_type === '1' && userInfo?.id !== params.creator) {
+    CustomToast.toast_fail('该课程未公开，无法访问')
+    return
+  }
+  if (params.hide) {
+    params.hide()
+  }
+  pageInfos?.pushPath({ name: 'courseDetailPage' })
+}
+
 @Component
 struct CourseList {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @State screenWidth: number = 0
   @State screenHeight: number = 0
   @State isRefreshing: boolean = false
@@ -331,6 +429,9 @@ struct CourseList {
             promptAction.closeCustomDialog(customDialog)
             customDialog.dispose()
           }
+        }
+        params.refresh = () => {
+          this.onChange('filterIndex')
         }
         params.filterIndex = this.filterIndex
         const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildHeaderMenu), params)
@@ -776,18 +877,46 @@ struct CourseList {
                     const windowClass = await window.getLastWindow(getContext())
                     const uiContext = windowClass.getUIContext()
                     const params = new MenuParam()
+                    params.creator = item.creator
+                    params.course_property = item.course_property
+                    params.end_time = item.end_time
+                    params.lock = Number(item.lock)
                     params.role = Number(item.role)
                     params.origin_type = item.origin_type
+                    params.name = item.name
+                    params.group_id = item.id
+                    params.public_type = item.public_type
                     params.hide = () => {
                       if (promptAction && customDialog) {
                         promptAction.closeCustomDialog(customDialog)
                         customDialog.dispose()
                       }
                     }
+                    params.refresh = () => {
+                      this.onChange('filterIndex')
+                    }
                     const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildLongPressMenu), params)
                     const promptAction = uiContext.getPromptAction()
                     promptAction.openCustomDialog(customDialog)
+                    this.preferenceStorage.currentTeam = item
                   }))
+                  .onClick(() => {
+                    const params = new MenuParam()
+                    params.creator = item.creator
+                    params.course_property = item.course_property
+                    params.end_time = item.end_time
+                    params.lock = Number(item.lock)
+                    params.role = Number(item.role)
+                    params.origin_type = item.origin_type
+                    params.name = item.name
+                    params.group_id = item.id
+                    params.public_type = item.public_type
+                    params.refresh = () => {
+                      this.onChange('filterIndex')
+                    }
+                    enterCourse(params)
+                    this.preferenceStorage.currentTeam = item
+                  })
                 }
               })
             }
