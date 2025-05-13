@@ -25,11 +25,19 @@ export struct AppIcon {
   /**
    * 背景色
    */
-  @Prop iconBackgroundColor: ResourceColor = '';
+  @Prop iconBackgroundColor: ResourceColor = ''
+  /**
+   * 边颜色
+   */
+  @Prop iconBorderColor: ResourceColor | EdgeColors | LocalizedEdgeColors = ''
   /**
    * 边角
    */
   @Prop iconRadius: Length | BorderRadiuses | LocalizedBorderRadiuses = 0
+  /**
+   * 边宽
+   */
+  @Prop iconBorderWidth: Length | EdgeWidths | LocalizedEdgeWidths = 0
   /**
    * 点击按钮
    */
@@ -42,7 +50,9 @@ export struct AppIcon {
       .fontSize(this.iconSize)
       .fontColor(this.iconColor)
       .backgroundColor(this.iconBackgroundColor)
+      .borderColor(this.iconBorderColor)
       .borderRadius(this.iconRadius)
+      .borderWidth(this.iconBorderWidth)
       .margin(this.iconMargin)
       .padding(this.iconPadding)
       .onClick(this.onClickBtn)

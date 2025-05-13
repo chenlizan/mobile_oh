@@ -5,6 +5,7 @@ import { pinyin } from 'pinyin-pro'
 import { PARAMS } from "./EnhancedFetch"
 import { ObjectUtil } from "./ObjectUtil"
 import { CustomToast } from "../components/CustomToast"
+import { IconConstants } from "../constants/IconConstants"
 
 export const isJSON = (str: string): boolean => {
   try {
@@ -540,7 +541,7 @@ const txtFileExtensions = new Set(['txt'])
 
 const txtFileMimetype = new Set(['text/plain'])
 
-function isTxtFile(filename: string, mimetype: string) {
+export function isTxtFile(filename: string, mimetype: string) {
   const ext = getExtension(filename)
   return txtFileMimetype.has(mimetype) || txtFileExtensions.has(ext || '')
 }
@@ -549,7 +550,7 @@ const pdfFileExtensions = new Set(['pdf'])
 
 const pdfFileMimetype = new Set(['application/pdf'])
 
-function isPdfFile(filename: string, mimetype: string) {
+export function isPdfFile(filename: string, mimetype: string) {
   const ext = getExtension(filename)
   return pdfFileMimetype.has(mimetype) || pdfFileExtensions.has(ext || '')
 }
@@ -562,7 +563,7 @@ const docFileMimetype = new Set([
   'application/vnd.ms-works',
 ])
 
-function isDocFile(filename: string, mimetype: string) {
+export function isDocFile(filename: string, mimetype: string) {
   const ext = getExtension(filename)
   return docFileMimetype.has(mimetype) || docFileExtensions.has(ext || '')
 }
@@ -574,7 +575,7 @@ const pptFileMimetype = new Set([
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 ])
 
-function isPptFile(filename: string, mimetype: string) {
+export function isPptFile(filename: string, mimetype: string) {
   const ext = getExtension(filename)
   return pptFileMimetype.has(mimetype) || pptFileExtensions.has(ext || '')
 }
@@ -586,7 +587,7 @@ const xlsFileMimetype = new Set([
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ])
 
-function isXlsFile(filename: string, mimetype: string) {
+export function isXlsFile(filename: string, mimetype: string) {
   const ext = getExtension(filename)
   return xlsFileMimetype.has(mimetype) || xlsFileExtensions.has(ext || '')
 }
@@ -788,3 +789,142 @@ export const navigateToResourceDetails =
         break
     }
   }
+
+/**
+ * 根据文件类型获取图标
+ */
+export const getIconByFileType = (item: Record<string, number>) => {
+  if (item.type === 1) {
+    return {
+      'iconCode': IconConstants.FOLDER,
+      'iconColor': '#666666',
+      'iconSize': 18
+    } as Record<string, string | number>
+  } else if (item.type === 2) {
+    return {
+      'iconCode': IconConstants.NOTE,
+      'iconColor': '#CCC597',
+      'iconSize': 20
+    } as Record<string, string | number>
+  } else if (item.type === 3) {
+    return {
+      'iconCode': IconConstants.MIND,
+      'iconColor': '#C59A77',
+      'iconSize': 20
+    } as Record<string, string | number>
+  } else if (item.type === 6) {
+    if (isVideoFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.VIDEO,
+        'iconColor': '#84CBDC',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isAudioFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.AUDIO,
+        'iconColor': '#F19292',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isImageFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.IMAGE,
+        'iconColor': '#E4B34D',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isTxtFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.TXT,
+        'iconColor': '#9B97BA',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isPdfFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.PDF,
+        'iconColor': '#C54442',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isDocFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.DOC,
+        'iconColor': '#7392AF',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isXlsFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.XLSX,
+        'iconColor': '#86A77C',
+        'iconSize': 20
+      } as Record<string, string | number>
+    } else if (isPptFile(String(item.filename), String(item.mimetype))) {
+      return {
+        'iconCode': IconConstants.PPT,
+        'iconColor': '#C56464',
+        'iconSize': 20
+      } as Record<string, string | number>
+    }
+  } else if (item.type === 7) {
+    return {
+      'iconCode': IconConstants.QUESTION,
+      'iconColor': '#A4D9CC',
+      'iconSize': 20
+    } as Record<string, string | number>
+  } else if (item.type === 8) {
+    return {
+      'iconCode': IconConstants.DISCUSS,
+      'iconColor': '#99B6E2',
+      'iconSize': 20
+    } as Record<string, string | number>
+  } else if (item.type === 9) {
+    return {
+      'iconCode': IconConstants.VIDEO,
+      'iconColor': '#84CBDC',
+      'iconSize': 20
+    } as Record<string, string | number>
+  } else if (item.type === 10) {
+    return {
+      'iconCode': IconConstants.AUDIO,
+      'iconColor': '#F19292',
+      'iconSize': 20
+    } as Record<string, string | number>
+  } else if (item.type === 11) {
+    return {
+      'iconCode': IconConstants.TEACH_DESIGN,
+      'iconColor': '#E4826D',
+      'iconSize': 20
+    } as Record<string, string | number>
+  }
+  return {
+    'iconCode': IconConstants.OTHER_FILE,
+    'iconColor': '#B1B1B1',
+    'iconSize': 20
+  } as Record<string, string | number>
+}
+
+export const getCourseInfo = (item: Record<string, string>) => {
+  const content: string[] = []
+  if (item.term_name) {
+    content.push(String(item.term_name))
+  }
+  if (item.public_type) {
+    content.push((() => {
+      switch (String(item.public_type)) {
+        case '1':
+          return `私有`
+        case '2':
+          return `课内`
+        case '3':
+          return `校内`
+        case '4':
+          return `全网`
+        default:
+          return ''
+      }
+    })())
+  }
+  if (item.origin_type === '2') {
+    content.push('自主开课')
+  } else {
+    content.push('教务开课')
+  }
+  return content.join(' | ')
+}

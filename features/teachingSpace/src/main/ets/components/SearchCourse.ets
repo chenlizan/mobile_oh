@@ -1,6 +1,6 @@
 import _ from "@wolfx/lodash"
 import { display } from "@kit.ArkUI"
-import { Api_Context, AppIcon, CustomNavTitle, HomeApi, IconConstants, xyApiGet } from "@xy/basic"
+import { Api_Context, AppIcon, CustomNavTitle, getCourseInfo, HomeApi, IconConstants, xyApiGet } from "@xy/basic"
 
 @Component
 struct SearchCourse {
@@ -106,28 +106,7 @@ struct SearchCourse {
                             .fontColor('#B9B9B9')
                             .fontSize(11)
                             .backgroundColor('rgba(0, 0, 0, 0.65)')
-                          Text((() => {
-                            return [item.term_name, (() => {
-                              switch (item.public_type) {
-                                case '1':
-                                  return `私有`;
-                                case '2':
-                                  return `课内`;
-                                case '3':
-                                  return `校内`;
-                                case '4':
-                                  return `全网`;
-                                default:
-                                  return null;
-                              }
-                            })(), (() => {
-                              if (item.origin_type === '2') {
-                                return '自主开课';
-                              } else {
-                                return '教务开课';
-                              }
-                            })()].join(' | ')
-                          })())
+                          Text(getCourseInfo(item))
                             .width(160)
                             .padding({ top: 3, bottom: 3 })
                             .textAlign(TextAlign.Center)

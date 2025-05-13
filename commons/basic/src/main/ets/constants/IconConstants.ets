@@ -43,4 +43,20 @@ export class IconConstants {
   static readonly NOTHING: string = '\ue617'
   static readonly NEXT_ACTIVITY: string = '\ue6cc'
   static readonly QRCODE: string = '\ue8c0' //二维码
+  static readonly QA_AREA: string = '\ue862' //答疑区
+  static readonly CLASS: string = '\ue8c5' //课题
+  static readonly NOTE: string = '\ue736' //笔记
+  static readonly MIND: string = '\ue731' //导图
+  static readonly VIDEO: string = '\ue757' //视频
+  static readonly AUDIO: string = '\ue737' //音频
+  static readonly IMAGE: string = '\ue734' //图片
+  static readonly TXT: string = '\ue73b' //文本
+  static readonly PDF: string = '\ue73d' //PDF
+  static readonly DOC: string = '\ue73a' //DOC
+  static readonly XLSX: string = '\ue739' //XLSX
+  static readonly PPT: string = '\ue73f' //PPT
+  static readonly QUESTION: string = '\ue738' //问答
+  static readonly DISCUSS: string = '\ue73e' //讨论
+  static readonly TEACH_DESIGN: string = '\ue733' //教学设计
+  static readonly OTHER_FILE: string = '\ue73c' //其他文件
 }

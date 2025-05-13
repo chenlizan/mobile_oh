@@ -51,6 +51,7 @@ function AlertDialogComponent(params: AlertDialogParam) {
       })
       .padding({ top: 12, right: 12 })
     }
+    .flexShrink(0)
     .flexBasis(42)
     .height(42)
 

@@ -13,6 +13,10 @@ export struct CustomTag {
    */
   @Prop fontSize: number | string | Resource = 12
   /**
+   * 背景色
+   */
+  tagBackgroundColor: ResourceColor = ''
+  /**
    * 边框颜色
    */
   @Prop tagBorderColor: ResourceColor | EdgeColors | LocalizedEdgeColors = "#ebebeb"
@@ -35,6 +39,7 @@ export struct CustomTag {
         top: 4,
         bottom: 4
       })
+      .backgroundColor(this.tagBackgroundColor)
       .borderWidth(1)
       .borderColor(this.tagBorderColor)
       .fontColor(this.fontColor)
