@@ -9,6 +9,10 @@ import {
   CustomTag,
   CustomToast,
   getCourseInfo,
+  getFolderDownloadStatus,
+  getFolderDownloadStatusText,
+  getFolderPublicStatus,
+  getFolderPublicStatusText,
   getIconByFileType,
   getTypeByAssignToType,
   getTypeByTaskType,
@@ -17,6 +21,7 @@ import {
   judgeGroupIsEnd,
   judgeRoleHasCourseOperationWeight,
   PreferenceStorage,
+  regularFilename,
   UserInfoModel,
   xyApiGet,
   xyApiPost
@@ -30,12 +35,14 @@ struct CourseDetailPage {
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   @State screenWidth: number = 0
   @State screenHeight: number = 0
+  @State isRefreshing: boolean = false
   @State siteCerts: Record<string, Record<string, string>[]> = {}
   @State rootResources: Record<string, string | number | boolean> [] = []
   @State subResources: Record<string, string | number | boolean> [] = []
   @State currentCourse: Record<string, string | number | boolean> = {}
   private courseInfo = this.preferenceStorage.currentTeam ?? {}
   private funcItems: Record<string, string | Resource>[] = []
+  private rootSource: Record<string, string | number | boolean> = {}
 
   async querySiteCertificate() {
     const response = await ccApiPost(this.Api_Context.getApiPrefix('ccApi') + CCApi.getSiteCertificate,
@@ -50,7 +57,7 @@ struct CourseDetailPage {
       'group_id': this.courseInfo.id,
     })
     if (response.success) {
-      const rootSource = _.filter(response.data as Record<string, string>[], res => res.parent_id === '1',)[0]
+      const rootSource = _.filter(response.data as Record<string, string>[], res => res.parent_id === '1')[0]
       const resources =
         _.filter(response.data as Record<string, string | number>[], res => res.parent_id !== '1' && res.del !== 2)
       const real_resources = _.orderBy(
@@ -67,6 +74,7 @@ struct CourseDetailPage {
         ['sort_position'],
         ['asc']
       )
+      this.rootSource = rootSource
       this.rootResources = _.filter(
         real_resources,
         res => res.parent_id === rootSource.id,
@@ -85,6 +93,71 @@ struct CourseDetailPage {
     })
     if (response.success) {
       this.currentCourse = response.data as Record<string, string | number | boolean>
+    }
+  }
+
+  async createCourseResource(type: number, name: string) {
+    const canOperation = judgeRoleHasCourseOperationWeight(Number(this.courseInfo?.role ?? 1))
+    if (!canOperation && !_.isEmpty(this.courseInfo) && judgeGroupIsEnd(this.courseInfo as Record<string, string>)) {
+      return
+    }
+    const body: Record<string, string | number | Record<string, string>> = {
+      'group_id': String(this.courseInfo.id),
+      'parent_id': String(this.rootSource.id),
+      'name': regularFilename(name, this.rootResources as Record<string, string>[]),
+      'type': type,
+    }
+    const addResource = async () => {
+      const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.addResource, body)
+      if (response.success) {
+        this.queryCourseResources()
+        if (type === 8) {
+
+        } else if (type === 7) {
+          CustomToast.toast_success('资源创建成功')
+        } else {
+          CustomToast.toast_success(
+            `资源创建成功${
+            this.courseInfo?.is_resource_auto_public ? '，已设置学生可见' : ''
+            }`,
+          )
+        }
+      }
+    }
+
+    switch (type) {
+      case 2:
+        body.resource = {
+          'content': '{"entityMap":{},"blocks":[{"type":"header-one","text":"笔记标题"},{"type":"paragraph","text":"内容"}]}'
+        }
+        addResource()
+        break
+      case 3:
+        CustomAlertDialog({
+          title: '提示',
+          message: '创建导图后，需要去web端编辑完善，是否继续创建导图？',
+          onCloseBtn: () => {
+            return
+          },
+          onClickBtn: () => {
+            addResource()
+          }
+        })
+        break
+      case 11:
+        CustomAlertDialog({
+          title: '提示',
+          message: '创建教学设计后，需要去web端编辑完善，是否继续创建教学设计？',
+          onCloseBtn: () => {
+            return
+          },
+          onClickBtn: () => {
+            addResource()
+          }
+        })
+        break
+      default:
+        addResource()
     }
   }
 
@@ -180,6 +253,33 @@ struct CourseDetailPage {
       onClickBtn: async () => {
       }
     })
+  }
+
+  @Builder
+  BuildExtendEnd() {
+    Row() {
+      Button('移动到', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .height('100%')
+        .backgroundColor('#41A9FF')
+        .fontColor(Color.White)
+        .fontSize(13)
+      Button('置顶', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .height('100%')
+        .backgroundColor('#63BDFF')
+        .fontColor(Color.White)
+        .fontSize(13)
+      Button('上移', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .height('100%')
+        .backgroundColor('#83D0FF')
+        .fontColor(Color.White)
+        .fontSize(13)
+      Button('下移', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .height('100%')
+        .backgroundColor('#A5DFFF')
+        .fontColor(Color.White)
+        .fontSize(13)
+    }
+    .height('100%')
   }
 
   build() {
@@ -324,7 +424,7 @@ struct CourseDetailPage {
         Flex({ direction: FlexDirection.Column }) {
           Row() {
             Row() {
-              Text(this.preferenceStorage.currentTeam?.role === 1 ? '课程内容' : '备授课')
+              Text(this.courseInfo?.role === 1 ? '课程内容' : '备授课')
                 .fontSize(16)
                 .fontWeight(FontWeight.Medium)
                 .padding(12)
@@ -363,7 +463,7 @@ struct CourseDetailPage {
                       customDialog.dispose()
                     }
                   }
-                  params.currentTeam = this.preferenceStorage.currentTeam ?? {}
+                  params.currentTeam = this.courseInfo
                   const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildResourceVisibleMenu), params)
                   const promptAction = uiContext.getPromptAction()
                   promptAction.openCustomDialog(customDialog)
@@ -381,50 +481,107 @@ struct CourseDetailPage {
             .strokeWidth(1)
             .margin({ left: 12, right: 12 })
           Column() {
-            List() {
-              ForEach(this.rootResources, (item: Record<string, string | number | boolean>) => {
-                ListItem() {
-                  Column() {
-                    if (item.tag) {
-                      CustomTag({ text: String(item.tag), fontColor: '#FF4040', tagBackgroundColor: '#ebebeb' })
-                    }
-                    Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Start }) {
-                      Flex() {
-                        AppIcon(getIconByFileType(item as Record<string, number>))
-                        Text(String(item.name))
-                          .margin({ left: 8, right: 8 })
-                          .lineHeight(20)
-                          .maxLines(1)
-                          .textOverflow({ overflow: TextOverflow.MARQUEE })
+            Refresh({ refreshing: $$this.isRefreshing }) {
+              List() {
+                ForEach(this.rootResources, (item: Record<string, string | number | boolean>) => {
+                  ListItem() {
+                    Column() {
+                      if (item.tag) {
+                        CustomTag({ text: String(item.tag), fontColor: '#FF4040', tagBackgroundColor: '#ebebeb' })
                       }
-                      .flexGrow(1)
+                      Flex({ justifyContent: FlexAlign.SpaceBetween, alignItems: ItemAlign.Start }) {
+                        Flex() {
+                          AppIcon(getIconByFileType(Number(item.type), String(item.name), String(item.mimetype)))
+                          Text(String(item.name))
+                            .margin({ left: 8, right: 8 })
+                            .lineHeight(20)
+                            .maxLines(1)
+                            .textOverflow({ overflow: TextOverflow.MARQUEE })
+                        }
+                        .flexGrow(1)
 
-                      AppIcon({ iconCode: IconConstants.MORE, iconColor: '#999999', iconSize: 22 })
-                    }
-                    .width('100%')
-                    .height(20)
-                    .margin({ top: 6, bottom: 6 })
+                        AppIcon({
+                          iconCode: IconConstants.MORE,
+                          iconColor: '#999999',
+                          iconSize: 22,
+                          onClickBtn: async () => {
+                            const windowClass = await window.getLastWindow(getContext())
+                            const uiContext = windowClass.getUIContext()
+                            const params = new MenuParam()
+                            params.hide = () => {
+                              if (promptAction && customDialog) {
+                                promptAction.closeCustomDialog(customDialog)
+                                customDialog.dispose()
+                              }
+                            }
+                            params.currentTeam = this.courseInfo
+                            params.resource = item
+                            params.subResources = this.subResources
+                            const customDialog =
+                              new ComponentContent(uiContext, wrapBuilder(BuildOperResourceMenu), params)
+                            const promptAction = uiContext.getPromptAction()
+                            promptAction.openCustomDialog(customDialog, { autoCancel: false })
+                          }
+                        })
+                      }
+                      .width('100%')
+                      .height(20)
+                      .margin({ top: 6, bottom: 6 })
 
-                    Row() {
-                      if (item._taskTypeText && item.published === 1) {
-                        if ((this.courseInfo?.role ?? 1) === 1) {
-                          CustomTag({ text: String(item._taskTypeText) })
-                        } else {
+                      Row() {
+                        if (item._taskTypeText && item.published === 1) {
+                          if ((this.courseInfo?.role ?? 1) === 1) {
+                            CustomTag({ text: String(item._taskTypeText), tagMargin: { right: 8 } })
+                          } else {
+                            CustomTag({
+                              text: String(item._taskTypeText),
+                              tagBorderColor: '#40A9FF',
+                              fontColor: '#40A9FF',
+                              tagMargin: { right: 8 }
+                            })
+                          }
+                        }
+                        if (!!_.trim(getFolderPublicStatusText(Number(item.type),
+                          item as Record<string, string | number>,
+                          this.subResources, Number(this.courseInfo?.role ?? 1)))) {
                           CustomTag({
-                            text: String(item._taskTypeText),
-                            tagBorderColor: '#40A9FF',
-                            fontColor: '#40A9FF'
+                            text: String(getFolderPublicStatusText(Number(item.type),
+                              item as Record<string, string | number>,
+                              this.subResources, Number(this.courseInfo?.role ?? 1))),
+                            tagMargin: { right: 8 }
+                          })
+                        }
+                        if (!!_.trim(getFolderDownloadStatusText(Number(item.type),
+                          item as Record<string, string | number>,
+                          this.subResources, Number(this.courseInfo?.role ?? 1)))) {
+                          CustomTag({
+                            text: String(getFolderDownloadStatusText(Number(item.type),
+                              item as Record<string, string | number>,
+                              this.subResources, Number(this.courseInfo?.role ?? 1))),
+                            tagMargin: { right: 8 }
                           })
                         }
                       }
                     }
+                    .alignItems(HorizontalAlign.Start)
+                    .margin({ left: 12, right: 12, bottom: 12 })
                   }
-                  .alignItems(HorizontalAlign.Start)
-                  .margin({ left: 12, right: 12, bottom: 12 })
-                }
-              })
+                  .swipeAction({
+                    end: () => {
+                      this.BuildExtendEnd()
+                    }
+                  })
+                })
+              }
+              .width('100%')
             }
-            .width('100%')
+            .onRefreshing(() => {
+              this.queryCourseResources()
+              this.queryCurrentCourse()
+              setTimeout(() => {
+                this.isRefreshing = false
+              }, 500)
+            })
           }
           .flexGrow(1)
           .margin({ top: 8, bottom: 8 })
@@ -453,6 +610,24 @@ struct CourseDetailPage {
             .height(40)
             .backgroundColor(Color.White)
             .borderRadius(8)
+            .onClick(async () => {
+              const windowClass = await window.getLastWindow(getContext())
+              const uiContext = windowClass.getUIContext()
+              const params = new MenuParam()
+              params.hide = () => {
+                if (promptAction && customDialog) {
+                  promptAction.closeCustomDialog(customDialog)
+                  customDialog.dispose()
+                }
+              }
+              params.addResource = (type: number, name: string) => {
+                this.createCourseResource(type, name)
+                params.hide()
+              }
+              const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildAddResourceMenu), params)
+              const promptAction = uiContext.getPromptAction()
+              promptAction.openCustomDialog(customDialog, { autoCancel: false })
+            })
           }
           if ((this.courseInfo?.role ?? 1) !== 1 && this.currentCourse?.status !== 1) {
             Button({ type: ButtonType.Normal }) {
@@ -492,6 +667,10 @@ export function CourseDetailPageBuilder() {
 
 class MenuParam {
   currentTeam: Record<string, string | number | boolean> = {}
+  subResources: Record<string, string | number | boolean> [] = []
+  resource: Record<string, string | number | boolean> = {}
+  addResource: (type: number, name: string) => void = () => {
+  }
   hide: () => void = () => {
   }
 }
@@ -499,13 +678,9 @@ class MenuParam {
 @Builder
 function BuildResourceVisibleMenu(params: MenuParam) {
   Column() {
-    Text('全部设为可见')
-      .padding({
-        left: 24,
-        right: 24,
-        top: 12,
-        bottom: 12
-      })
+    Button('全部设为可见', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor(Color.Black)
       .onClick(() => {
         params.hide()
         CustomAlertDialog({
@@ -529,13 +704,9 @@ function BuildResourceVisibleMenu(params: MenuParam) {
           }
         })
       })
-    Text('全部设为不可见')
-      .padding({
-        left: 24,
-        right: 24,
-        top: 12,
-        bottom: 12
-      })
+    Button('全部设为不可见', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor(Color.Black)
       .onClick(() => {
         params.hide()
         CustomAlertDialog({
@@ -612,6 +783,227 @@ function BuildResourceVisibleMenu(params: MenuParam) {
         }
       })
     }
+  }
+  .margin(48)
+  .backgroundColor(Color.White)
+  .borderRadius(8)
+}
+
+@Builder
+function BuildAddResourceMenu(params: MenuParam) {
+  Column() {
+    Button('文件夹', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+      .onClick(() => params.addResource(1, '新建文件夹'))
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('笔记', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+      .onClick(() => params.addResource(2, '新建笔记'))
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('导图', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+      .onClick(() => params.addResource(3, '新建导图'))
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('作业/测练', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+      .onClick(() => params.addResource(7, '作业/测练'))
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('讨论', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('教学设计', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('本地资源', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#40A9FF')
+    Divider()
+      .color('#33999999')
+      .strokeWidth(1)
+    Button('取消', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#999999')
+      .onClick(() => params.hide())
+  }
+  .margin(48)
+  .backgroundColor(Color.White)
+  .borderRadius(8)
+}
+
+@Builder
+function BuildOperResourceMenu(params: MenuParam) {
+  Column() {
+    if (params.resource.type !== 1) {
+      Button('查看学习时长', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#FCBB34')
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+    }
+    if (params.currentTeam?.role ?? 1 !== 1) {
+      Button(!!_.trim(params.resource.tag as string) ? '编辑活动标签' : '设置活动标签',
+        { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#40A9FF')
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+
+      if (params.resource.type !== 1) {
+        if (params.resource.type !== 11) {
+          Button(params.resource.published === 1 ? '修改发布' : '发布任务',
+            { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+            .width('100%')
+            .fontColor('#40A9FF')
+          Divider()
+            .color('#33999999')
+            .strokeWidth(1)
+        }
+      }
+      if (params.resource.type === 7) {
+        Button('编辑作业/测练',
+          { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .width('100%')
+          .fontColor('#40A9FF')
+        Divider()
+          .color('#33999999')
+          .strokeWidth(1)
+      }
+      if (params.resource.type === 1) {
+        Button(getFolderPublicStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+          '取消学生可见' : '设置学生可见',
+          { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .width('100%')
+          .fontColor('#40A9FF')
+        Divider()
+          .color('#33999999')
+          .strokeWidth(1)
+      } else {
+        if (params.resource.type !== 7) {
+          Button(params.resource.public === 2 ? '取消学生可见' : '设置学生可见',
+            { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+            .width('100%')
+            .fontColor('#40A9FF')
+          Divider()
+            .color('#33999999')
+            .strokeWidth(1)
+        }
+      }
+      if (params.resource.type === 1) {
+        Button(getFolderDownloadStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+          '取消学生可下载' : '允许学生可下载',
+          { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .width('100%')
+          .fontColor('#40A9FF')
+        Divider()
+          .color('#33999999')
+          .strokeWidth(1)
+      } else {
+        if (params.resource.type === 6 || params.resource.type === 9) {
+          Button(params.resource.download === 2 ? '取消学生可下载' : '允许学生可下载',
+            { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+            .width('100%')
+            .fontColor('#40A9FF')
+          Divider()
+            .color('#33999999')
+            .strokeWidth(1)
+        }
+      }
+      Button('重命名',
+        { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#40A9FF')
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+      if (params.resource.type !== 1 && params.resource.type !== 8) {
+        Button('文档复制',
+          { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .width('100%')
+          .fontColor('#40A9FF')
+        Divider()
+          .color('#33999999')
+          .strokeWidth(1)
+      }
+      Button('移动到',
+        { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#40A9FF')
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+      if (params.resource.type !== 1) {
+        Button('资源二维码',
+          { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .width('100%')
+          .fontColor('#40A9FF')
+        Divider()
+          .color('#33999999')
+          .strokeWidth(1)
+      }
+      Button('关联知识点',
+        { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#40A9FF')
+        .onClick(() => {
+          CustomToast.toast_info('移动端暂未开放关联知识点功能，请去web端查看。')
+          params.hide()
+        })
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+
+      if (params.resource.type !== 1) {
+        Button('查看学生问题',
+          { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .width('100%')
+          .fontColor('#40A9FF')
+        Divider()
+          .color('#33999999')
+          .strokeWidth(1)
+      }
+      Button('删除',
+        { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#FF4040')
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+    } else {
+      Button('我要提问',
+        { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+        .width('100%')
+        .fontColor('#40A9FF')
+      Divider()
+        .color('#33999999')
+        .strokeWidth(1)
+    }
+    Button('取消',
+      { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+      .width('100%')
+      .fontColor('#999999')
+      .onClick(() => {
+        params.hide()
+      })
   }
   .margin(48)
   .backgroundColor(Color.White)

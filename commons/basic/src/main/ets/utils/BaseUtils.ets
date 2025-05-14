@@ -793,100 +793,100 @@ export const navigateToResourceDetails =
 /**
  * 根据文件类型获取图标
  */
-export const getIconByFileType = (item: Record<string, number>) => {
-  if (item.type === 1) {
+export const getIconByFileType = (type: number, filename: string, mimetype: string) => {
+  if (type === 1) {
     return {
       'iconCode': IconConstants.FOLDER,
       'iconColor': '#666666',
       'iconSize': 18
     } as Record<string, string | number>
-  } else if (item.type === 2) {
+  } else if (type === 2) {
     return {
       'iconCode': IconConstants.NOTE,
       'iconColor': '#CCC597',
       'iconSize': 20
     } as Record<string, string | number>
-  } else if (item.type === 3) {
+  } else if (type === 3) {
     return {
       'iconCode': IconConstants.MIND,
       'iconColor': '#C59A77',
       'iconSize': 20
     } as Record<string, string | number>
-  } else if (item.type === 6) {
-    if (isVideoFile(String(item.filename), String(item.mimetype))) {
+  } else if (type === 6) {
+    if (isVideoFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.VIDEO,
         'iconColor': '#84CBDC',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isAudioFile(String(item.filename), String(item.mimetype))) {
+    } else if (isAudioFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.AUDIO,
         'iconColor': '#F19292',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isImageFile(String(item.filename), String(item.mimetype))) {
+    } else if (isImageFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.IMAGE,
         'iconColor': '#E4B34D',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isTxtFile(String(item.filename), String(item.mimetype))) {
+    } else if (isTxtFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.TXT,
         'iconColor': '#9B97BA',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isPdfFile(String(item.filename), String(item.mimetype))) {
+    } else if (isPdfFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.PDF,
         'iconColor': '#C54442',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isDocFile(String(item.filename), String(item.mimetype))) {
+    } else if (isDocFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.DOC,
         'iconColor': '#7392AF',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isXlsFile(String(item.filename), String(item.mimetype))) {
+    } else if (isXlsFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.XLSX,
         'iconColor': '#86A77C',
         'iconSize': 20
       } as Record<string, string | number>
-    } else if (isPptFile(String(item.filename), String(item.mimetype))) {
+    } else if (isPptFile(filename, mimetype)) {
       return {
         'iconCode': IconConstants.PPT,
         'iconColor': '#C56464',
         'iconSize': 20
       } as Record<string, string | number>
     }
-  } else if (item.type === 7) {
+  } else if (type === 7) {
     return {
       'iconCode': IconConstants.QUESTION,
       'iconColor': '#A4D9CC',
       'iconSize': 20
     } as Record<string, string | number>
-  } else if (item.type === 8) {
+  } else if (type === 8) {
     return {
       'iconCode': IconConstants.DISCUSS,
       'iconColor': '#99B6E2',
       'iconSize': 20
     } as Record<string, string | number>
-  } else if (item.type === 9) {
+  } else if (type === 9) {
     return {
       'iconCode': IconConstants.VIDEO,
       'iconColor': '#84CBDC',
       'iconSize': 20
     } as Record<string, string | number>
-  } else if (item.type === 10) {
+  } else if (type === 10) {
     return {
       'iconCode': IconConstants.AUDIO,
       'iconColor': '#F19292',
       'iconSize': 20
     } as Record<string, string | number>
-  } else if (item.type === 11) {
+  } else if (type === 11) {
     return {
       'iconCode': IconConstants.TEACH_DESIGN,
       'iconColor': '#E4826D',
@@ -927,4 +927,143 @@ export const getCourseInfo = (item: Record<string, string>) => {
     content.push('教务开课')
   }
   return content.join(' | ')
+}
+
+export const getAllSubResources =
+  (item: Record<string, string | number>, resources: Array<object>, nodes: Record<string, number>[]) => {
+    const resource = _.filter(resources, { parent_id: item.id }) as Record<string, number> []
+    if (resource) {
+      _.filter(resource, res => {
+        if (res.type === 1) {
+          getAllSubResources(res, resources, nodes)
+        } else {
+          nodes.push(res)
+        }
+      })
+    }
+  }
+
+export const getFolderDownloadStatus = (item: Record<string, string | number>, resources: Array<object>) => {
+  let subRes: Record<string, number>[] = []
+  getAllSubResources(item, resources, subRes)
+  if (_.isEmpty(subRes)) {
+    return 0
+  }
+  subRes = _.filter(subRes, res => res.type === 6 || res.type === 9)
+  const _download = _.filter(subRes, res => res.download === 2)
+  if (_.isEmpty(_download)) {
+    return 1
+  }
+  // 0文件夹为空 1文件夹不可下载 2文件夹部分可下载 3文件夹可下载
+  return _download.length === subRes.length ? 3 : 2
+}
+
+export const getFolderPublicStatus = (item: Record<string, string | number>, resources: Array<object>) => {
+  let subRes: Record<string, number>[] = []
+  getAllSubResources(item, resources, subRes)
+  if (_.isEmpty(subRes)) {
+    return 0
+  }
+  subRes = _.filter(subRes, res => res.type !== 7)
+
+  const _public = _.filter(subRes, res => res.public === 2)
+  if (_.isEmpty(_public)) {
+    return 1
+  }
+  // 0文件夹为空 1文件夹不可见 2文件夹部分可见 3文件夹可见
+  return _public.length === subRes.length ? 3 : 2
+}
+
+export const getFolderDownloadStatusText =
+  (type: number, item: Record<string, string | number>, resources: Array<object>, loginRole: number) => {
+    if (type === 1) {
+      if (loginRole !== 1) {
+        const status = getFolderDownloadStatus(item, resources)
+        if (status === 2) {
+          return '部分可下载'
+        }
+        if (status === 3) {
+          return '可下载'
+        }
+      }
+    } else if (type === 6 || type === 9) {
+      if (item.download === 2) {
+        return '可下载'
+      }
+    }
+    return ''
+  }
+
+export const getFolderPublicStatusText =
+  (type: number, item: Record<string, string | number>, resources: Array<object>, loginRole: number) => {
+    if (type === 1) {
+      if (loginRole !== 1) {
+        const status = getFolderPublicStatus(item, resources)
+        if (status === 2) {
+          return '部分可见'
+        }
+        if (status === 3) {
+          return '可见'
+        }
+      }
+    } else if (type !== 7) {
+      if (item.public === 2) {
+        return '可见'
+      }
+    }
+
+    return ''
+  }
+
+export const getResourceStatus = (item: Record<string, string | number>, resources: Array<object>) => {
+  // status 0:灰色勾勾 1:绿色勾勾 2:空心圆圈
+  // 老师
+  // 灰色勾勾：资源：未讲授；文件夹：文件夹中的资源未全部讲授；
+  // 绿色勾勾：资源：已讲授；文件夹：文件夹中的资源未全部讲授
+  // 空心圆圈：文件夹中无资源
+
+  let status = 0
+  let isPublished = false
+
+  let subRes = []
+  if (item.type === 1) {
+    getAllSubResources(item, resources, subRes)
+  }
+  if (item._formatKey !== 'student') {
+    // 老师
+    if (item.type === 1) {
+      if (subRes.length === 0) {
+        status = 2
+      } else {
+        status =
+          subRes.length ===
+          _.filter(subRes, (res: Record<string, number>) => res.finish_teaching === 1).length ? 1 : 0
+      }
+      isPublished =
+        subRes.length === _.filter(subRes, (res: Record<string, number>) => res.published === 1).length &&
+          subRes.length !== 0
+    } else {
+      status = item.finish_teaching === 1 ? 1 : 0
+    }
+  }
+  return { 'status': status, 'isPublished': isPublished } as Record<string, number | boolean>
+}
+
+export const regularFilename = (orgName: string, currentFiles: Record<string, string>[]) => {
+  const filenames = _.values(currentFiles).map(f => f.name)
+  const parts = orgName.split('.')
+  let filename = orgName
+  let index = 1
+  while (filenames.indexOf(filename) >= 0) {
+    if (parts.length > 1) {
+      filename = `${_.dropRight(parts).join('.')}(${index}).${_.last(parts)}`
+    } else if (parts.length === 1) {
+      filename = `${_.last(parts)}(${index})`
+    } else {
+      return orgName
+    }
+
+    index += 1
+  }
+  return filename
 }
