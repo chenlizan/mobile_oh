@@ -20,8 +20,10 @@ import {
   IconConstants,
   judgeGroupIsEnd,
   judgeRoleHasCourseOperationWeight,
+  navigateToResourceDetails,
   PreferenceStorage,
   regularFilename,
+  UploadResources,
   UserInfoModel,
   xyApiGet,
   xyApiPost
@@ -101,19 +103,18 @@ struct CourseDetailPage {
     if (!canOperation && !_.isEmpty(this.courseInfo) && judgeGroupIsEnd(this.courseInfo as Record<string, string>)) {
       return
     }
-    const body: Record<string, string | number | Record<string, string>> = {
-      'group_id': String(this.courseInfo.id),
-      'parent_id': String(this.rootSource.id),
-      'name': regularFilename(name, this.rootResources as Record<string, string>[]),
-      'type': type,
-    }
+    const body: Record<string, string | number | Record<string, string | number | boolean | Array<Record<string, string>>>> =
+      {
+        'group_id': String(this.courseInfo.id),
+        'parent_id': String(this.rootSource.id),
+        'name': regularFilename(name, this.rootResources as Record<string, string>[]),
+        'type': type
+      }
     const addResource = async () => {
       const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.addResource, body)
       if (response.success) {
         this.queryCourseResources()
-        if (type === 8) {
-
-        } else if (type === 7) {
+        if (type === 7) {
           CustomToast.toast_success('资源创建成功')
         } else {
           CustomToast.toast_success(
@@ -144,6 +145,31 @@ struct CourseDetailPage {
           }
         })
         break
+      case 6:
+        UploadResources((file) => {
+          body.name = file.filename as string
+          body.resource = {
+            'files': [{
+              'id': file.id,
+              'filename': file.filename,
+              'mimetype': file.mimetype
+            } as Record<string, string>]
+          }
+          addResource()
+        })
+        break
+      case 8:
+        this.pageInfos.pushPath({
+          name: 'createDiscuss', param: JSON.stringify({
+            isSubGroup: false,
+            group_id: String(this.courseInfo.id),
+            parent_id: String(this.rootSource.id),
+            courseInfo: this.courseInfo
+          }), onPop: () => {
+            this.queryCourseResources()
+          }
+        })
+        break
       case 11:
         CustomAlertDialog({
           title: '提示',
@@ -159,6 +185,10 @@ struct CourseDetailPage {
       default:
         addResource()
     }
+  }
+
+  async operateCourseResource(name: string, item: Record<string, string | number | boolean>) {
+
   }
 
   getCourseFuncItems(role: number) {
@@ -367,6 +397,7 @@ struct CourseDetailPage {
                     .fontColor(Color.White)
                   AppIcon({
                     iconCode: IconConstants.RIGHT,
+                    iconColor: Color.White,
                     iconSize: 14
                   })
                 }
@@ -517,6 +548,9 @@ struct CourseDetailPage {
                             params.currentTeam = this.courseInfo
                             params.resource = item
                             params.subResources = this.subResources
+                            params.operResource = (name: string) => {
+                              this.operateCourseResource(name, item)
+                            }
                             const customDialog =
                               new ComponentContent(uiContext, wrapBuilder(BuildOperResourceMenu), params)
                             const promptAction = uiContext.getPromptAction()
@@ -531,13 +565,20 @@ struct CourseDetailPage {
                       Row() {
                         if (item._taskTypeText && item.published === 1) {
                           if ((this.courseInfo?.role ?? 1) === 1) {
-                            CustomTag({ text: String(item._taskTypeText), tagMargin: { right: 8 } })
+                            CustomTag({
+                              text: String(item._taskTypeText), tagMargin: { right: 8 }, onClickBtn: () => {
+                                this.pageInfos.pushPath({ name: 'taskDetails' })
+                              }
+                            })
                           } else {
                             CustomTag({
                               text: String(item._taskTypeText),
                               tagBorderColor: '#40A9FF',
                               fontColor: '#40A9FF',
-                              tagMargin: { right: 8 }
+                              tagMargin: { right: 8 },
+                              onClickBtn: () => {
+                                this.pageInfos.pushPath({ name: 'taskDetails' })
+                              }
                             })
                           }
                         }
@@ -566,6 +607,10 @@ struct CourseDetailPage {
                     .alignItems(HorizontalAlign.Start)
                     .margin({ left: 12, right: 12, bottom: 12 })
                   }
+                  .onClick(() => {
+                    navigateToResourceDetails(item as Record<string, string | number>,
+                      Number(this.courseInfo?.role ?? 1))
+                  })
                   .swipeAction({
                     end: () => {
                       this.BuildExtendEnd()
@@ -670,6 +715,8 @@ class MenuParam {
   subResources: Record<string, string | number | boolean> [] = []
   resource: Record<string, string | number | boolean> = {}
   addResource: (type: number, name: string) => void = () => {
+  }
+  operResource: (name: string) => void = () => {
   }
   hide: () => void = () => {
   }
@@ -823,18 +870,21 @@ function BuildAddResourceMenu(params: MenuParam) {
     Button('讨论', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
       .width('100%')
       .fontColor('#40A9FF')
+      .onClick(() => params.addResource(8, '讨论'))
     Divider()
       .color('#33999999')
       .strokeWidth(1)
     Button('教学设计', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
       .width('100%')
       .fontColor('#40A9FF')
+      .onClick(() => params.addResource(11, '教学设计'))
     Divider()
       .color('#33999999')
       .strokeWidth(1)
     Button('本地资源', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
       .width('100%')
       .fontColor('#40A9FF')
+      .onClick(() => params.addResource(6, '本地资源'))
     Divider()
       .color('#33999999')
       .strokeWidth(1)
@@ -855,6 +905,7 @@ function BuildOperResourceMenu(params: MenuParam) {
       Button('查看学习时长', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#FCBB34')
+        .onClick(() => params.operResource('查看学习时长'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -864,6 +915,7 @@ function BuildOperResourceMenu(params: MenuParam) {
         { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#40A9FF')
+        .onClick(() => params.operResource(!!_.trim(params.resource.tag as string) ? '编辑活动标签' : '设置活动标签'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -874,6 +926,7 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
+            .onClick(() => params.operResource(params.resource.published === 1 ? '修改发布' : '发布任务'))
           Divider()
             .color('#33999999')
             .strokeWidth(1)
@@ -884,6 +937,7 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
+          .onClick(() => params.operResource('编辑作业/测练'))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -894,6 +948,8 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
+          .onClick(() => params.operResource(getFolderPublicStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+            '取消学生可见' : '设置学生可见'))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -903,6 +959,7 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
+            .onClick(() => params.operResource(params.resource.public === 2 ? '取消学生可见' : '设置学生可见'))
           Divider()
             .color('#33999999')
             .strokeWidth(1)
@@ -914,6 +971,8 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
+          .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+            '取消学生可下载' : '允许学生可下载'))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -923,6 +982,8 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
+            .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+              '取消学生可下载' : '允许学生可下载'))
           Divider()
             .color('#33999999')
             .strokeWidth(1)
@@ -932,6 +993,7 @@ function BuildOperResourceMenu(params: MenuParam) {
         { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#40A9FF')
+        .onClick(() => params.operResource('重命名'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -940,6 +1002,7 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
+          .onClick(() => params.operResource('文档复制'))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -948,6 +1011,7 @@ function BuildOperResourceMenu(params: MenuParam) {
         { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#40A9FF')
+        .onClick(() => params.operResource('移动到'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -956,6 +1020,7 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
+          .onClick(() => params.operResource('资源二维码'))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -977,6 +1042,7 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
+          .onClick(() => params.operResource('查看学生问题'))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -985,6 +1051,7 @@ function BuildOperResourceMenu(params: MenuParam) {
         { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#FF4040')
+        .onClick(() => params.operResource('删除'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -993,6 +1060,7 @@ function BuildOperResourceMenu(params: MenuParam) {
         { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#40A9FF')
+        .onClick(() => params.operResource('我要提问'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
