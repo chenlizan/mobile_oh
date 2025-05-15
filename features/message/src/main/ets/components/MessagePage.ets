@@ -218,7 +218,7 @@ export struct MessagePage {
             itemMargin: { top: 8 },
             itemBorder: '',
             onClickBtn: () => {
-              // this.pageInfos.pushPath({ name: 'messagePerson' })
+              this.pageInfos.pushPath({ name: 'messagePerson' })
             }
           })
           CustomListItem({
@@ -232,7 +232,7 @@ export struct MessagePage {
             itemMargin: { top: 8 },
             itemBorder: '',
             onClickBtn: () => {
-              // this.pageInfos.pushPath({ name: 'messageSystem' })
+              this.pageInfos.pushPath({ name: 'messageSystem' })
             }
           })
         }

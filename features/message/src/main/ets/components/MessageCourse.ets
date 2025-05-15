@@ -600,7 +600,6 @@ struct MessageCourse {
                                 .fontColor('#40A9FF')
                                 .fontSize(13)
                                 .fontWeight(400)
-                                .maxLines(1)
                               AppIcon({
                                 iconCode: IconConstants.NEXT_ACTIVITY,
                                 iconColor: '#40A9FF',

@@ -15,6 +15,30 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "messagePerson",
+      "pageSourceFile": "src/main/ets/components/MessagePerson.ets",
+      "buildFunction": "MessagePersonBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "messageSystem",
+      "pageSourceFile": "src/main/ets/components/MessageSystem.ets",
+      "buildFunction": "MessageSystemBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "messageSystemDetail",
+      "pageSourceFile": "src/main/ets/components/MessageSystemDetail.ets",
+      "buildFunction": "MessageSystemDetailBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }
