@@ -1,3 +1,5 @@
+import { Api_Context } from "../config/Context";
+
 export const getMemberRole = (role: number) => {
   switch (role) {
     case 1:
@@ -19,4 +21,23 @@ export const getMemberRole = (role: number) => {
     default:
       return '';
   }
+};
+
+export const getAvatarSource = (avatar: string) => {
+  let source: Record<string, string | number> = {};
+  if (avatar) {
+    if (avatar.indexOf('cloud/file_access') !== -1) {
+      if (avatar.indexOf('/cloud/file_access') === 0) {
+        let icon_url =
+          AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('baseApi_out') + avatar.slice(1);
+        source = {"uri": icon_url};
+      } else if (avatar.indexOf('cloud/file_access') === 0) {
+        let icon_url = AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('baseApi_out') + avatar;
+        source = {"uri": icon_url};
+      }
+    } else {
+      source = {"uri": avatar};
+    }
+  }
+  return source;
 };
