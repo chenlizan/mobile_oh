@@ -282,10 +282,26 @@ struct MessageSystem {
       if (!_.isEmpty(group)) {
         if (group?.spType == 1 || group?.sp_type == 1) {
           // sp
+          this.pageInfos.pushPath({
+            name: 'courseSpecialReviewDetail', param: JSON.stringify({
+              item: group,
+              groupSpaceType: 'teach',
+            })
+          });
         } else {
           if (group.course_property === '2') {
             // mooc
+            this.pageInfos.pushPath({
+              name: 'courseMoocDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           } else {
+            this.pageInfos.pushPath({
+              name: 'courseDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           }
         }
       }

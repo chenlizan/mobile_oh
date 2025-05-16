@@ -27,6 +27,7 @@ import dayjs from "dayjs"
 struct MessageTodo {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @State isRefreshing: boolean = false
   @State isLoading: boolean = false
   @State screenWidth: number = 0
@@ -244,10 +245,26 @@ struct MessageTodo {
       if (!_.isEmpty(group)) {
         if (group?.spType == 1 || group?.sp_type == 1) {
           // sp
+          this.pageInfos.pushPath({
+            name: 'courseSpecialReviewDetail', param: JSON.stringify({
+              item: group,
+              groupSpaceType: 'teach',
+            })
+          });
         } else {
           if (group.course_property === '2') {
             // mooc
+            this.pageInfos.pushPath({
+              name: 'courseMoocDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           } else {
+            this.pageInfos.pushPath({
+              name: 'courseDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           }
         }
       }
@@ -259,7 +276,13 @@ struct MessageTodo {
 
     if (response.success) {
       const group = response.data as Record<string, string | number>
-      // courseMemberAdd
+      this.pageInfos.pushPath({
+        name: 'courseMemberAdd', param: JSON.stringify({
+          group: group,
+          fromMessage: true,
+          is_all: true,
+        })
+      });
     }
   }
   onAcceptPress = async (item: Record<string, string | number | boolean>, verify: number) => {
@@ -286,13 +309,6 @@ struct MessageTodo {
       } else {
         // 判断身份，学生需要选择班级，教师无需
         if (item.be_join_role === 1) {
-          // this.assign_modal.show({
-          //             title: t('message:sub_page.MessageTodoPage.onAcceptPress.title'),
-          //             group_id: item.group_id,
-          //             showNameInput: true,
-          //             data: item,
-          //             name: userInfo.realname,
-          //           });
         } else {
           this.onSelectClass(item, verify, '');
         }
@@ -501,6 +517,9 @@ struct MessageTodo {
                   .borderWidth({ bottom: 1 })
                   .borderColor({ bottom: '#ebebeb' })
                 }
+                .onClick(() => {
+                  this.pageInfos.pushPath({ name: 'messageTodoDetail', param: JSON.stringify(item) })
+                })
               })
             }
             .flexGrow(1)

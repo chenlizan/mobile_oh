@@ -27,6 +27,7 @@ import dayjs from "dayjs"
 struct MessageCourse {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('messageCount') messageCount: MessageCountModel = new MessageCountModel()
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @State isRefreshing: boolean = false
   @State isLoading: boolean = false
   @State screenWidth: number = 0
@@ -120,7 +121,9 @@ struct MessageCourse {
     const response = await xyApiGet(this.Api_Context.getApiPrefix("baseApi_inner") + HomeApi.queryJoinedGroups)
     if (response.success) {
       _.forEach(response.data, (item: Record<string, string>) => {
-        filterList.push({ 'title': item.name, 'value': item.id })
+        if (dayjs().isAfter(dayjs(item.start_time)) && dayjs().isBefore(dayjs(item.end_time))) {
+          filterList.push({ 'title': item.name, 'value': item.id })
+        }
       })
       filterList.unshift({
         'title': '全部课程',
@@ -417,10 +420,26 @@ struct MessageCourse {
       if (!_.isEmpty(group)) {
         if (group?.spType == 1 || group?.sp_type == 1) {
           // sp
+          this.pageInfos.pushPath({
+            name: 'courseSpecialReviewDetail', param: JSON.stringify({
+              item: group,
+              groupSpaceType: 'teach',
+            })
+          });
         } else {
           if (group.course_property === '2') {
             // mooc
+            this.pageInfos.pushPath({
+              name: 'courseMoocDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           } else {
+            this.pageInfos.pushPath({
+              name: 'courseDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           }
         }
       }
@@ -623,6 +642,9 @@ struct MessageCourse {
                     .borderWidth({ bottom: 1 })
                     .borderColor({ bottom: '#ebebeb' })
                   }
+                  .onClick(() => {
+                    this.pageInfos.pushPath({ name: 'messageCourseDetail', param: JSON.stringify(item) })
+                  })
                 })
               }
               .flexGrow(1)

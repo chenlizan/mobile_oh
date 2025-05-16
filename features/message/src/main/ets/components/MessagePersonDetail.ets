@@ -18,7 +18,7 @@ import {
 import dayjs from "dayjs"
 
 @Component
-struct MessageSystemDetail {
+struct MessagePersonDetail {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
@@ -31,7 +31,7 @@ struct MessageSystemDetail {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
     this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
 
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('messageSystemDetail')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('messagePersonDetail')[0]))
     if (this.param.status === 0) {
       this.onUpdateMsgStatus(this.param.id as string, 1)
     }
@@ -157,12 +157,12 @@ struct MessageSystemDetail {
       .flexGrow(1)
       .backgroundColor(Color.White)
     }
-    .title(CustomNavTitle('系统消息详情', () => this.BuildNavRightBtn()))
+    .title(CustomNavTitle('个人消息详情', () => this.BuildNavRightBtn()))
     .backgroundColor("#f1f1f1")
   }
 }
 
 @Builder
-export function MessageSystemDetailBuilder() {
-  MessageSystemDetail()
+export function MessagePersonDetailBuilder() {
+  MessagePersonDetail()
 }

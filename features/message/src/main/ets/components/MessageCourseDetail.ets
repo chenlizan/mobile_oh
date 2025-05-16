@@ -14,11 +14,12 @@ import {
   xyApiPut,
   xyApiDelete,
   UserInfoModel,
+  MessageContentType,
 } from "@xy/basic"
 import dayjs from "dayjs"
 
 @Component
-struct MessageSystemDetail {
+struct MessageCourseDetail {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
@@ -31,7 +32,7 @@ struct MessageSystemDetail {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
     this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
 
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('messageSystemDetail')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('messageCourseDetail')[0]))
     if (this.param.status === 0) {
       this.onUpdateMsgStatus(this.param.id as string, 1)
     }
@@ -71,17 +72,27 @@ struct MessageSystemDetail {
       }
     }
   }
+  onEnterAppraise = () => {
+    this.pageInfos.pushPath({
+      name: 'courseStudentAppraise', param: JSON.stringify({
+        group_id: this.param.group_id,
+        fromMessage: true,
+        activity_id: this.param.activity_id,
+      })
+    });
+  };
   onDeleteMsg = () => {
     CustomAlertDialog({
       title: '提示',
       message: '是否删除此消息？',
       onClickBtn: () => {
-        xyApiDelete(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.delMessage + this.param.id).then(response => {
-          if (response.success) {
-            CustomToast.toast_success("删除成功");
-            this.pageInfos.pop()
-          }
-        })
+        xyApiDelete(this.Api_Context.getApiPrefix("baseApi_inner") + MessageApi.delMessage + this.param.id)
+          .then(response => {
+            if (response.success) {
+              CustomToast.toast_success("删除成功");
+              this.pageInfos.pop()
+            }
+          })
       }
     } as AlertDialogParam)
   }
@@ -112,13 +123,13 @@ struct MessageSystemDetail {
 
   build() {
     NavDestination() {
-      Flex({direction: FlexDirection.Column, alignItems: ItemAlign.Center}) {
+      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center }) {
         Text(dayjs(this.param?.createAt).format('YYYY-MM-DD HH:mm:ss'))
           .fontSize(13)
           .fontColor('#A9AFB8')
           .backgroundColor('#F1F1F1')
 
-        Column(){
+        Column() {
           if (this.param?.link_group) {
             Text(this.param?.title as string)
               .fontColor('#40A9FF')
@@ -135,7 +146,7 @@ struct MessageSystemDetail {
             .fontColor('#999')
             .fontSize(13)
             .fontWeight(400)
-            .margin({top: 12})
+            .margin({ top: 12 })
         }
         .width('100%')
         .margin(12)
@@ -151,18 +162,26 @@ struct MessageSystemDetail {
             .fontWeight(400)
             .textAlign(TextAlign.Start)
         }
+        if (this.param.msgCode === MessageContentType.Publish_Evaluation_Activity) {
+          Button('前往评价活动', { type: ButtonType.Normal })
+            .fontSize(14)
+            .width('100%')
+            .fontColor(Color.White)
+            .backgroundColor('#40A9FF')
+            .onClick(this.onEnterAppraise)
+        }
       }
       .padding(12)
-      .margin({left:12,right:12})
+      .margin({ left: 12, right: 12 })
       .flexGrow(1)
       .backgroundColor(Color.White)
     }
-    .title(CustomNavTitle('系统消息详情', () => this.BuildNavRightBtn()))
+    .title(CustomNavTitle('课程消息详情', () => this.BuildNavRightBtn()))
     .backgroundColor("#f1f1f1")
   }
 }
 
 @Builder
-export function MessageSystemDetailBuilder() {
-  MessageSystemDetail()
+export function MessageCourseDetailBuilder() {
+  MessageCourseDetail()
 }
