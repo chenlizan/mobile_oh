@@ -28,6 +28,7 @@ import dayjs from "dayjs"
 struct MessageSystem {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @State isRefreshing: boolean = false
   @State isLoading: boolean = false
   @State screenWidth: number = 0
@@ -420,6 +421,9 @@ struct MessageSystem {
                     .borderWidth({ bottom: 1 })
                     .borderColor({ bottom: '#ebebeb' })
                   }
+                  .onClick(() => {
+                    this.pageInfos.pushPath({ name: 'messageSystemDetail', param: JSON.stringify(item) })
+                  })
                 })
               }
               .flexGrow(1)
