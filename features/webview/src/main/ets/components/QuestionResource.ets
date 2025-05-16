@@ -48,10 +48,10 @@ struct QuestionResource {
     const currentTeam = this.preferenceStorage.currentTeam
 
     let path = `#/paper_mobile/exam/info/student/course/${null}/${
-    item.paper_id
+    item.quote_id
     }/${item.id}/${item.group_id}`
     if (loginRole !== 1 || isSub || isDocument) {
-      path = `#/paper_mobile/exam/info/teacher/${null}/${item.paper_id}/${
+      path = `#/paper_mobile/exam/info/teacher/${null}/${item.quote_id}/${
       item.id
       }/${item.group_id}`
     }

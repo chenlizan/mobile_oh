@@ -239,7 +239,7 @@ export struct KnowledgeBar {
   async getResourceKnowledge() {
     const response = await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.getResourceKnowledge, {
       'group_id': this.item.group_id,
-      'activity_node_id': this.item.node_id,
+      'activity_node_id': this.item.id,
     })
     if (response.success) {
       const result = response?.data ?? []
@@ -252,7 +252,7 @@ export struct KnowledgeBar {
   async getResourceBindTag() {
     const response = await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.getResourceBindTag, {
       'group_id': this.item.group_id,
-      'activity_node_id': this.item.node_id,
+      'activity_node_id': this.item.id,
     })
     if (response.success) {
       const result = response?.data ?? []

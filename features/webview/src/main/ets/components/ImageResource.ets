@@ -136,8 +136,8 @@ struct ImageResource {
       Flex({ direction: FlexDirection.Column }) {
         Column() {
           Image(this.imageData)
-            .width(this.screenWidth / 2)
-            .height((this.screenWidth / 2) / this.imageWHRatio)
+            .width(this.screenWidth)
+            .height(this.screenWidth / this.imageWHRatio)
             .rotate({ angle: this.preAngle })
             .scale({ x: this.preScale, y: this.preScale })
         }

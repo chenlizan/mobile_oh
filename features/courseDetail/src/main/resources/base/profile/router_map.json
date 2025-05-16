@@ -7,6 +7,22 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "createDiscuss",
+      "pageSourceFile": "src/main/ets/components/CreateDiscuss.ets",
+      "buildFunction": "CreateDiscussBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "taskDetails",
+      "pageSourceFile": "src/main/ets/components/TaskDetails.ets",
+      "buildFunction": "TaskDetailsBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

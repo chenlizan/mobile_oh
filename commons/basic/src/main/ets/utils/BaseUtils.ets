@@ -1067,3 +1067,8 @@ export const regularFilename = (orgName: string, currentFiles: Record<string, st
   }
   return filename
 }
+
+export const verifyNameIsSpecial = (name: string) => {
+  const nameRegex = /[\\|/|:|*|?|"|<|>||]/;
+  return nameRegex.test(name);
+}

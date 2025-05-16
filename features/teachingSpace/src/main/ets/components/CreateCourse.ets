@@ -25,7 +25,7 @@ struct CreateCourse {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @StorageLink('UserInfo') userInfo: UserInfoModel = new UserInfoModel()
-  @State textAreaBorderColor: ResourceColor = '#999999'
+  @State textAreaBorderColor: ResourceColor = '#d9d9d9'
   @State schoolList: Record<string, string>[] = []
   @State courseDomainList: Record<string, string>[] = []
   @State courseTermList: Record<string, string>[] = []
@@ -286,7 +286,7 @@ struct CreateCourse {
                   this.textAreaBorderColor = '#40A9FF'
                 })
                 .onBlur(() => {
-                  this.textAreaBorderColor = '#999999'
+                  this.textAreaBorderColor = '#d9d9d9'
                 })
                 .onChange((value: string) => {
                   this.siteName = value
