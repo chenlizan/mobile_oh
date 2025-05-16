@@ -8,6 +8,7 @@ import {
   CustomAlertDialog,
   CustomTag,
   CustomToast,
+  getAllSubResources,
   getCourseInfo,
   getFolderDownloadStatus,
   getFolderDownloadStatusText,
@@ -120,8 +121,7 @@ struct CourseDetailPage {
           CustomToast.toast_success(
             `资源创建成功${
             this.courseInfo?.is_resource_auto_public ? '，已设置学生可见' : ''
-            }`,
-          )
+            }`)
         }
       }
     }
@@ -187,8 +187,105 @@ struct CourseDetailPage {
     }
   }
 
-  async operateCourseResource(name: string, item: Record<string, string | number | boolean>) {
+  async moveCourseResource(original_index: number, target_index: number,
+    item: Record<string, string | number | boolean>) {
+    const sort_content = _.map(
+      _.map(this.rootResources, (r, i) => {
+        r.sort_position = i
+        return r
+      }),
+      (node: Record<string, number>) => {
+        if (item.id === node.id) {
+          node.sort_position = target_index
+        } else {
+          if (target_index > original_index) {
+            // 下移
+            if (
+              node.sort_position > original_index &&
+                node.sort_position <= target_index
+            ) {
+              node.sort_position = node.sort_position - 1
+            }
+          } else {
+            // 上移
+            if (
+              node.sort_position < original_index &&
+                node.sort_position >= target_index
+            ) {
+              node.sort_position = node.sort_position + 1
+            }
+          }
+        }
+        return {
+          'node_id': node.id,
+          'sort_position': node.sort_position,
+        } as Record<string, string | number>
+      },
+    )
+    const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.sortResource, {
+      'group_id': String(this.courseInfo.id),
+      'sort_content': JSON.stringify(sort_content),
+    })
+    if (response.success) {
+      this.queryCourseResources()
+    }
+  }
 
+  async deleteCourseResource(item: Record<string, string | number | boolean>) {
+    const canDelete =
+      this.userInfo.id === item.creator || judgeRoleHasCourseOperationWeight(Number(this.courseInfo?.role ?? 1))
+    if (canDelete) {
+      CustomAlertDialog({
+        title: '提示',
+        message: `是否确定删除《${item.name}》？课程内的资源删除后无法找回，发布的任务会被取消，请谨慎操作`,
+        onClickBtn: async () => {
+          if (judgeGroupIsEnd(this.courseInfo as Record<string, string>)) {
+            return
+          }
+          const isFile = item.type === 1
+          if (isFile) {
+            let sub_nodes = []
+            getAllSubResources(item as Record<string, string | number>, this.subResources, sub_nodes)
+            if (_.filter(sub_nodes, (node: Record<string, number>) => node.published === 1).length > 0) {
+              CustomToast.toast_fail('文件夹中存在已发布的资源，需要撤销所有已发布的任务才能删除')
+              return
+            }
+          } else {
+            if (item.published === 1) {
+              const response =
+                await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.revokePublishRecord, {
+                  'group_id': item.group_id,
+                  'activity_node_ids': item.id,
+                })
+              if (!response.success) {
+                CustomToast.toast_fail('删除失败')
+                return
+              }
+            }
+          }
+          const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.delResource,
+            { 'node_id': item.id, 'group_id': item.group_id })
+          if (response.success) {
+            this.queryCourseResources()
+          }
+        }
+      })
+    } else {
+      CustomAlertDialog({
+        title: '提示',
+        message: '无法删除该资源，仅该资源的创建者或主讲教师才有权限删除'
+      })
+    }
+  }
+
+  async operateCourseResource(name: string, item: Record<string, string | number | boolean>) {
+    switch (name) {
+      case '删除':
+        this.deleteCourseResource(item)
+        break
+      default:
+        break
+    }
   }
 
   getCourseFuncItems(role: number) {
@@ -286,28 +383,42 @@ struct CourseDetailPage {
   }
 
   @Builder
-  BuildExtendEnd() {
+  BuildExtendEnd(length: number, index: number, item: Record<string, string | number | boolean>) {
     Row() {
       Button('移动到', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .height('100%')
         .backgroundColor('#41A9FF')
         .fontColor(Color.White)
         .fontSize(13)
-      Button('置顶', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
-        .height('100%')
-        .backgroundColor('#63BDFF')
-        .fontColor(Color.White)
-        .fontSize(13)
-      Button('上移', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
-        .height('100%')
-        .backgroundColor('#83D0FF')
-        .fontColor(Color.White)
-        .fontSize(13)
-      Button('下移', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
-        .height('100%')
-        .backgroundColor('#A5DFFF')
-        .fontColor(Color.White)
-        .fontSize(13)
+        .onClick(() => {
+          this.pageInfos.pushPath({
+            name: 'resourceMove', param: JSON.stringify(item), onPop: () => {
+              this.queryCourseResources()
+            }
+          })
+        })
+      if (index !== 0) {
+        Button('置顶', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .height('100%')
+          .backgroundColor('#63BDFF')
+          .fontColor(Color.White)
+          .fontSize(13)
+          .onClick(() => this.moveCourseResource(index, 0, item))
+        Button('上移', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .height('100%')
+          .backgroundColor('#83D0FF')
+          .fontColor(Color.White)
+          .fontSize(13)
+          .onClick(() => this.moveCourseResource(index, index - 1, item))
+      }
+      if (index !== (length - 1)) {
+        Button('下移', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
+          .height('100%')
+          .backgroundColor('#A5DFFF')
+          .fontColor(Color.White)
+          .fontSize(13)
+          .onClick(() => this.moveCourseResource(index, index + 1, item))
+      }
     }
     .height('100%')
   }
@@ -514,7 +625,7 @@ struct CourseDetailPage {
           Column() {
             Refresh({ refreshing: $$this.isRefreshing }) {
               List() {
-                ForEach(this.rootResources, (item: Record<string, string | number | boolean>) => {
+                ForEach(this.rootResources, (item: Record<string, string | number | boolean>, index: number) => {
                   ListItem() {
                     Column() {
                       if (item.tag) {
@@ -550,6 +661,7 @@ struct CourseDetailPage {
                             params.subResources = this.subResources
                             params.operResource = (name: string) => {
                               this.operateCourseResource(name, item)
+                              params.hide()
                             }
                             const customDialog =
                               new ComponentContent(uiContext, wrapBuilder(BuildOperResourceMenu), params)
@@ -567,7 +679,7 @@ struct CourseDetailPage {
                           if ((this.courseInfo?.role ?? 1) === 1) {
                             CustomTag({
                               text: String(item._taskTypeText), tagMargin: { right: 8 }, onClickBtn: () => {
-                                this.pageInfos.pushPath({ name: 'taskDetails' })
+                                // this.pageInfos.pushPath({ name: 'taskDetails' }) TODO
                               }
                             })
                           } else {
@@ -577,7 +689,7 @@ struct CourseDetailPage {
                               fontColor: '#40A9FF',
                               tagMargin: { right: 8 },
                               onClickBtn: () => {
-                                this.pageInfos.pushPath({ name: 'taskDetails' })
+                                // this.pageInfos.pushPath({ name: 'taskDetails' }) TODO
                               }
                             })
                           }
@@ -613,7 +725,7 @@ struct CourseDetailPage {
                   })
                   .swipeAction({
                     end: () => {
-                      this.BuildExtendEnd()
+                      this.BuildExtendEnd(this.rootResources.length, index, item)
                     }
                   })
                 })
@@ -948,7 +1060,8 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
-          .onClick(() => params.operResource(getFolderPublicStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+          .onClick(() => params.operResource(getFolderPublicStatus(params.resource as Record<string, string | number>,
+            params.subResources) === 3 ?
             '取消学生可见' : '设置学生可见'))
         Divider()
           .color('#33999999')
@@ -971,7 +1084,8 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
-          .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+          .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>,
+            params.subResources) === 3 ?
             '取消学生可下载' : '允许学生可下载'))
         Divider()
           .color('#33999999')
@@ -982,7 +1096,8 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
-            .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ?
+            .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>,
+              params.subResources) === 3 ?
               '取消学生可下载' : '允许学生可下载'))
           Divider()
             .color('#33999999')

@@ -22,6 +22,7 @@ struct TeachDesignResource {
   getUrlPath() {
     const item = this.param.item as Record<string, string>
     let path = `#/paper_mobile/teach_design/${item.quote_id}`
+    path += '?placeholder=1'
     return path
   }
 

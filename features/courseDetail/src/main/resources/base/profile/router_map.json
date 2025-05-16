@@ -23,6 +23,14 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "resourceMove",
+      "pageSourceFile": "src/main/ets/components/ResourceMove.ets",
+      "buildFunction": "ResourceMoveBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

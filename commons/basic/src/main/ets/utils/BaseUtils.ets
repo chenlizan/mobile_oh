@@ -670,6 +670,7 @@ export const navigateToResourceDetails =
           param: JSON.stringify({
             item,
             loginRole,
+            isCourse: true,
             isSub,
             showFinish
           })
