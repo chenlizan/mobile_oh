@@ -18,6 +18,7 @@ import {
   xyApiPost,
 } from "@xy/basic"
 import dayjs from "dayjs"
+import { AssignClassModal } from "./AssignClassModal"
 
 @Component
 struct MessageTodoDetail {
@@ -27,13 +28,15 @@ struct MessageTodoDetail {
   @State screenWidth: number = 0
   @State screenHeight: number = 0
   @State onlyUnread: boolean = true
+  @State visible: boolean = false
+  @State classList: Record<string, string | number>[] = []
   private param: Record<string, string | number> = {}
-
+  private verify: number = 0
   aboutToAppear(): void {
     this.screenWidth = px2vp(display.getDefaultDisplaySync().width)
     this.screenHeight = px2vp(display.getDefaultDisplaySync().height)
 
-    this.param = JSON.parse(String(this.pageInfos.getParamByName('messageCourseDetail')[0]))
+    this.param = JSON.parse(String(this.pageInfos.getParamByName('messageTodoDetail')[0]))
   }
 
   onEnterGroup = async (group_id: string) => {
@@ -95,6 +98,12 @@ struct MessageTodoDetail {
       } else {
         // 判断身份，学生需要选择班级，教师无需
         if (this.param.be_join_role === 1) {
+          xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.groupClassList + '/' + this.param.group_id)
+            .then((response) => {
+              this.classList = response.data as Record<string, string | number>[]
+              this.visible = true
+              this.verify = verify
+            })
         } else {
           this.onSelectClass(this.param, verify, '');
         }
@@ -154,6 +163,7 @@ struct MessageTodoDetail {
         CustomToast.toast_success('已拒绝该申请');
       }
     }
+    this.visible = false;
   };
   onEnterMemberAdd = async () => {
     // 进入课程成员处理页
@@ -258,22 +268,20 @@ struct MessageTodoDetail {
             this.param.msgCode === MessageContentType.Apply_Clone_Group ||
             this.param.msgCode === MessageContentType.Apply_Be_Friend ||
             this.param.msgCode === MessageContentType.Apply_Merge_Group) {
-            Text('同意')
-              .padding(8)
-              .fontSize(13)
+            Button('同意', { type: ButtonType.Normal })
+              .fontSize(14)
+              .width('100%')
+              .borderRadius(4)
               .fontColor(Color.White)
               .backgroundColor('#40A9FF')
-              .borderRadius(4)
-              .margin({ right: 4 })
               .onClick(() => this.onAcceptPress(1))
-            Text('拒绝')
-              .padding(8)
-              .fontSize(13)
-              .backgroundColor(Color.White)
-              .fontColor('#999999')
-              .borderColor('#F5F5F5')
-              .borderWidth(1)
+            Button('拒绝', { type: ButtonType.Normal })
+              .fontSize(14)
+              .width('100%')
               .borderRadius(4)
+              .margin({top: 8})
+              .fontColor('#999999')
+              .backgroundColor('#F5F5F5')
               .onClick(() => this.onAcceptPress(2))
           }
           if (this.param.msgCode === MessageContentType.Apply_Join_Group) {
@@ -290,6 +298,15 @@ struct MessageTodoDetail {
       .margin({ left: 12, right: 12 })
       .flexGrow(1)
       .backgroundColor(Color.White)
+
+      AssignClassModal({
+        visible: $visible,
+        classList: $classList,
+        name: this.userInfo.realname,
+        onSelect: (selectClass: Record<string, string | number>) => {
+          this.onSelectClass(this.param, this.verify, selectClass.id as string)
+        }
+      })
     }
     .title(CustomNavTitle('代办事项详情', () => this.BuildNavRightBtn()))
     .backgroundColor("#f1f1f1")
