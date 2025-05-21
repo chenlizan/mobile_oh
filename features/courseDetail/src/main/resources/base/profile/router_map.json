@@ -9,6 +9,14 @@
       }
     },
     {
+      "name": "courseFolder",
+      "pageSourceFile": "src/main/ets/components/CourseFolder.ets",
+      "buildFunction": "CourseFolderBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "createDiscuss",
       "pageSourceFile": "src/main/ets/components/CreateDiscuss.ets",
       "buildFunction": "CreateDiscussBuilder",

@@ -215,7 +215,6 @@ struct CourseDetailPage {
           node.sort_position = target_index
         } else {
           if (target_index > original_index) {
-            // 下移
             if (
               node.sort_position > original_index &&
                 node.sort_position <= target_index
@@ -223,7 +222,6 @@ struct CourseDetailPage {
               node.sort_position = node.sort_position - 1
             }
           } else {
-            // 上移
             if (
               node.sort_position < original_index &&
                 node.sort_position >= target_index
@@ -1052,8 +1050,16 @@ struct CourseDetailPage {
                     .margin({ left: 12, right: 12, bottom: 12 })
                   }
                   .onClick(() => {
-                    navigateToResourceDetails(item as Record<string, string | number>,
-                      Number(this.courseInfo?.role ?? 1))
+                    if (item.type === 1) {
+                      this.pageInfos.pushPath({
+                        name: 'courseFolder', param: JSON.stringify(item), onPop: () => {
+                          this.queryCourseResources()
+                        }
+                      })
+                    } else {
+                      navigateToResourceDetails(item as Record<string, string | number>,
+                        Number(this.courseInfo?.role ?? 1))
+                    }
                   })
                   .swipeAction({
                     end: () => {
@@ -1161,7 +1167,7 @@ export function CourseDetailPageBuilder() {
   CourseDetailPage()
 }
 
-class MenuParam {
+export class MenuParam {
   currentTeam: Record<string, string | number | boolean> = {}
   subResources: Record<string, string | number | boolean> [] = []
   resource: Record<string, string | number | boolean> = {}
@@ -1289,7 +1295,7 @@ function BuildResourceVisibleMenu(params: MenuParam) {
 }
 
 @Builder
-function BuildAddResourceMenu(params: MenuParam) {
+export function BuildAddResourceMenu(params: MenuParam) {
   Column() {
     Button('文件夹', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
       .width('100%')
@@ -1351,13 +1357,12 @@ function BuildAddResourceMenu(params: MenuParam) {
 }
 
 @Builder
-function BuildOperResourceMenu(params: MenuParam) {
+export function BuildOperResourceMenu(params: MenuParam) {
   Column() {
     if (params.resource.type !== 1) {
       Button('查看学习时长', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#FCBB34')
-      // .onClick(() => params.operResource('查看学习时长'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -1532,7 +1537,7 @@ function BuildOperResourceMenu(params: MenuParam) {
 }
 
 @Builder
-function BuildResourceLinkModal(params: MenuParam) {
+export function BuildResourceLinkModal(params: MenuParam) {
   Column() {
     Text('课程资源链接')
       .margin(12)
@@ -1585,7 +1590,7 @@ function BuildResourceLinkModal(params: MenuParam) {
 }
 
 @Builder
-function BuildRenameModal(params: MenuParam) {
+export function BuildRenameModal(params: MenuParam) {
   Column() {
     Row() {
       Text('重命名')
