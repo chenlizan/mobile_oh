@@ -5,7 +5,6 @@ import { IconConstants } from "../constants/IconConstants"
 export class AlertDialogParam {
   message: string = ''
   title: string = ''
-  dialogHeight?: Length = 0
   autoCancel?: boolean = false
   hideCloseBtn?: Visibility = Visibility.Visible
   hideDivider?: Visibility = Visibility.Visible
@@ -19,7 +18,7 @@ export class AlertDialogParam {
 
 @Builder
 function AlertDialogComponent(params: AlertDialogParam) {
-  Flex({ direction: FlexDirection.Column }) {
+  Column() {
     RelativeContainer() {
       Row() {
         Text(params.title)
@@ -122,7 +121,6 @@ function AlertDialogComponent(params: AlertDialogParam) {
     }
     .width('100%')
   }
-  .height(params.dialogHeight || 180)
   .margin(48)
   .borderRadius(8)
   .backgroundColor(Color.White)

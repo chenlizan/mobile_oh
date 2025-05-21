@@ -62,7 +62,6 @@ export struct SetDocumentPasswordModal {
 
   build() {
     CustomModalDialog({
-      dialogHeight: 180,
       visible: $visible,
       title: $title,
       contentBuilder: () => this.BuildModalContent(),

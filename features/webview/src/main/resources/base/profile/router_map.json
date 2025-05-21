@@ -9,6 +9,14 @@
       }
     },
     {
+      "name": "questionEditorResource",
+      "pageSourceFile": "src/main/ets/components/QuestionEditorResource.ets",
+      "buildFunction": "QuestionEditorResourceBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "discussResource",
       "pageSourceFile": "src/main/ets/components/DiscussResource.ets",
       "buildFunction": "DiscussResourceBuilder",

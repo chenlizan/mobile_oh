@@ -98,7 +98,6 @@ struct PaperKnowledgeModal {
     CustomModalDialog({
       visible: $visible,
       title: this.title,
-      dialogHeight: 300,
       contentBuilder: () => this.BuildModalContent(),
       footerBuilder: () => this.BuildModalFooter()
     })
@@ -192,7 +191,6 @@ struct KnowledgeModal {
     CustomModalDialog({
       visible: $visible,
       title: this.title,
-      dialogHeight: 300,
       contentBuilder: () => this.BuildModalContent(),
       footerBuilder: () => this.BuildModalFooter()
     })

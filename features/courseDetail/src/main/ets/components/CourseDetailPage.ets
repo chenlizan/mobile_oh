@@ -6,6 +6,7 @@ import {
   CCApi,
   ccApiPost,
   CustomAlertDialog,
+  CustomModalDialog,
   CustomTag,
   CustomToast,
   getAllSubResources,
@@ -26,9 +27,11 @@ import {
   regularFilename,
   UploadResources,
   UserInfoModel,
+  verifyNameIsSpecial,
   xyApiGet,
   xyApiPost
 } from "@xy/basic"
+import { pasteboard } from "@kit.BasicServicesKit"
 
 @Component
 struct CourseDetailPage {
@@ -43,6 +46,12 @@ struct CourseDetailPage {
   @State rootResources: Record<string, string | number | boolean> [] = []
   @State subResources: Record<string, string | number | boolean> [] = []
   @State currentCourse: Record<string, string | number | boolean> = {}
+  @State activityTags: Record<string, string>[] = []
+  @State tagTitle: string = '设置活动标签'
+  @State tagVisible: boolean = false
+  @State tagEdit: boolean = false
+  @State tagValue: string = ''
+  @State tagNodeId: string = ''
   private courseInfo = this.preferenceStorage.currentTeam ?? {}
   private funcItems: Record<string, string | Resource>[] = []
   private rootSource: Record<string, string | number | boolean> = {}
@@ -96,6 +105,13 @@ struct CourseDetailPage {
     })
     if (response.success) {
       this.currentCourse = response.data as Record<string, string | number | boolean>
+    }
+  }
+
+  async queryActivityTags() {
+    const response = await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.getActivityTags)
+    if (response.success) {
+      this.activityTags = response.data as Record<string, string>[]
     }
   }
 
@@ -278,10 +294,250 @@ struct CourseDetailPage {
     }
   }
 
-  async operateCourseResource(name: string, item: Record<string, string | number | boolean>) {
+  async downloadSetup(item: Record<string, string | number | boolean>, param: number) {
+    const reqFun = async () => {
+      const response =
+        await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.updateResourceAttribute, {
+          'node_id': item.id,
+          'group_id': item.group_id,
+          'download': param,
+        })
+      if (response.success) {
+        if (param === 1) {
+          CustomToast.toast_success('取消学生可下载设置成功')
+        } else {
+          CustomToast.toast_success('允许学生可下载设置成功')
+        }
+        this.queryCourseResources()
+      }
+    }
+    const sub_nodes: Record<string, string | number | boolean>[] = []
+    const getAllSubFileResourcesAndDepth = (item: Record<string, string | number | boolean>) => {
+      let maxFoldersDepth: number = 0
+      if (item.type === 1) {
+        const resource = _.filter(this.subResources, { parent_id: item.id })
+        if (resource) {
+          _.forEach(resource, item => {
+            if (item.type === 1) {
+              maxFoldersDepth = Math.max(maxFoldersDepth, getAllSubFileResourcesAndDepth(item))
+            } else {
+              if (item.type === 6 || item.type === 9 || item.type === 10) {
+                sub_nodes.push(item)
+              }
+            }
+          })
+        }
+      }
+      return maxFoldersDepth + 1
+    }
+    if (item.type === 1) {
+      CustomAlertDialog({
+        title: '请确认',
+        message: param === 2 ?
+          '设置文件夹为【允许学生可下载】仅将文件夹内已有的资源设置为允许学生下载，该设置对此后新创建或上传的资源无效' :
+          '是否确认将文件夹内的资源设置为学生不可下载？',
+        onClickBtn: () => {
+          const maxFoldersDepth = getAllSubFileResourcesAndDepth(item)
+          if (sub_nodes.length > 500) {
+            CustomToast.toast_fail('批量设置文件数量超出限制')
+            return
+          }
+          if (maxFoldersDepth > 100) {
+            CustomToast.toast_fail('批量设置文件夹层级数超出限制')
+            return
+          }
+          reqFun()
+        }
+      })
+    } else {
+      reqFun()
+    }
+  }
+
+  async visibleSetup(item: Record<string, string | number | boolean>, param: boolean) {
+    const reqFun = async () => {
+      const nodeIds: string[] = []
+      const targets = _.filter(sub_nodes, res => res.type !== 7)
+      targets.forEach(node => {
+        nodeIds.push(String(node.id))
+      })
+      if (_.isEmpty(nodeIds) && item.type === 1) {
+        CustomToast.toast_fail('所选资源均不支持学生可见功能')
+        return
+      }
+      const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.publicResources, {
+        'activity_node_ids': nodeIds.join(','),
+        'group_id': item.group_id,
+        'pub': param ? 2 : 1,
+      })
+      if (response.success) {
+        if (_.isEmpty(response.data)) {
+          CustomToast.toast_success('资源已不存在，请刷新后操作')
+          return
+        }
+        if (item.type === 1 && param) {
+          CustomToast.toast_success('文件夹设置学生可见成功')
+        } else {
+          CustomToast.toast_success('设置成功')
+        }
+        this.queryCourseResources()
+      }
+    }
+    if (judgeGroupIsEnd(this.courseInfo as Record<string, string>)) {
+      return
+    }
+    let isSub = false
+    const sub_nodes: Record<string, string | number | boolean>[] = []
+    const getAllSubResources = (item: Record<string, string | number | boolean>) => {
+      if (item.type === 1) {
+        const resource = _.filter(this.subResources, { parent_id: item.id })
+        if (resource) {
+          _.forEach(resource, item => {
+            if (item.type === 1) {
+              getAllSubResources(item)
+            } else {
+              sub_nodes.push(item)
+            }
+          })
+        }
+      }
+    }
+    if (item.type === 1) {
+      isSub = true
+      getAllSubResources(item)
+    } else {
+      sub_nodes.push(item)
+    }
+    if (item.type === 1) {
+      CustomAlertDialog({
+        title: '请确认',
+        message: param ?
+          '1.对文件夹【设置学生可见】只是对文件夹内的课件资源进行批量设置，之后再创建的新资源并非学生可见。\n' +
+            '2.作业/测练必须发布任务后学生才能查看与参与，无法设置学生可见' :
+          '是否确认将文件夹内的资源设置为学生不可见？',
+        onClickBtn: () => {
+          reqFun()
+        }
+      })
+    } else {
+      reqFun()
+    }
+  }
+
+  async viewQAArea(item: Record<string, string | number | boolean>) {
+    if (item && (this.courseInfo?.role ?? 1) === 1 &&
+    judgeGroupIsEnd(this.courseInfo as Record<string, string>, false)) {
+      CustomToast.toast_info('课程已结束，您只能查看答疑区内容')
+      return
+    }
+    this.pageInfos?.pushPath({
+      name: 'qaAreaResource',
+      param: JSON.stringify({
+        loginRole: this.courseInfo?.role ?? 1,
+      })
+    })
+  }
+
+  async viewResourceLinkModal(item: Record<string, string | number | boolean>) {
+    const windowClass = await window.getLastWindow(getContext())
+    const uiContext = windowClass.getUIContext()
+    const params = new MenuParam()
+    params.hide = () => {
+      if (promptAction && customDialog) {
+        promptAction.closeCustomDialog(customDialog)
+        customDialog.dispose()
+      }
+    }
+    params.resource = item
+    params.codeStr =
+      `${this.Api_Context.getApiPrefix('base_homepage')}mycourse/${item.group_id}/resource/${item.parent_id}/${item.id}`
+    const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildResourceLinkModal), params)
+    const promptAction = uiContext.getPromptAction()
+    promptAction.openCustomDialog(customDialog)
+  }
+
+  async viewRenameModal(item: Record<string, string | number | boolean>) {
+    const windowClass = await window.getLastWindow(getContext())
+    const uiContext = windowClass.getUIContext()
+    const params = new MenuParam()
+    let newName = ''
+    params.hide = () => {
+      if (promptAction && customDialog) {
+        promptAction.closeCustomDialog(customDialog)
+        customDialog.dispose()
+      }
+    }
+    params.resource = item
+    params.operResource = (value: string) => {
+      newName = value
+    }
+    params.onClickBtn = async () => {
+      if (!_.trim(newName)) {
+        CustomToast.toast_info('请输入名字')
+        return
+      }
+      if (newName.length > 255) {
+        CustomToast.toast_fail('资源名称不能超过255个字符')
+        return
+      }
+      if (verifyNameIsSpecial(newName)) {
+        CustomToast.toast_fail('资源名称中不能包含\\ : * ? " < > | 等特殊字符')
+        return
+      }
+      const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.updateResource, {
+        'node_id': item.id,
+        'group_id': item.group_id,
+        'name': newName,
+      })
+      if (response.success) {
+        this.queryCourseResources()
+      }
+    }
+    const customDialog = new ComponentContent(uiContext, wrapBuilder(BuildRenameModal), params)
+    const promptAction = uiContext.getPromptAction()
+    promptAction.openCustomDialog(customDialog, { autoCancel: false })
+  }
+
+  async operateCourseResource(name: string, item: Record<string, string | number | boolean>, param?: boolean | number) {
     switch (name) {
       case '删除':
         this.deleteCourseResource(item)
+        break
+      case '查看学生问题':
+      case '我要提问':
+        this.viewQAArea(item)
+        break
+      case '资源二维码':
+        this.viewResourceLinkModal(item)
+        break
+      case '移动到':
+        this.pageInfos.pushPath({
+          name: 'resourceMove', param: JSON.stringify(item), onPop: () => {
+            this.queryCourseResources()
+          }
+        })
+      case '重命名':
+        this.viewRenameModal(item)
+        break
+      case '下载':
+        this.downloadSetup(item, param as number)
+        break
+      case '可见':
+        this.visibleSetup(item, param as boolean)
+        break
+      case '编辑作业/测练':
+        this.pageInfos.pushPath({
+          name: 'questionEditorResource', param: JSON.stringify({ item }), onPop: () => {
+            this.queryCourseResources()
+          }
+        })
+        break
+      case '活动标签':
+        this.tagVisible = true
+        this.tagEdit = param as boolean
+        this.tagTitle = `${this.tagEdit ? '编辑' : '设置'}活动标签`
+        this.tagValue = this.tagEdit ? String(item.tag) : ''
+        this.tagNodeId = item.id as string
         break
       default:
         break
@@ -363,6 +619,7 @@ struct CourseDetailPage {
     this.getCourseFuncItems(Number(this.courseInfo.role))
     this.queryCourseResources()
     this.queryCurrentCourse()
+    this.queryActivityTags()
   }
 
   @Builder
@@ -421,6 +678,81 @@ struct CourseDetailPage {
       }
     }
     .height('100%')
+  }
+
+  @Builder
+  BuildTagContent() {
+    Row() {
+      Text('活动标签:')
+      Select(this.activityTags.map((item) => {
+        return { 'value': item.title } as SelectOption
+      }))
+        .value(_.find(this.activityTags, { 'title': this.tagValue })?.title ?? '请选择')
+        .onSelect((index: number) => {
+          this.tagValue = this.activityTags[index].title
+        })
+    }
+    .width('100%')
+    .justifyContent(FlexAlign.SpaceBetween)
+    .padding({ left: 16, right: 16, top: 16 })
+
+    Column() {
+      TextInput({ placeholder: '请输入自定义活动标签', text: this.tagValue })
+        .showUnderline(true)
+        .underlineColor({ typing: '#40A9FF' })
+        .onChange((value: string) => {
+          this.tagValue = value
+        })
+      if (!_.trim(this.tagValue) && this.tagEdit) {
+        Text('标签内容为空时，点击确定会删除标签')
+          .fontColor('#FF4040')
+          .padding(12)
+      }
+    }
+    .padding(16)
+
+    Row() {
+      Button('取消', { type: ButtonType.Normal })
+        .height(40)
+        .fontColor('#999999')
+        .backgroundColor(Color.White)
+        .borderWidth({ top: 1 })
+        .borderColor('#33999999')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 8,
+          bottomRight: 0
+        })
+        .flexGrow(1)
+        .onClick(() => {
+          this.tagVisible = false
+        })
+      Button('确定', { type: ButtonType.Normal })
+        .height(40)
+        .backgroundColor('#40A9FF')
+        .borderWidth({ top: 1 })
+        .borderColor('#40A9FF')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 0,
+          bottomRight: 8
+        })
+        .flexGrow(1)
+        .onClick(async () => {
+          const response = await xyApiPost(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.updateResource, {
+            'node_id': this.tagNodeId,
+            'group_id': String(this.courseInfo.id),
+            'tag': this.tagValue,
+          })
+          if (response.success) {
+            this.queryCourseResources()
+          }
+          this.tagVisible = false
+        })
+    }
+    .width('100%')
   }
 
   build() {
@@ -659,8 +991,8 @@ struct CourseDetailPage {
                             params.currentTeam = this.courseInfo
                             params.resource = item
                             params.subResources = this.subResources
-                            params.operResource = (name: string) => {
-                              this.operateCourseResource(name, item)
+                            params.operResource = (name: string, param?: boolean | number) => {
+                              this.operateCourseResource(name, item, param)
                               params.hide()
                             }
                             const customDialog =
@@ -811,6 +1143,13 @@ struct CourseDetailPage {
         .visibility((this.courseInfo?.role ?? 1) !== 1 ||
           (this.courseInfo?.role ?? 1) !== 1 && this.currentCourse?.status !== 1 ? Visibility.Visible : Visibility.None)
       }
+
+      CustomModalDialog({
+        title: this.tagTitle,
+        visible: $tagVisible,
+        hideCloseBtn: Visibility.Hidden,
+        contentBuilder: () => this.BuildTagContent()
+      })
     }
     .hideTitleBar(true)
     .backgroundColor("#f1f1f1")
@@ -826,11 +1165,15 @@ class MenuParam {
   currentTeam: Record<string, string | number | boolean> = {}
   subResources: Record<string, string | number | boolean> [] = []
   resource: Record<string, string | number | boolean> = {}
+  codeStr: string = ''
+  isEdit: boolean = false
   addResource: (type: number, name: string) => void = () => {
   }
-  operResource: (name: string) => void = () => {
+  operResource: (name: string, param?: boolean | number) => void = () => {
   }
   hide: () => void = () => {
+  }
+  onClickBtn: () => void = () => {
   }
 }
 
@@ -843,7 +1186,6 @@ function BuildResourceVisibleMenu(params: MenuParam) {
       .onClick(() => {
         params.hide()
         CustomAlertDialog({
-          dialogHeight: 220,
           title: '请确认',
           message: '1.是否确定将课程内所有资源设置学生可见？\n' +
             '2.请注意：作业/测练资源必须发布任务后学生才能查看与参与，无法设置学生可见。',
@@ -869,7 +1211,6 @@ function BuildResourceVisibleMenu(params: MenuParam) {
       .onClick(() => {
         params.hide()
         CustomAlertDialog({
-          dialogHeight: 220,
           title: '请确认',
           message: '是否确定将课程内所有资源取消学生可见？',
           onClickBtn: async () => {
@@ -899,7 +1240,6 @@ function BuildResourceVisibleMenu(params: MenuParam) {
         .onChange((value: boolean) => {
           params.hide()
           CustomAlertDialog({
-            dialogHeight: 220,
             title: '请确认',
             message: '1.勾选【新增资源默认学生可见】之后，新增资源默认设置为学生可见。\n' +
               '2.取消勾选【新增资源默认学生可见】之后，新增资源默认设置为学生不可见。',
@@ -1017,7 +1357,7 @@ function BuildOperResourceMenu(params: MenuParam) {
       Button('查看学习时长', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#FCBB34')
-        .onClick(() => params.operResource('查看学习时长'))
+      // .onClick(() => params.operResource('查看学习时长'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -1027,7 +1367,7 @@ function BuildOperResourceMenu(params: MenuParam) {
         { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#40A9FF')
-        .onClick(() => params.operResource(!!_.trim(params.resource.tag as string) ? '编辑活动标签' : '设置活动标签'))
+        .onClick(() => params.operResource('活动标签', !!_.trim(params.resource.tag as string)))
       Divider()
         .color('#33999999')
         .strokeWidth(1)
@@ -1038,7 +1378,6 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
-            .onClick(() => params.operResource(params.resource.published === 1 ? '修改发布' : '发布任务'))
           Divider()
             .color('#33999999')
             .strokeWidth(1)
@@ -1060,9 +1399,9 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
-          .onClick(() => params.operResource(getFolderPublicStatus(params.resource as Record<string, string | number>,
-            params.subResources) === 3 ?
-            '取消学生可见' : '设置学生可见'))
+          .onClick(() => params.operResource('可见',
+            getFolderPublicStatus(params.resource as Record<string, string | number>,
+              params.subResources) !== 3))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -1072,7 +1411,7 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
-            .onClick(() => params.operResource(params.resource.public === 2 ? '取消学生可见' : '设置学生可见'))
+            .onClick(() => params.operResource('可见', params.resource.public !== 2))
           Divider()
             .color('#33999999')
             .strokeWidth(1)
@@ -1084,9 +1423,9 @@ function BuildOperResourceMenu(params: MenuParam) {
           { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
           .width('100%')
           .fontColor('#40A9FF')
-          .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>,
-            params.subResources) === 3 ?
-            '取消学生可下载' : '允许学生可下载'))
+          .onClick(() => params.operResource('下载',
+            getFolderDownloadStatus(params.resource as Record<string, string | number>, params.subResources) === 3 ? 1 :
+              2))
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -1096,9 +1435,7 @@ function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
-            .onClick(() => params.operResource(getFolderDownloadStatus(params.resource as Record<string, string | number>,
-              params.subResources) === 3 ?
-              '取消学生可下载' : '允许学生可下载'))
+            .onClick(() => params.operResource('下载', params.resource.download === 2 ? 1 : 2))
           Divider()
             .color('#33999999')
             .strokeWidth(1)
@@ -1118,6 +1455,7 @@ function BuildOperResourceMenu(params: MenuParam) {
           .width('100%')
           .fontColor('#40A9FF')
           .onClick(() => params.operResource('文档复制'))
+          .enabled(false)
         Divider()
           .color('#33999999')
           .strokeWidth(1)
@@ -1191,4 +1529,129 @@ function BuildOperResourceMenu(params: MenuParam) {
   .margin(48)
   .backgroundColor(Color.White)
   .borderRadius(8)
+}
+
+@Builder
+function BuildResourceLinkModal(params: MenuParam) {
+  Column() {
+    Text('课程资源链接')
+      .margin(12)
+      .fontSize(16)
+      .fontWeight(FontWeight.Bold)
+    Divider()
+      .flexShrink(0)
+      .color('#33999999')
+      .strokeWidth(1.1)
+      .padding({ left: 16, right: 16 })
+
+    Text(params.resource.name as string)
+      .margin(10)
+    QRCode(params.codeStr).width(240).height(240)
+    Row() {
+      Text('*可以复制链接在浏览器打开，或者用小雅App扫码查看。如果教师没有公开资源，可能无法查看')
+        .fontColor('#d9999999')
+        .fontSize(13)
+    }
+    .margin(16)
+
+    Row() {
+      Button('复制链接', { type: ButtonType.Normal })
+        .width(120)
+        .backgroundColor('#40A9FF')
+        .borderRadius(4)
+        .fontColor(Color.White)
+        .onClick(() => {
+          const pasteData: pasteboard.PasteData = pasteboard.createData(pasteboard.MIMETYPE_TEXT_PLAIN, params.codeStr)
+          const systemPasteboard: pasteboard.SystemPasteboard = pasteboard.getSystemPasteboard()
+          systemPasteboard.setData(pasteData, (err, data) => {
+            if (err) {
+              return
+            }
+            CustomToast.toast_success('复制链接成功')
+          })
+        })
+      Button('关闭', { type: ButtonType.Normal })
+        .width(120)
+        .margin({ left: 12 })
+        .backgroundColor('#F5F5F5')
+        .borderRadius(4)
+        .fontColor('#999999')
+        .onClick(() => params.hide())
+    }
+    .margin({ bottom: 16 })
+  }
+  .margin({ left: 16, right: 16 })
+  .backgroundColor(Color.White)
+}
+
+@Builder
+function BuildRenameModal(params: MenuParam) {
+  Column() {
+    Row() {
+      Text('重命名')
+        .margin(12)
+    }
+
+    Divider()
+      .flexShrink(0)
+      .color('#33999999')
+      .strokeWidth(1.1)
+
+    TextArea({ placeholder: '请输入名字', text: params.resource.name as string })
+      .height(120)
+      .margin(12)
+      .backgroundColor(Color.White)
+      .borderColor('#d9d9d9')
+      .borderRadius(4)
+      .borderWidth(1)
+      .placeholderColor('#999999')
+      .maxLength(255)
+      .onChange((value: string) => params.operResource(value))
+
+    Row() {
+      Button('取消', { type: ButtonType.Normal })
+        .height(40)
+        .fontColor('#999999')
+        .backgroundColor(Color.White)
+        .borderWidth({ top: 1 })
+        .borderColor('#33999999')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 8,
+          bottomRight: 0
+        })
+        .flexGrow(1)
+        .onClick(() => {
+          if (params.hide) {
+            params.hide()
+          }
+        })
+      Button('确定', { type: ButtonType.Normal })
+        .height(40)
+        .backgroundColor('#40A9FF')
+        .borderWidth({ top: 1 })
+        .borderColor('#40A9FF')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 0,
+          bottomRight: 8
+        })
+        .flexGrow(1)
+        .onClick(() => {
+          if (params.onClickBtn) {
+            params.onClickBtn()
+          }
+          if (params.hide) {
+            params.hide()
+          }
+        })
+    }
+    .width('100%')
+  }
+  .height(220)
+  .margin(16)
+  .borderRadius(8)
+  .backgroundColor(Color.White)
 }

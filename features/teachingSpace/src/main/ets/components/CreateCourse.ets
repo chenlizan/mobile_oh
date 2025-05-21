@@ -410,7 +410,6 @@ struct CreateCourse {
               const group = response.data as Record<string, string | number>
               group.role = 3
               CustomAlertDialog({
-                dialogHeight: 240,
                 'title': '提示',
                 'message': `课程《${group.name}》（课程号：${group.key}）已经创建成功，教师、助教可任意修改目录结构并选择目录上传课件进行备课、授课、布置作业、扫码添加成员等。是否进入课程？`,
                 onCloseBtn: () => {

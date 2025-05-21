@@ -153,7 +153,6 @@ export struct SystemNoticeModal {
 
   build() {
     CustomModalDialog({
-      dialogHeight: 400,
       visible: this.visible,
       title: this.title,
       contentBuilder: () => this.BuildModalContent(this.systemNotice),

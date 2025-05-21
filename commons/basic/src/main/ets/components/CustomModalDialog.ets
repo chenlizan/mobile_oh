@@ -24,10 +24,6 @@ export struct CustomModalDialog {
    */
   @Prop isModal: boolean = true
   /**
-   * 对话框高度
-   */
-  @Prop dialogHeight: Length = '30%'
-  /**
    * 隐藏关闭按钮
    */
   @Prop hideCloseBtn: Visibility = Visibility.Visible
@@ -61,7 +57,6 @@ export struct CustomModalDialog {
       contentBuilder: this.contentBuilder,
       footerBuilder: this.footerBuilder,
       title: this.title,
-      dialogHeight: this.dialogHeight,
       hideCloseBtn: this.hideCloseBtn,
       hideDivider: this.hideDivider,
       onCloseBtn: this.onCloseBtn
@@ -87,19 +82,18 @@ export struct CustomModalDialog {
 
 @CustomDialog
 struct CustomModalDialogView {
-  controller?: CustomDialogController;
+  controller?: CustomDialogController
   @BuilderParam titleBuilder?: CustomBuilder
   @BuilderParam contentBuilder?: CustomBuilder
   @BuilderParam footerBuilder?: CustomBuilder
   title?: string
-  dialogHeight?: Length = '30%'
   hideCloseBtn?: Visibility = Visibility.Visible
   hideDivider?: Visibility = Visibility.Visible
   onCloseBtn: () => void = () => {
   }
 
   build() {
-    Flex({ direction: FlexDirection.Column }) {
+    Column(){
       if (typeof this.titleBuilder === 'function') {
         this.titleBuilder()
       } else {
@@ -155,7 +149,6 @@ struct CustomModalDialogView {
         this.footerBuilder()
       }
     }
-    .height(this.dialogHeight)
     .margin(16)
     .borderRadius(8)
     .backgroundColor(Color.White)

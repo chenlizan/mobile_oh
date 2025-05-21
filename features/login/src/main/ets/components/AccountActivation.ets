@@ -203,7 +203,6 @@ export struct AccountActivation {
       CustomModalDialog({
         visible: $accountDialogVisible,
         title: this.title,
-        dialogHeight: 360,
         contentBuilder: () => this.BuildModalContent(this.accounts),
         footerBuilder: () => this.BuildModalFooter(),
       })

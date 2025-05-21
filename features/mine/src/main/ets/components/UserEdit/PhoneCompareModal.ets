@@ -139,7 +139,6 @@ export struct PhoneCompareModal {
 
   build() {
     CustomModalDialog({
-      dialogHeight: 450,
       visible: $visible,
       title: this.title,
       contentBuilder: () => this.BuildModalContent(),

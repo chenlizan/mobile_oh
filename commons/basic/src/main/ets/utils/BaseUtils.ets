@@ -683,6 +683,7 @@ export const navigateToResourceDetails =
           param: JSON.stringify({
             item,
             loginRole,
+            isCourse: true,
             isSub,
             showFinish
           })
@@ -1070,6 +1071,6 @@ export const regularFilename = (orgName: string, currentFiles: Record<string, st
 }
 
 export const verifyNameIsSpecial = (name: string) => {
-  const nameRegex = /[\\|/|:|*|?|"|<|>||]/;
+  const nameRegex =  /[\\|:|*|?|"|<|>||]/;
   return nameRegex.test(name);
 }

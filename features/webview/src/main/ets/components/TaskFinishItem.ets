@@ -218,7 +218,6 @@ struct WatchRemindModal {
     CustomModalDialog({
       visible: $visible,
       title: this.title,
-      dialogHeight: 180,
       hideCloseBtn: Visibility.Hidden,
       hideDivider: Visibility.Hidden,
       contentBuilder: () => this.BuildModalContent(),

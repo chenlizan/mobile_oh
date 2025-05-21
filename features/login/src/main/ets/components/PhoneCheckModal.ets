@@ -69,7 +69,6 @@ export struct PhoneCheckModal {
 
   build() {
     CustomModalDialog({
-      dialogHeight: 360,
       visible: $visible,
       title: this.title,
       contentBuilder: () => this.BuildModalContent(this.accounts),

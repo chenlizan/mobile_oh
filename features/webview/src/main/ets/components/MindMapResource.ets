@@ -42,7 +42,7 @@ struct MindMapResource {
           `${this.Api_Context.getApiPrefix('base_mobilepage',)}mindmap/share/preview/${item.root_node_id}/${item.id}/${this.userInfo.id}`
       }
     }
-
+    path += '?placeholder=1'
     return path
   }
 
@@ -66,7 +66,8 @@ struct MindMapResource {
       Flex({ direction: FlexDirection.Column }) {
         CustomLocalH5({
           url: this.getUrlPath(),
-          controller: this.controller
+          controller: this.controller,
+          isLocal: false
         })
         if (!this.param.isSub && !this.param.isDocument && !this.param.fromBridge) {
           KnowledgeBar({ item: this.param.item as Record<string, string>, loginRole: this.param.loginRole as number })

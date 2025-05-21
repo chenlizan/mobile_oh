@@ -390,7 +390,6 @@ struct JoinCourse {
       CustomModalDialog({
         visible: $visible,
         title: this.title,
-        dialogHeight: 208,
         hideCloseBtn: Visibility.Hidden,
         contentBuilder: () => this.BuildModalContent(),
         footerBuilder: () => this.BuildModalFooter(),

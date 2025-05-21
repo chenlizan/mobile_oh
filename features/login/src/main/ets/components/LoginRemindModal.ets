@@ -181,7 +181,6 @@ export struct LoginRemindModal {
 
   build() {
     CustomModalDialog({
-      dialogHeight: 300,
       visible: $visible,
       title: this.title,
       contentBuilder: () => this.BuildModalContent(this.login_info),

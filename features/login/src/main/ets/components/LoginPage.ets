@@ -127,6 +127,8 @@ export struct LoginPage {
         } else {
           this.accountDialogVisible = true
           this.accounts = accounts
+          CustomToast.hide()
+          return
         }
       }
 
