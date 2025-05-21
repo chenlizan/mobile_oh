@@ -28,6 +28,7 @@ import dayjs from "dayjs"
 struct MessagePerson {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('messageCount') messageCount: MessageCountModel = new MessageCountModel()
+  @StorageLink('pageInfos') pageInfos: NavPathStack = new NavPathStack()
   @State isRefreshing: boolean = false
   @State isLoading: boolean = false
   @State screenWidth: number = 0
@@ -262,10 +263,26 @@ struct MessagePerson {
       if (!_.isEmpty(group)) {
         if (group?.spType == 1 || group?.sp_type == 1) {
           // sp
+          this.pageInfos.pushPath({
+            name: 'courseSpecialReviewDetail', param: JSON.stringify({
+              item: group,
+              groupSpaceType: 'teach',
+            })
+          });
         } else {
           if (group.course_property === '2') {
             // mooc
+            this.pageInfos.pushPath({
+              name: 'courseMoocDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           } else {
+            this.pageInfos.pushPath({
+              name: 'courseDetail', param: JSON.stringify({
+                item: group,
+              })
+            });
           }
         }
       }
@@ -400,7 +417,9 @@ struct MessagePerson {
                     }.padding(12)
                     .borderWidth({ bottom: 1 })
                     .borderColor({ bottom: '#ebebeb' })
-                  }
+                  }.onClick(() => {
+                    this.pageInfos.pushPath({ name: 'messagePersonDetail', param: JSON.stringify(item) })
+                  })
                 })
               }
               .flexGrow(1)

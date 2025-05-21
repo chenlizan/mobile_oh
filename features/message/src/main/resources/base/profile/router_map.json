@@ -9,6 +9,14 @@
       }
     },
     {
+      "name": "messageTodoDetail",
+      "pageSourceFile": "src/main/ets/components/MessageTodoDetail.ets",
+      "buildFunction": "MessageTodoDetailBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "messageCourse",
       "pageSourceFile": "src/main/ets/components/MessageCourse.ets",
       "buildFunction": "MessageCourseBuilder",
@@ -17,9 +25,25 @@
       }
     },
     {
+      "name": "messageCourseDetail",
+      "pageSourceFile": "src/main/ets/components/MessageCourseDetail.ets",
+      "buildFunction": "MessageCourseDetailBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "messagePerson",
       "pageSourceFile": "src/main/ets/components/MessagePerson.ets",
       "buildFunction": "MessagePersonBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "messagePersonDetail",
+      "pageSourceFile": "src/main/ets/components/MessagePersonDetail.ets",
+      "buildFunction": "MessagePersonDetailBuilder",
       "data": {
         "description": "this is pageOne"
       }
