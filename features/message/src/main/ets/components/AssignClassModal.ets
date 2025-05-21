@@ -100,7 +100,6 @@ export struct AssignClassModal {
 
   build() {
     CustomModalDialog({
-      dialogHeight: 360,
       visible: $visible,
       title: this.title,
       contentBuilder: () => this.BuildModalContent(this.classList),
