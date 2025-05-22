@@ -17,6 +17,14 @@
       }
     },
     {
+      "name": "courseQrcode",
+      "pageSourceFile": "src/main/ets/components/CourseQrcode.ets",
+      "buildFunction": "CourseQrcodeBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "createDiscuss",
       "pageSourceFile": "src/main/ets/components/CreateDiscuss.ets",
       "buildFunction": "CreateDiscussBuilder",
@@ -36,6 +44,14 @@
       "name": "resourceMove",
       "pageSourceFile": "src/main/ets/components/ResourceMove.ets",
       "buildFunction": "ResourceMoveBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "browseHistory",
+      "pageSourceFile": "src/main/ets/components/BrowseHistory.ets",
+      "buildFunction": "BrowseHistoryBuilder",
       "data": {
         "description": "this is pageOne"
       }

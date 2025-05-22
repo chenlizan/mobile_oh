@@ -1,11 +1,14 @@
 import _ from "@wolfx/lodash"
 import dayjs from "dayjs"
+import duration, { DurationUnitType } from 'dayjs/plugin/duration'
 import { CryptoJS } from '@ohos/crypto-js'
 import { pinyin } from 'pinyin-pro'
 import { PARAMS } from "./EnhancedFetch"
 import { ObjectUtil } from "./ObjectUtil"
 import { CustomToast } from "../components/CustomToast"
 import { IconConstants } from "../constants/IconConstants"
+
+dayjs.extend(duration)
 
 export const isJSON = (str: string): boolean => {
   try {
@@ -1071,6 +1074,19 @@ export const regularFilename = (orgName: string, currentFiles: Record<string, st
 }
 
 export const verifyNameIsSpecial = (name: string) => {
-  const nameRegex =  /[\\|:|*|?|"|<|>||]/;
-  return nameRegex.test(name);
+  const nameRegex = /[\\|:|*|?|"|<|>||]/
+  return nameRegex.test(name)
+}
+
+export const transTimeHm = (time: number, unit: DurationUnitType = 'seconds', mT = '分') => {
+  if (unit === 'seconds' ? time >= 60 : time > 0) {
+    const date = dayjs.duration(time, unit)
+    let txt = ''
+    if (date.asHours() >= 1) {
+      txt += _.floor(date.asHours(), 0) + '小时'
+    }
+    txt += date.minutes() + mT
+    return txt
+  }
+  return `0${mT}`
 }

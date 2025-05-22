@@ -1,7 +1,7 @@
 export class IconConstants {
   static readonly NAVIGATION_HOME: string = '\ue7c6'
-  static readonly UP: string = '\ue7ed' //上右箭头
-  static readonly DOWN: string = '\ue7ee' //上右箭头
+  static readonly UP: string = '\ue7ed' //上箭头
+  static readonly DOWN: string = '\ue7ee' //下箭头
   static readonly LEFT: string = '\ue7ec' //左箭头
   static readonly RIGHT: string = '\ue7eb' //右箭头
   static readonly CHOOSE_SCHOOL: string = '\ue831' //选择学校
@@ -59,4 +59,6 @@ export class IconConstants {
   static readonly DISCUSS: string = '\ue73e' //讨论
   static readonly TEACH_DESIGN: string = '\ue733' //教学设计
   static readonly OTHER_FILE: string = '\ue73c' //其他文件
+  static readonly ARROW_DOWN: string = '\ue7f3' //下箭头
+  static readonly ARROW_UP: string = '\ue7f2' //上箭头
 }

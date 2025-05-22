@@ -775,6 +775,7 @@ struct CourseDetailPage {
                     iconSize: 16,
                     iconMargin: { right: 12 },
                     onClickBtn: () => {
+                      this.pageInfos.pushPath({ name: 'courseQrcode', param: JSON.stringify(this.courseInfo) })
                     }
                   })
                   AppIcon({
@@ -843,7 +844,7 @@ struct CourseDetailPage {
                   })
                 }
                 .onClick(() => {
-
+                  this.pageInfos.pushPath({ name: 'browseHistory', param: JSON.stringify(this.courseInfo) })
                 })
               }
               .justifyContent(FlexAlign.SpaceBetween)
@@ -1383,6 +1384,7 @@ export function BuildOperResourceMenu(params: MenuParam) {
             { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
             .width('100%')
             .fontColor('#40A9FF')
+            .enabled(false)
           Divider()
             .color('#33999999')
             .strokeWidth(1)
