@@ -55,6 +55,38 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "noticeList",
+      "pageSourceFile": "src/main/ets/components/Notice/NoticeList.ets",
+      "buildFunction": "NoticeListBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "courseNotice",
+      "pageSourceFile": "src/main/ets/components/Notice/CourseNotice.ets",
+      "buildFunction": "CourseNoticeBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "createCourseNotice",
+      "pageSourceFile": "src/main/ets/components/Notice/CreateCourseNotice.ets",
+      "buildFunction": "CreateCourseNoticeBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "editCourseNotice",
+      "pageSourceFile": "src/main/ets/components/Notice/EditCourseNotice.ets",
+      "buildFunction": "EditCourseNoticeBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

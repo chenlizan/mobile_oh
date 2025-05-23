@@ -874,6 +874,13 @@ struct CourseDetailPage {
                       .width(80)
                       .height(80)
                       .padding(12)
+                      .onClick(() => {
+                        switch (this.funcItems[4 * paper+index]?.type) {
+                          case 'notice':
+                            this.pageInfos.pushPath({ name: 'noticeList' })
+                            break
+                        }
+                      })
                     })
                   }
                   .justifyContent(FlexAlign.SpaceAround)

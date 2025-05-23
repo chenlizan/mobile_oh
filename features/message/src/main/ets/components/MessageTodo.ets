@@ -622,14 +622,14 @@ export struct MessageSettingDialog {
         CustomListItem({
           text: '仅看未处理',
           itemRadius: 8,
-          itemBorder: '',
+          itemBorder: {},
           operateBuilder: () => this.BuildOperate(),
         })
         CustomDivider()
         CustomListItem({
           text: '全部清空',
           itemRadius: 8,
-          itemBorder: '',
+          itemBorder: {},
           onClickBtn: () => {
             this.onDeleteAll()
           }

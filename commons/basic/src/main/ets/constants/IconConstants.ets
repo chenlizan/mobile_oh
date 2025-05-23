@@ -22,7 +22,7 @@ export class IconConstants {
   static readonly LOADING: string = 'loading' //加载
   static readonly MENU: string = '\ue7f5' //菜单
   static readonly SCAN: string = '\ue70b' //扫码
-  static readonly ADD: string = '\ue84a' //添加
+  static readonly ADD: string = '\ue8b7' //添加
   static readonly FOLDER: string = '\ue747' //文件夹
   static readonly SCHOOL: string = '\ue804' //学校
   static readonly MAJOR: string = '\ue802' //院系
@@ -61,4 +61,5 @@ export class IconConstants {
   static readonly OTHER_FILE: string = '\ue73c' //其他文件
   static readonly ARROW_DOWN: string = '\ue7f3' //下箭头
   static readonly ARROW_UP: string = '\ue7f2' //上箭头
+  static readonly DELETE: string = '\ue88e' //删除
 }

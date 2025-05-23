@@ -503,14 +503,14 @@ export struct MessageSettingDialog {
         CustomListItem({
           text: '仅看未读',
           itemRadius: 8,
-          itemBorder: '',
+          itemBorder: {},
           operateBuilder: () => this.BuildOperate(),
         })
         CustomDivider()
         CustomListItem({
           text: '全部已读',
           itemRadius: 8,
-          itemBorder: '',
+          itemBorder: {},
           onClickBtn: () => {
             this.onReadAll()
           }
@@ -524,7 +524,7 @@ export struct MessageSettingDialog {
         CustomListItem({
           text: '全部清空',
           itemRadius: 8,
-          itemBorder: '',
+          itemBorder: {},
           onClickBtn: () => {
             this.onDeleteAll()
           }

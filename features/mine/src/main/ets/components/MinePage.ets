@@ -59,7 +59,7 @@ export struct MinePage {
     Image(src)
       .width(20)
       .height(20)
-      .margin({ top: 4, right: 4 })
+      .margin({ right: 4 })
   }
 
   build() {
@@ -136,7 +136,7 @@ export struct MinePage {
                 text: '个人年度报告',
                 itemMargin: { top: 8 },
                 itemRadius: 8,
-                itemBorder: '',
+                itemBorder: {},
                 onClickBtn: () => {
                   this.pageInfos.pushPath({ name: 'userReport' })
                 }
@@ -146,7 +146,7 @@ export struct MinePage {
                 text: '个人数据看板',
                 itemMargin: { top: 8 },
                 itemRadius: 8,
-                itemBorder: '',
+                itemBorder: {},
                 onClickBtn: () => {
                   this.pageInfos.pushPath({ name: 'userPortrait' })
                 }
@@ -156,7 +156,7 @@ export struct MinePage {
                 text: '反馈&建议',
                 itemMargin: { top: 8 },
                 itemRadius: 8,
-                itemBorder: '',
+                itemBorder: {},
                 onClickBtn: () => {
                   this.pageInfos.pushPath({ name: 'userReflect' })
                 }
@@ -166,7 +166,7 @@ export struct MinePage {
                 text: '关于小雅',
                 itemMargin: { top: 8 },
                 itemRadius: 8,
-                itemBorder: '',
+                itemBorder: {},
                 onClickBtn: () => {
                   this.pageInfos.pushPath({ name: "about" })
                 }

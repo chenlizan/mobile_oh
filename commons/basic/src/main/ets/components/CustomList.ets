@@ -27,6 +27,10 @@ export struct CustomListItem {
    */
   @Prop text: string = ''
   /**
+   * 背景色
+   */
+  @Prop itemBackgroundColor: ResourceColor = Color.White
+  /**
    * 外边距
    */
   @Prop itemMargin: Margin | Length | LocalizedMargin = ''
@@ -41,11 +45,7 @@ export struct CustomListItem {
   /**
    * 边框样式
    */
-  @Prop itemBorder: Length | EdgeWidths | LocalizedEdgeWidths = { top: '1vp' }
-  /**
-   * 文字行高
-   */
-  @Prop lineHeight: number | string | Resource = 30
+  @Prop itemBorder: BorderOptions = { width: { top: 1 } }
   /**
    * 文字颜色
    */
@@ -87,14 +87,13 @@ export struct CustomListItem {
             .fontColor(Color.Red)
             .fontSize(this.fontSize)
             .fontWeight(this.fontWeight)
-            .lineHeight(this.lineHeight)
         }
         Text(this.text)
           .fontColor(this.fontColor)
           .fontSize(this.fontSize)
           .fontWeight(this.fontWeight)
-          .lineHeight(this.lineHeight)
       }
+      .alignItems(VerticalAlign.Center)
 
       if (typeof this.operateBuilder === 'function') {
         this.operateBuilder()
@@ -105,8 +104,8 @@ export struct CustomListItem {
     .width('100%')
     .padding(this.itemPadding)
     .margin(this.itemMargin)
-    .backgroundColor(Color.White)
-    .borderWidth(this.itemBorder)
+    .backgroundColor(this.itemBackgroundColor)
+    .border(this.itemBorder)
     .borderRadius(this.itemRadius)
     .borderColor({ top: '#d9d9d9d9' })
     .justifyContent(FlexAlign.SpaceBetween)

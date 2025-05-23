@@ -184,11 +184,10 @@ export struct MessagePage {
             operateBuilder: () => this.BuildTodoOperate(),
             text: '待办事项',
             fontSize: 14,
-            lineHeight: 14,
             itemRadius: 4,
             itemPadding: 8,
             itemMargin: { top: 8 },
-            itemBorder: '',
+            itemBorder: {},
             onClickBtn: () => {
               this.pageInfos.pushPath({ name: 'messageTodo' })
             }
@@ -198,11 +197,10 @@ export struct MessagePage {
             operateBuilder: () => this.BuildCourseOperate(),
             text: '课程消息',
             fontSize: 14,
-            lineHeight: 14,
             itemRadius: 4,
             itemPadding: 8,
             itemMargin: { top: 8 },
-            itemBorder: '',
+            itemBorder: {},
             onClickBtn: () => {
               this.pageInfos.pushPath({ name: 'messageCourse' })
             }
@@ -212,11 +210,10 @@ export struct MessagePage {
             operateBuilder: () => this.BuildPersonOperate(),
             text: '个人消息',
             fontSize: 14,
-            lineHeight: 14,
             itemRadius: 4,
             itemPadding: 8,
             itemMargin: { top: 8 },
-            itemBorder: '',
+            itemBorder: {},
             onClickBtn: () => {
               this.pageInfos.pushPath({ name: 'messagePerson' })
             }
@@ -226,11 +223,10 @@ export struct MessagePage {
             operateBuilder: () => this.BuildSystemOperate(),
             text: '系统消息',
             fontSize: 14,
-            lineHeight: 14,
             itemRadius: 4,
             itemPadding: 8,
             itemMargin: { top: 8 },
-            itemBorder: '',
+            itemBorder: {},
             onClickBtn: () => {
               this.pageInfos.pushPath({ name: 'messageSystem' })
             }
