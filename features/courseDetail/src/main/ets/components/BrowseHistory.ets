@@ -5,9 +5,14 @@ import {
   Api_Context,
   AppIcon,
   CustomNavTitle,
+  CustomToast,
   getIconByFileType,
+  getResourcePath,
+  getTypeByAssignToType,
+  getTypeByTaskType,
   HomeApi,
   IconConstants,
+  navigateToResourceDetails,
   PreferenceStorage,
   transTimeHm,
   UserInfoModel,
@@ -23,8 +28,11 @@ struct BrowseHistory {
   @State screenWidth: number = 0
   @State isRefreshing: boolean = false
   @State selectIndex: number = 0
-  @State orderType: boolean | "asc" | "desc" = 'desc'
+  @State orderType1: boolean | "asc" | "desc" = 'desc'
+  @State orderType2: boolean | "asc" | "desc" = 'desc'
   @State filterType: number = 4
+  @State rootResources: Record<string, string | number | boolean> [] = []
+  @State subResources: Record<string, string | number | boolean> [] = []
   @State learning_record: Record<string, string>[] = []
   @State resource_durations: Record<string, string>[] = []
   @State resource_total_duration: number = 0
@@ -69,7 +77,55 @@ struct BrowseHistory {
     }
   }
 
+  async queryCourseResources() {
+    const response = await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.queryCourseResources, {
+      'group_id': this.courseInfo.id,
+    })
+    if (response.success) {
+      const rootSource = _.filter(response.data as Record<string, string>[], res => res.parent_id === '1')[0]
+      const resources =
+        _.filter(response.data as Record<string, string | number>[], res => res.parent_id !== '1' && res.del !== 2)
+      const real_resources = _.orderBy(
+        _.map(resources, (item: Record<string, string | number | boolean>) => {
+          if (item.task_id) {
+            item._formatKey = Number(this.courseInfo.role) === 1 ? 'student' : 'teacher'
+            item._isSurveyTask = item.task_type >= 2 && item.task_type <= 6
+            item._assignTypeText = getTypeByAssignToType(item.assign_to_type as number, item.finish_type as number)
+            item._taskTypeText = getTypeByTaskType(item.task_type as number)
+          }
+          item._formatKey = Number(this.courseInfo.role) === 1 ? 'student' : 'teacher'
+          return item
+        }),
+        ['sort_position'],
+        ['asc']
+      )
+      this.rootResources = _.filter(
+        real_resources,
+        res => res.parent_id === rootSource.id,
+      )
+      this.subResources = _.filter(
+        real_resources,
+        res => res.parent_id !== rootSource.id,
+      )
+    }
+  }
+
+  handleShowResource(item: Record<string, string>) {
+    const resource = _.find(this.rootResources, { id: item.id })
+    if (resource) {
+      navigateToResourceDetails(resource as Record<string, string | number>, Number(this.courseInfo?.role ?? 1))
+    } else {
+      const resource = _.find(this.subResources, { id: item.id })
+      if (resource) {
+        navigateToResourceDetails(resource as Record<string, string | number>, Number(this.courseInfo?.role ?? 1))
+      } else {
+        CustomToast.toast_info('未找到目标资源，可能文件被已删除或任务被撤销')
+      }
+    }
+  }
+
   getData() {
+    this.queryCourseResources()
     this.getResourceRecordHistory()
     if (this.courseInfo.role === 1) {
       this.queryStudentResourceStudyLearn()
@@ -146,12 +202,12 @@ struct BrowseHistory {
           if (this.selectIndex === 0) {
             Flex({ alignItems: ItemAlign.Center }) {
               AppIcon({
-                iconCode: this.orderType === 'desc' ? IconConstants.ARROW_DOWN : IconConstants.ARROW_UP,
+                iconCode: this.orderType1 === 'desc' ? IconConstants.ARROW_DOWN : IconConstants.ARROW_UP,
                 iconSize: 16,
                 iconColor: '#999999',
                 iconPadding: 8,
                 onClickBtn: () => {
-                  this.orderType = this.orderType === 'desc' ? 'asc' : 'desc'
+                  this.orderType1 = this.orderType1 === 'desc' ? 'asc' : 'desc'
                 }
               })
               Select([
@@ -176,19 +232,19 @@ struct BrowseHistory {
                   }
                 })
             }
-            .margin(12)
+            .margin({ left: 12, right: 12, bottom: 12 })
 
             List({ space: 12 }) {
               ForEach((() => {
                 let data = this.learning_record
                 if (this.filterType === 1) {
-                  data = _.orderBy(data, ['name'], [this.orderType]);
+                  data = _.orderBy(data, ['name'], [this.orderType1]);
                 } else if (this.filterType === 2) {
-                  data = _.orderBy(data, [""], [this.orderType]);
+                  data = _.orderBy(data, [""], [this.orderType1]);
                 } else if (this.filterType === 3) {
-                  data = _.orderBy(data, ['type'], [this.orderType]);
+                  data = _.orderBy(data, ['type'], [this.orderType1]);
                 } else if (this.filterType === 4) {
-                  data = _.orderBy(data, ['view_time'], [this.orderType]);
+                  data = _.orderBy(data, ['view_time'], [this.orderType1]);
                 }
                 return data
               })(), (item: Record<string, string>) => {
@@ -212,7 +268,7 @@ struct BrowseHistory {
                     .width('100%')
 
                     Row() {
-                      Text(`位置：`)
+                      Text(`位置：${getResourcePath(item.parent_id, this.rootResources, this.subResources)}`)
                         .fontColor('#d9999999')
                         .fontSize(12)
                     }
@@ -222,11 +278,62 @@ struct BrowseHistory {
                 .margin({ left: 12, right: 12 })
                 .backgroundColor(Color.White)
                 .borderRadius(4)
+                .onClick(() => this.handleShowResource(item))
               })
             }
           }
           if (this.selectIndex === 1) {
+            Flex({ justifyContent: FlexAlign.End, alignItems: ItemAlign.Center }) {
+              Text('学习时长')
+                .fontColor('#40A9FF')
+                .fontSize(14)
+              AppIcon({
+                iconCode: this.orderType2 === 'desc' ? IconConstants.ARROW_DOWN : IconConstants.ARROW_UP,
+                iconSize: 16,
+                iconColor: '#40A9FF',
+                iconPadding: 8,
+                onClickBtn: () => {
+                  this.orderType2 = this.orderType2 === 'desc' ? 'asc' : 'desc'
+                }
+              })
+            }
+            .margin({ left: 12, right: 12, bottom: 8 })
 
+            List({ space: 12 }) {
+              ForEach((() => {
+                return _.orderBy(this.resource_durations, ['duration'], [this.orderType2])
+              })(), (item: Record<string, string>) => {
+                ListItem() {
+                  Flex({ direction: FlexDirection.Column }) {
+                    Flex({ justifyContent: FlexAlign.SpaceBetween }) {
+                      Row() {
+                        AppIcon(getIconByFileType(Number(item.type), item.name, item.mimetype))
+                        Text(item.name)
+                          .margin({ left: 12 })
+                          .fontColor('#40A9FF')
+                          .fontSize(14)
+                      }
+
+                      Text(`${transTimeHm(Number(item.duration ?? 0), 'minutes', '分钟')}`)
+                        .fontColor('#d9999999')
+                        .fontSize(12)
+                    }
+                    .margin(12)
+
+                    Row() {
+                      Text(`资源位置：${item.path ?? ''}`)
+                        .fontColor('#d9999999')
+                        .fontSize(12)
+                    }
+                    .margin({ left: 12, right: 12, bottom: 12 })
+                  }
+                }
+                .margin({ left: 12, right: 12 })
+                .backgroundColor(Color.White)
+                .borderRadius(4)
+                .onClick(() => this.handleShowResource(item))
+              })
+            }
           }
         }
       }

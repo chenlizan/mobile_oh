@@ -797,36 +797,41 @@ struct CourseDetailPage {
               }
               .width('100%')
 
-              Flex({ direction: FlexDirection.RowReverse, justifyContent: FlexAlign.End }) {
-                ForEach((() => {
-                  return _.isEmpty(this.siteCerts) ? [] : (this.siteCerts[this.courseInfo.site_id as number] ?? [])
-                })(), (item: Record<string, string>, index: number) => {
-                  Text(item.siteCertificateLevelName)
-                    .margin({ left: (this.siteCerts[item.siteId] ?? []).length - index === 1 ? 0 : -8 })
-                    .padding({
-                      left: (this.siteCerts[item.siteId] ?? []).length - index === 1 ? 8 : 16,
-                      right: 8,
-                      top: 4,
-                      bottom: 4
-                    })
-                    .borderRadius({ topLeft: 4, bottomRight: 10 })
-                    .backgroundColor('#FCBB34')
-                    .fontColor(Color.White)
-                    .fontSize(12)
-                    .shadow(ShadowStyle.OUTER_DEFAULT_SM)
-                })
-              }
-              .height(22)
-              .margin({ top: 12, bottom: 12 })
+              Column() {
+                Flex({ direction: FlexDirection.RowReverse, justifyContent: FlexAlign.End }) {
+                  ForEach((() => {
+                    return _.isEmpty(this.siteCerts) ? [] : (this.siteCerts[this.courseInfo.site_id as number] ?? [])
+                  })(), (item: Record<string, string>, index: number) => {
+                    Text(item.siteCertificateLevelName)
+                      .margin({ left: (this.siteCerts[item.siteId] ?? []).length - index === 1 ? 0 : -8 })
+                      .padding({
+                        left: (this.siteCerts[item.siteId] ?? []).length - index === 1 ? 8 : 16,
+                        right: 8,
+                        top: 4,
+                        bottom: 4
+                      })
+                      .borderRadius({ topLeft: 4, bottomRight: 10 })
+                      .backgroundColor('#FCBB34')
+                      .fontColor(Color.White)
+                      .fontSize(12)
+                      .shadow(ShadowStyle.OUTER_DEFAULT_SM)
+                  })
+                }
+                .height(22)
+                .margin({ top: 12 })
+                .visibility(_.isEmpty(this.siteCerts) ? Visibility.None : Visibility.Visible)
 
-              Row() {
-                Text(String(this.courseInfo.teacher_names))
-                  .fontColor(Color.White)
-                  .fontSize(14)
-                  .width('100%')
-                  .maxLines(1)
-                  .textOverflow({ overflow: TextOverflow.MARQUEE })
+                Row() {
+                  Text(String(this.courseInfo.teacher_names))
+                    .fontColor(Color.White)
+                    .fontSize(14)
+                    .width('100%')
+                    .margin({ top: 12 })
+                    .maxLines(1)
+                    .textOverflow({ overflow: TextOverflow.MARQUEE })
+                }
               }
+              .height(64)
 
               Row() {
                 Text(getCourseInfo(this.courseInfo as Record<string, string>))

@@ -1090,3 +1090,17 @@ export const transTimeHm = (time: number, unit: DurationUnitType = 'seconds', mT
   }
   return `0${mT}`
 }
+
+export const getResourcePath = (parent_id: string, courseResources: Record<string, string | number | boolean> [],
+  courseSubResources: Record<string, string | number | boolean> []): string => {
+  const sub = _.find(courseSubResources, { attribute: parent_id })
+  if (sub && sub.parent_id) {
+    return getResourcePath(String(sub.parent_id), courseResources, courseSubResources) + '/' + sub.name
+  } else {
+    const res = _.find(courseResources, { id: parent_id });
+    if (res) {
+      return `/${res.name}`
+    }
+  }
+  return '/'
+}
