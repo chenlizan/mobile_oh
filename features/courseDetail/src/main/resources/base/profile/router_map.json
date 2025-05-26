@@ -87,6 +87,22 @@
       "data": {
         "description": "this is pageOne"
       }
+    },
+    {
+      "name": "boardList",
+      "pageSourceFile": "src/main/ets/components/Board/BoardList.ets",
+      "buildFunction": "BoardListBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "studyList",
+      "pageSourceFile": "src/main/ets/components/Study/StudyList.ets",
+      "buildFunction": "StudyListBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
     }
   ]
 }

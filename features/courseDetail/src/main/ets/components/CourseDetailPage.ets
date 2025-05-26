@@ -879,6 +879,12 @@ struct CourseDetailPage {
                           case 'notice':
                             this.pageInfos.pushPath({ name: 'noticeList' })
                             break
+                          case 'board':
+                            this.pageInfos.pushPath({ name: 'boardList' })
+                            break
+                          case 'study':
+                            this.pageInfos.pushPath({ name: 'studyList' })
+                            break
                         }
                       })
                     })
@@ -1376,6 +1382,7 @@ export function BuildOperResourceMenu(params: MenuParam) {
       Button('查看学习时长', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#FCBB34')
+        .enabled(false)
       Divider()
         .color('#33999999')
         .strokeWidth(1)
