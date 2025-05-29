@@ -741,6 +741,8 @@ struct CourseList {
                   Column() {
                     Row() {
                       Text(item.name)
+                        .maxLines(1)
+                        .textOverflow({ overflow: TextOverflow.MARQUEE })
                       Text('MOOC')
                         .padding({
                           left: 8,

@@ -41,6 +41,14 @@
       }
     },
     {
+      "name": "taskArchiveDetails",
+      "pageSourceFile": "src/main/ets/components/TaskArchiveDetails.ets",
+      "buildFunction": "TaskArchiveDetailsBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "resourceMove",
       "pageSourceFile": "src/main/ets/components/ResourceMove.ets",
       "buildFunction": "ResourceMoveBuilder",
@@ -100,6 +108,14 @@
       "name": "studyList",
       "pageSourceFile": "src/main/ets/components/Study/StudyList.ets",
       "buildFunction": "StudyListBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
+      "name": "studyTime",
+      "pageSourceFile": "src/main/ets/components/StudyTime.ets",
+      "buildFunction": "StudyTimeBuilder",
       "data": {
         "description": "this is pageOne"
       }

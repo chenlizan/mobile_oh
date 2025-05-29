@@ -1,5 +1,7 @@
 import { ComponentContent, display, LengthMetrics, window } from "@kit.ArkUI"
+import { pasteboard } from "@kit.BasicServicesKit"
 import _ from "@wolfx/lodash"
+import dayjs from "dayjs"
 import {
   Api_Context,
   AppIcon,
@@ -25,13 +27,13 @@ import {
   navigateToResourceDetails,
   PreferenceStorage,
   regularFilename,
+  transTimeHm,
   UploadResources,
   UserInfoModel,
   verifyNameIsSpecial,
   xyApiGet,
   xyApiPost
 } from "@xy/basic"
-import { pasteboard } from "@kit.BasicServicesKit"
 
 @Component
 struct CourseDetailPage {
@@ -52,6 +54,8 @@ struct CourseDetailPage {
   @State tagEdit: boolean = false
   @State tagValue: string = ''
   @State tagNodeId: string = ''
+  @State certTitle: string = '课程空间荣誉'
+  @State certVisible: boolean = false
   private courseInfo = this.preferenceStorage.currentTeam ?? {}
   private funcItems: Record<string, string | Resource>[] = []
   private rootSource: Record<string, string | number | boolean> = {}
@@ -496,32 +500,54 @@ struct CourseDetailPage {
     promptAction.openCustomDialog(customDialog, { autoCancel: false })
   }
 
+  async viewStudyLearn(item: Record<string, string | number | boolean>) {
+    if (this.courseInfo.course_property !== '2' && (this.courseInfo?.role ?? 1) !== 1) {
+      this.pageInfos.pushPath({ name: 'studyTime', param: JSON.stringify(item) })
+    } else {
+      let study_text = ''
+      if ((this.courseInfo?.role ?? 1) === 1) {
+        const response = await xyApiGet(this.Api_Context.getApiPrefix('statApi') + HomeApi.queryResourceStudyLearn,
+          { 'group_id': item.group_id, 'resource_id': item.id })
+        const info = response.data as Record<string, string | number>
+        study_text = `资源学习时长：${transTimeHm(
+          Number(info?.duration),
+          'minutes',
+        )}\n\n学习时长数据为次日更新。\n\n最近访问时间：${dayjs(
+          info?.lasted_created_time,
+        ).format('YYYY-MM-DD HH:mm')}`
+      } else {
+        const response = await xyApiGet(this.Api_Context.getApiPrefix('statApi') + HomeApi.queryResourceLearnTotal,
+          { 'group_id': item.group_id, 'resource_id': item.id })
+        const info = response.data as Record<string, number>
+        study_text = `本资源所有学生的学习时长：${transTimeHm(
+          info?.duration ?? 0,
+          'minutes',
+        )}`
+      }
+      CustomAlertDialog({
+        title: '提示',
+        message: study_text
+      })
+    }
+  }
+
   async operateCourseResource(name: string, item: Record<string, string | number | boolean>, param?: boolean | number) {
     switch (name) {
-      case '删除':
-        this.deleteCourseResource(item)
+      case '查看学习时长':
+        this.viewStudyLearn(item)
         break
-      case '查看学生问题':
-      case '我要提问':
-        this.viewQAArea(item)
-        break
-      case '资源二维码':
-        this.viewResourceLinkModal(item)
-        break
-      case '移动到':
-        this.pageInfos.pushPath({
-          name: 'resourceMove', param: JSON.stringify(item), onPop: () => {
-            this.queryCourseResources()
-          }
-        })
-      case '重命名':
-        this.viewRenameModal(item)
-        break
-      case '下载':
-        this.downloadSetup(item, param as number)
+      case '活动标签':
+        this.tagVisible = true
+        this.tagEdit = param as boolean
+        this.tagTitle = `${this.tagEdit ? '编辑' : '设置'}活动标签`
+        this.tagValue = this.tagEdit ? String(item.tag) : ''
+        this.tagNodeId = item.id as string
         break
       case '可见':
         this.visibleSetup(item, param as boolean)
+        break
+      case '下载':
+        this.downloadSetup(item, param as number)
         break
       case '编辑作业/测练':
         this.pageInfos.pushPath({
@@ -530,12 +556,25 @@ struct CourseDetailPage {
           }
         })
         break
-      case '活动标签':
-        this.tagVisible = true
-        this.tagEdit = param as boolean
-        this.tagTitle = `${this.tagEdit ? '编辑' : '设置'}活动标签`
-        this.tagValue = this.tagEdit ? String(item.tag) : ''
-        this.tagNodeId = item.id as string
+      case '重命名':
+        this.viewRenameModal(item)
+        break
+      case '移动到':
+        this.pageInfos.pushPath({
+          name: 'resourceMove', param: JSON.stringify(item), onPop: () => {
+            this.queryCourseResources()
+          }
+        })
+        break
+      case '资源二维码':
+        this.viewResourceLinkModal(item)
+        break
+      case '删除':
+        this.deleteCourseResource(item)
+        break
+      case '查看学生问题':
+      case '我要提问':
+        this.viewQAArea(item)
         break
       default:
         break
@@ -753,6 +792,63 @@ struct CourseDetailPage {
     .width('100%')
   }
 
+  @Builder
+  BuildCertContent() {
+    Column() {
+      Text(`课程空间名称：${String(this.courseInfo.name)}${this.courseInfo.key ? `（${this.courseInfo.key}）` : ''}`)
+        .margin({ bottom: 12 })
+        .fontColor('#999999')
+        .fontSize(14)
+      Text('课程空间荣誉：')
+        .fontColor('#999999')
+        .fontSize(14)
+    }
+    .alignItems(HorizontalAlign.Start)
+    .width('100%')
+    .padding(12)
+
+    Row() {
+      ForEach(this.siteCerts[this.courseInfo.site_id as number] ?? [],
+        (item: Record<string, string>, index: number) => {
+          Text(item.siteCertificateLevelName)
+            .margin({ right: 8 })
+            .padding({
+              left: 16,
+              right: 16,
+              top: 4,
+              bottom: 4
+            })
+            .backgroundColor('#FCBB34')
+            .borderRadius(16)
+            .fontColor(Color.White)
+            .fontSize(12)
+        })
+    }
+    .justifyContent(FlexAlign.Start)
+    .width('100%')
+    .padding({ left: 12, right: 12, bottom: 12 })
+
+    Row() {
+      Button('关闭', { type: ButtonType.Normal })
+        .height(40)
+        .fontColor('#999999')
+        .backgroundColor(Color.White)
+        .borderWidth({ top: 1 })
+        .borderColor('#33999999')
+        .borderRadius({
+          topLeft: 0,
+          topRight: 0,
+          bottomLeft: 8,
+          bottomRight: 8
+        })
+        .flexGrow(1)
+        .onClick(() => {
+          this.certVisible = false
+        })
+    }
+    .width('100%')
+  }
+
   build() {
     NavDestination() {
       Flex({ direction: FlexDirection.Column }) {
@@ -820,6 +916,7 @@ struct CourseDetailPage {
                 .height(22)
                 .margin({ top: 12 })
                 .visibility(_.isEmpty(this.siteCerts) ? Visibility.None : Visibility.Visible)
+                .onClick(() => this.certVisible = true)
 
                 Row() {
                   Text(String(this.courseInfo.teacher_names))
@@ -1026,11 +1123,7 @@ struct CourseDetailPage {
                       Row() {
                         if (item._taskTypeText && item.published === 1) {
                           if ((this.courseInfo?.role ?? 1) === 1) {
-                            CustomTag({
-                              text: String(item._taskTypeText), tagMargin: { right: 8 }, onClickBtn: () => {
-                                // this.pageInfos.pushPath({ name: 'taskDetails' }) TODO
-                              }
-                            })
+                            CustomTag({ text: String(item._taskTypeText), tagMargin: { right: 8 } })
                           } else {
                             CustomTag({
                               text: String(item._taskTypeText),
@@ -1038,7 +1131,7 @@ struct CourseDetailPage {
                               fontColor: '#40A9FF',
                               tagMargin: { right: 8 },
                               onClickBtn: () => {
-                                // this.pageInfos.pushPath({ name: 'taskDetails' }) TODO
+                                this.pageInfos.pushPath({ name: 'taskDetails', param: JSON.stringify(item) })
                               }
                             })
                           }
@@ -1174,6 +1267,13 @@ struct CourseDetailPage {
         visible: $tagVisible,
         hideCloseBtn: Visibility.Hidden,
         contentBuilder: () => this.BuildTagContent()
+      })
+
+      CustomModalDialog({
+        title: this.certTitle,
+        visible: $certVisible,
+        hideCloseBtn: Visibility.Hidden,
+        contentBuilder: () => this.BuildCertContent()
       })
     }
     .hideTitleBar(true)
@@ -1382,7 +1482,7 @@ export function BuildOperResourceMenu(params: MenuParam) {
       Button('查看学习时长', { type: ButtonType.Normal, buttonStyle: ButtonStyleMode.TEXTUAL })
         .width('100%')
         .fontColor('#FCBB34')
-        .enabled(false)
+        .onClick(() => params.operResource('查看学习时长'))
       Divider()
         .color('#33999999')
         .strokeWidth(1)

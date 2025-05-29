@@ -119,6 +119,7 @@ struct CustomModalDialogView {
                   Text(item?.loginName)
                     .margin({ top: 8 })
                 }
+                .alignItems(HorizontalAlign.Start)
               }
               .width('100%')
               .padding(8)

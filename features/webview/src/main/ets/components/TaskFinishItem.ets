@@ -37,7 +37,7 @@ export struct TaskFinishItem {
 
   async queryStudentFinishInfo() {
     const response = await xyApiGet(this.Api_Context.getApiPrefix('baseApi_inner') + HomeApi.queryStudentFinishInfo,
-      { 'node_id': this.item.node_id, 'group_id': this.item.group_id })
+      { 'node_id': this.item.id, 'group_id': this.item.group_id })
     if (response.success) {
       const res = response.data as Record<string, string | boolean>
       this.finish = res.finished as boolean
