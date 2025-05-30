@@ -7,6 +7,7 @@ import { PARAMS } from "./EnhancedFetch"
 import { ObjectUtil } from "./ObjectUtil"
 import { CustomToast } from "../components/CustomToast"
 import { IconConstants } from "../constants/IconConstants"
+import { Api_Context } from "../config/Context"
 
 dayjs.extend(duration)
 
@@ -1097,10 +1098,15 @@ export const getResourcePath = (parent_id: string, courseResources: Record<strin
   if (sub && sub.parent_id) {
     return getResourcePath(String(sub.parent_id), courseResources, courseSubResources) + '/' + sub.name
   } else {
-    const res = _.find(courseResources, { id: parent_id });
+    const res = _.find(courseResources, { id: parent_id })
     if (res) {
       return `/${res.name}`
     }
   }
   return '/'
+}
+
+export const getCourseAvatarUrl = (user_id: string) => {
+  return `${AppStorage.get<Api_Context>('Api_Context')?.getApiPrefix('baseApi_out')}cloud/file/avatar/${user_id}?random=${dayjs()
+    .format('YYYY/MM/DD/HH')}`
 }

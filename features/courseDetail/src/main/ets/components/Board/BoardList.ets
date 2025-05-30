@@ -35,7 +35,7 @@ struct BoardList {
           CustomListItem({
             text: '课程看板',
             itemBorder: {},
-            itemMargin: { top: 12 },
+            itemMargin: { bottom: 12 },
             itemRadius: 4,
             iconBuilder: () => this.BuildLeftIcon($r('app.media.course_board')),
             onClickBtn: (): void => {
@@ -55,17 +55,19 @@ struct BoardList {
             CustomListItem({
               text: '成员画像',
               itemBorder: {},
-              itemMargin: { top: 12 },
+              itemMargin: { bottom: 12 },
               itemRadius: 4,
               iconBuilder: () => this.BuildLeftIcon($r('app.media.member_portrait')),
-              onClickBtn: (): void => {
-              }
+              onClickBtn: (): void => this.pageInfos.pushPath({
+                name: 'memberPortrait',
+                param: JSON.stringify({ self: false })
+              })
             })
             CustomList() {
               CustomListItem({
                 text: '课堂实录分析',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.teach_trace')),
                 onClickBtn: (): void => {
@@ -78,7 +80,7 @@ struct BoardList {
                 text: '课堂教学活动轨迹',
                 itemBackgroundColor: '#EBEDF0',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.teach_trace')),
                 onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放课堂教学活动轨迹功能，请去web端查看。')
@@ -89,7 +91,7 @@ struct BoardList {
             CustomListItem({
               text: '班级画像',
               itemBorder: {},
-              itemMargin: { top: 12 },
+              itemMargin: { bottom: 12 },
               itemRadius: 4,
               iconBuilder: () => this.BuildLeftIcon($r('app.media.class_portrait')),
               onClickBtn: async (): Promise<void> => {
@@ -118,7 +120,7 @@ struct BoardList {
             text: 'AI+应用看板',
             itemBackgroundColor: '#EBEDF0',
             itemBorder: {},
-            itemMargin: { top: 12 },
+            itemMargin: { bottom: 12 },
             itemRadius: 4,
             iconBuilder: () => this.BuildLeftIcon($r('app.media.ai_helper')),
             onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放AI+应用看板功能，请去web端查看。')
@@ -128,7 +130,7 @@ struct BoardList {
       .margin({ left: 12, right: 12 })
     }
     .title(CustomNavTitle('课程画像'))
-    .backgroundColor('#f1f1f1')
+    .backgroundColor('#F5F5F5')
   }
 }
 

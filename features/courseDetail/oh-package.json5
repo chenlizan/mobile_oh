@@ -6,6 +6,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@xy/basic": "file:../../commons/basic"
+    "@xy/basic": "file:../../commons/basic",
+    "@xy/webview": "file:../../features/webview"
   }
 }

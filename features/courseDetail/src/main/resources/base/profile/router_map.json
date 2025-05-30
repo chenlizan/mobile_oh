@@ -105,6 +105,14 @@
       }
     },
     {
+      "name": "memberPortrait",
+      "pageSourceFile": "src/main/ets/components/Board/MemberPortrait.ets",
+      "buildFunction": "MemberPortraitBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "studyList",
       "pageSourceFile": "src/main/ets/components/Study/StudyList.ets",
       "buildFunction": "StudyListBuilder",

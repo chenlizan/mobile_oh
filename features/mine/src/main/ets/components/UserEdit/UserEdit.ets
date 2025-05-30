@@ -31,7 +31,7 @@ struct UserEdit {
 
   async getUserSchoolInfo() {
     const response =
-      await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.queryUserSchoolInfo, { 'userId': this.userInfo.id })
+      await ccApiGet(this.Api_Context.getApiPrefix('ccApi') + CCApi.queryUserSchoolInfo, { 'userId': this.userInfo.userId })
     if (response.code === 200) {
       this.schoolList = response.result as Record<string, string>[]
     }

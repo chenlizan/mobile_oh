@@ -62,4 +62,6 @@ export class IconConstants {
   static readonly ARROW_DOWN: string = '\ue7f3' //下箭头
   static readonly ARROW_UP: string = '\ue7f2' //上箭头
   static readonly DELETE: string = '\ue88e' //删除
+  static readonly COLLEGE: string = '\ue859' //学校
+  static readonly CARD: string = '\ue856' //卡
 }

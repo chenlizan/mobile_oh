@@ -53,9 +53,9 @@ export class Toolkits {
 
   async onRecodeLrsTrace(dataSource: Record<string, string>) {
     const Api_Context = AppStorage.get<Api_Context>('Api_Context')
-    const body = getLrsTraceElement(dataSource);
+    const body = getLrsTraceElement(dataSource)
     if (_.isEmpty(body)) {
-      return;
+      return
     }
     await xyApiPost(Api_Context?.getApiPrefix('lrsApi') + SystemApi.buriedTrack, body)
   }
@@ -202,12 +202,13 @@ export struct CustomLocalH5 {
   @Prop toolkits: Toolkits | null = null
   @Prop methodList: string[] = []
   @Prop extraJavaScript: string = ''
-  @Prop url: string = ''
+  @Prop @Watch('updateUrl') url: string = ''
   @Prop isLocal: boolean = true
   @State screenHeight: number = 0
   @State scripts: Array<ScriptItem> = [
     { script: this.getJavaScript(), scriptRules: ['*'] }
   ]
+  private init: boolean = false
 
   getLrsHeader() {
     return ({
@@ -236,6 +237,19 @@ export struct CustomLocalH5 {
     queryParams.school_code = this.preferenceStorage.school?.code
     queryParams.school_domain = this.preferenceStorage.school?.domain
     this.url += `&${qs.stringify(queryParams)}`
+  }
+
+  updateUrl() {
+    if (this.init) {
+      const queryParams: Record<string, string | number | undefined> = {}
+      queryParams.school_code = this.preferenceStorage.school?.code
+      queryParams.school_domain = this.preferenceStorage.school?.domain
+      this.controller.loadUrl(this.isLocal ?
+        'resource://rawfile/localh5/index.html' + this.url + `&${qs.stringify(queryParams)}` : this.url)
+      setTimeout(() => {
+        this.controller.refresh()
+      }, 0)
+    }
   }
 
   build() {
@@ -270,6 +284,7 @@ export struct CustomLocalH5 {
         })
         .onControllerAttached(() => {
           CustomToast.toast_loading('')
+          this.init = true
         })
         .onPageEnd(() => {
           CustomToast.hide()

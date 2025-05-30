@@ -24,18 +24,20 @@ struct StudyList {
               CustomListItem({
                 text: '我的画像',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.my_portrait')),
-                onClickBtn: (): void => {
-                }
+                onClickBtn: (): void => this.pageInfos.pushPath({
+                  name: 'memberPortrait',
+                  param: JSON.stringify({ self: true })
+                })
               })
             } else {
               if (this.courseInfo.member_count <= 500) {
                 CustomListItem({
                   text: '排行榜',
                   itemBorder: {},
-                  itemMargin: { top: 12 },
+                  itemMargin: { bottom: 12 },
                   itemRadius: 4,
                   iconBuilder: () => this.BuildLeftIcon($r('app.media.course_rank')),
                   onClickBtn: (): void => {
@@ -57,7 +59,7 @@ struct StudyList {
             text: '课程任务',
             itemBackgroundColor: '#EBEDF0',
             itemBorder: {},
-            itemMargin: { top: 12 },
+            itemMargin: { bottom: 12 },
             itemRadius: 4,
             iconBuilder: () => this.BuildLeftIcon($r('app.media.course_task')),
             onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放课程任务功能，请去web端查看。')
@@ -66,7 +68,7 @@ struct StudyList {
             text: '学习时长',
             itemBackgroundColor: '#EBEDF0',
             itemBorder: {},
-            itemMargin: { top: 12 },
+            itemMargin: { bottom: 12 },
             itemRadius: 4,
             iconBuilder: () => this.BuildLeftIcon($r('app.media.study_length')),
             onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放学习时长功能，请去web端查看。')
@@ -76,7 +78,7 @@ struct StudyList {
               CustomListItem({
                 text: '签到记录',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.course_sign')),
                 onClickBtn: (): void => {
@@ -86,7 +88,7 @@ struct StudyList {
                 text: '课堂表现',
                 itemBackgroundColor: '#EBEDF0',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.course_performance')),
                 onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放课堂表现功能，请去web端查看。')
@@ -95,7 +97,7 @@ struct StudyList {
                 text: '评价活动',
                 itemBackgroundColor: '#EBEDF0',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.tool_appraise')),
                 onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放评价活动功能，请去web端查看。')
@@ -103,7 +105,7 @@ struct StudyList {
               CustomListItem({
                 text: '错题本',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.tool_wrong_book')),
                 onClickBtn: (): void => {
@@ -115,7 +117,7 @@ struct StudyList {
               CustomListItem({
                 text: '签到',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.course_sign')),
                 onClickBtn: (): void => {
@@ -125,7 +127,7 @@ struct StudyList {
                 text: '课堂表现',
                 itemBackgroundColor: '#EBEDF0',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.course_performance')),
                 onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放课堂表现功能，请去web端查看。')
@@ -134,7 +136,7 @@ struct StudyList {
                 text: '评价活动',
                 itemBackgroundColor: '#EBEDF0',
                 itemBorder: {},
-                itemMargin: { top: 12 },
+                itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.tool_appraise')),
                 onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放评价活动功能，请去web端查看。')
@@ -144,7 +146,7 @@ struct StudyList {
               text: '总评成绩',
               itemBackgroundColor: '#EBEDF0',
               itemBorder: {},
-              itemMargin: { top: 12 },
+              itemMargin: { bottom: 12 },
               itemRadius: 4,
               iconBuilder: () => this.BuildLeftIcon($r('app.media.review_grade')),
               onClickBtn: (): void => CustomToast.toast_info('移动端暂未开放总评成绩功能，请去web端查看。')
@@ -154,7 +156,8 @@ struct StudyList {
       }
       .margin({ left: 12, right: 12 })
     }
-    .title(CustomNavTitle((this.courseInfo?.role ?? 1) === 1 ? '我的学情' : '学生学情')).backgroundColor('#f1f1f1')
+    .title(CustomNavTitle((this.courseInfo?.role ?? 1) === 1 ? '我的学情' : '学生学情'))
+    .backgroundColor('#F5F5F5')
   }
 }
 

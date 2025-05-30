@@ -6,8 +6,7 @@ import {
   HomeApi,
   judgeGroupIsEnd,
   PreferenceStorage,
-  xyApiPost,
-  xyApiPut
+  xyApiPost
 } from "@xy/basic"
 
 @Component
@@ -16,7 +15,6 @@ struct CreateCourseNotice {
   @StorageLink('Api_Context') Api_Context: Api_Context = new Api_Context()
   @StorageLink('PreferenceStorage') preferenceStorage: PreferenceStorage = new PreferenceStorage()
   private courseInfo = this.preferenceStorage.currentTeam ?? {}
-  private param: Record<string, string> = {}
   private content: string = ''
 
   build() {
