@@ -113,6 +113,14 @@
       }
     },
     {
+      "name": "courseAnalysis",
+      "pageSourceFile": "src/main/ets/components/Board/CourseAnalysis.ets",
+      "buildFunction": "CourseAnalysisBuilder",
+      "data": {
+        "description": "this is pageOne"
+      }
+    },
+    {
       "name": "studyList",
       "pageSourceFile": "src/main/ets/components/Study/StudyList.ets",
       "buildFunction": "StudyListBuilder",

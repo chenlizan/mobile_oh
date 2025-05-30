@@ -70,8 +70,7 @@ struct BoardList {
                 itemMargin: { bottom: 12 },
                 itemRadius: 4,
                 iconBuilder: () => this.BuildLeftIcon($r('app.media.teach_trace')),
-                onClickBtn: (): void => {
-                }
+                onClickBtn: (): void => this.pageInfos.pushPath({ name: 'courseAnalysis' })
               })
             }
 
